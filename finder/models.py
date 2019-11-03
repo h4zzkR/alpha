@@ -13,7 +13,7 @@ class Project(models.Model):
     description = models.TextField(default="")
     max_people = models.IntegerField(default=0)  # 0 - no limit
     public = models.BooleanField(default=True)
-    active = models.BooleanField(default=True)
+    active = models.IntegerField(default=True)  # 0 - team finder; 1 - developing; 2 - refinding people; 3 - closed
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
     trello = models.TextField(default="")
     github = models.TextField(default="")
