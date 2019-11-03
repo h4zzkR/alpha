@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'finder.apps.FinderConfig',
+    'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
