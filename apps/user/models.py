@@ -2,14 +2,14 @@ import pytz
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from finder.models import Skill, Project
+from apps.project.models import Skill, Project
 
 
 class UserProfile(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    activated = models.BooleanField(default=False)
+    confirmed = models.BooleanField(default=False) #is account confirmed by email
     rating = models.IntegerField(default=0)
-    teamlead = models.IntegerField(default=0)
+    good_teamlead = models.IntegerField(default=0) #users sets this user as a good teamled
     phone = models.TextField(default="")
     status = models.TextField(default="")
     github = models.TextField(default="")

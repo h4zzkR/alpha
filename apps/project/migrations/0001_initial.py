@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('message', models.TextField(default='Hey, join my project.')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='finder.Project')),
+                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='apps.project.Project')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
             name='ProjectSkills',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='finder.Project')),
+                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='apps.project.Project')),
             ],
         ),
         migrations.CreateModel(
@@ -55,6 +55,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='projectskills',
             name='skill',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='finder.Skill'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='apps.project.Skill'),
         ),
     ]

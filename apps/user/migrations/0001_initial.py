@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('finder', '0001_initial'),
+        ('project', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
             name='UserProject',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='finder.Project')),
+                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='apps.project.Project')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
             name='UserSkill',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('skill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='finder.Skill')),
+                ('skill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='apps.project.Skill')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
