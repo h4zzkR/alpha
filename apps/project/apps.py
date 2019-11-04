@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class FinderConfig(AppConfig):
+class ProjectConfig(AppConfig):
     name = 'apps.project'
