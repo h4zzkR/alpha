@@ -7,9 +7,10 @@ from apps.project.models import Skill, Project
 
 class UserProfile(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    confirmed = models.BooleanField(default=False) #is account confirmed by email
+    userpic = models.ImageField(upload_to="userpics", blank=True) # TODO add default userpic
+    confirmed = models.BooleanField(default=False) # is account confirmed by email
     rating = models.IntegerField(default=0)
-    good_teamlead = models.IntegerField(default=0) #users sets this user as a good teamled
+    good_teamlead = models.IntegerField(default=0) # users sets this user as a good teamled
     phone = models.TextField(default="")
     status = models.TextField(default="")
     github = models.TextField(default="")
