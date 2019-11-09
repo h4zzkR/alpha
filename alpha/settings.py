@@ -76,12 +76,17 @@ STATIC_URL = '/statics/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'statics')]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-try:
-    import alpha.server_settings
-except ImportError:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
-        }
+# try:
+#     import alpha.server_settings
+# except ImportError:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'concat',
+        'USER': 'concat',
+        'PASSWORD': 's1XTPKlOjWo4',
+        'HOST': 'localhost',
+        'PORT': '5432',
+
     }
+}
