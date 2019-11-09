@@ -76,7 +76,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'statics')]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 try:
-    import server_settings
+    import alpha.server_settings
 except ImportError:
     DATABASES = {
         'default': {
