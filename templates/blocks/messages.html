@@ -1,0 +1,16 @@
+{#{% if messages %}#}
+     <div class="container-fluid" style="position: fixed; bottom: 2%; right: 0.5rem;">
+        <div class="flex-column float-right" id="div_messages">
+        {%  if messages %}
+            {% for message in messages %}
+                <script>alertTimer();</script>
+              <div class="alert {{ message.tags }} alert-dismissible myAlert-bottom" data-auto-dismiss="2000" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+              </div>
+            {% endfor %}
+        {% endif %}
+        </div></div>
+{#{%  endif %}#}

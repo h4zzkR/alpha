@@ -4,6 +4,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from apps.project.models import Skill, Project
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 class UserProfile(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -11,7 +14,7 @@ class UserProfile(models.Model):
     confirmed = models.BooleanField(default=False) # is account confirmed by email
     rating = models.IntegerField(default=0)
     good_teamlead = models.IntegerField(default=0) # users sets this user as a good teamlead
-    phone = models.TextField(default="")
+    # phone = models.TextField(default="") мы не фейсбук
     status = models.TextField(default="")
     github = models.TextField(default="")
     trello = models.TextField(default="")

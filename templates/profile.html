@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!-- concat.team 2020 -->
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        {{ user.username }}
+    </title>
+    <!-- Favicon -->
+    <link href="{{STATIC_URL}}img/brand/logo.png" rel="icon" type="image/png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Icons -->
+    <link href="{{STATIC_URL}}js/plugins/nucleo/css/nucleo.css" rel="stylesheet"/>
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet"/>
+    <!-- CSS Files -->
+    <link href="{{STATIC_URL}}css/argon-dashboard.css?v=1.1.0" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{STATIC_URL}}css/other_styles.css" rel="stylesheet"/>
+    <!-- Image Cropping -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
+    <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/main.js"></script>
+    <style>
+        @media screen and (max-width: 720px) {
+            .footer {
+                left: 0px;
+            }
+        }
+    </style>
+
+</head>
+
+<body class="" style="background: #35274E;">
+{% include "blocks/nav.html" %}
+
+<div class="main-content" style="padding-bottom: 60px;">
+    <img src="{{STATIC_URL}}img/brand/back0.png" class="bg">
+    <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
+        <div class="container-fluid" >
+            <!-- Brand -->
+            <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
+            <!-- Form -->
+            {% include "blocks/search.html" %}
+            <!-- User -->
+            {% include "blocks/profile_menu.html" %}
+        </div>
+    </nav>
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+         style="min-height: 600px; background-size: cover; background-position: center top;">
+        <!-- Mask -->
+        <span class="mask bg-gradient-default opacity-5"></span>
+        <!-- Header container -->
+        <div class="container-fluid d-flex align-items-center">
+            <div class="row">
+                <div class="col-lg-7 col-md-10">
+                    <h1 class="display-2 text-white">Привет, {{ user.username }}</h1>
+                    <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
+                        информацию о себе.</p>
+                    <div class="btn-group">
+                        <button onclick="myFunction()" href="#!" class="btn btn-info btn-xs">Редактировать</button>
+                        <button onclick="CopyLink();" class="btn btn-outline-primary btn-xs" id="copyButton">Ссылка на
+                            профиль
+                        </button>
+                        <button class="btn btn-outline-danger btn-xs" id="copyResult">&lt;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+    <div class="overlay" id="avatar_menu">
+        <div class="col-xl-3 order-xl-2 mb-5 mb-xl-0 popup">
+            <div class="row justify-content-center mb-5">
+                <h3 class="mb-2" style="z-index: 700;">Обновление аватара</h3>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <a class="close" href="#">&times;</a>
+                <div class="col-lg-3 order-lg-2">
+                    <div class="card-profile-image">
+                        <a href="#">
+                            <img src="{{ MEDIA_URL }}{{ picture }}" class="rounded-circle">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header text-center border-0 pt-5 pt-md-2 pb-0 pb-md-4">
+                <div class="d-flex justify-content-lg-between justify-content-between">
+                    <a href="{{ user.telegram_link }}" class="btn-icon float-lg-left ml-4" style="">
+                        <i class="fab fa-telegrams fa-3x tg-icon"></i>
+                    </a>
+                    <a href="#avatar_menu" class="btn-icon float-lg-right mr-4" style="transition: all 0.3s ease-out;">
+                    <span class="fa-stack dfa-lg" style="font-size: 26px;">
+                      <i class="fa fa-circles fa-stack-2x"></i>
+                      <i class="fa fa-cameras fa-stack-1x" style="color: white; font-size: 23px;"></i>
+                    </span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-body pt-0 pt-md-4">
+                <div class="text-center">
+                    <a href='/gencon'>
+                <span class="btn btn-outline-danger">
+                  Сгенерировать Identicon
+                <span class="font-weight-light"></span>
+                </span></a>
+                    <div class="h5 font-weight-300">
+                        <i class="ni location_pin mr-2"></i>
+                    </div>
+                    <div>
+                        Или загрузите свое фото:
+                    </div>
+                    <hr class="my-4"/>
+                    <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and
+                        records all of his own music.</p>
+                    <a href="#">Show more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  END OF ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+
+
+    <div class="container-fluid mt--7">
+        <div class="row"></div>
+            <div class="col-xl-4 float-lg-right">
+                <div class="order-xl-2 mb-5 mb-xl-0">
+                <div class="card card-profile shadow">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3 order-lg-2">
+                            <div class="card-profile-image">
+                                <a href="#">
+                                    <img src="{{ MEDIA_URL }}{{ picture }}" class="rounded-circle"
+                                         style="width: 135px;">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                        <div class="d-flex justify-content-lg-between justify-content-between">
+                            <a href="{{ user.telegram_link }}" class="btn-icon float-lg-left ml-4" style="">
+                                <i class="fab fa-telegram fa-3x tg-icon"></i>
+                            </a>
+                            <a href="#avatar_menu" class="btn-icon float-lg-right mr-4"
+                               style="transition: all 0.3s ease-out;">
+                    <span class="fa-stack fa-lg" style="font-size: 26px;">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-camera fa-stack-1x" style="color: white; font-size: 23px;"></i>
+                    </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body pt-0 pt-md-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
+                                    <div>
+                      <span class="heading">{{ user.projects_cnt }}
+                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.stars_cnt }}
+                          <i class="fa fa-star"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.rate }}
+                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 id="user-name">
+                                {{ user.first_name }} {{ user.last_name }}
+                            </h3>
+                            <div class="h5 font-weight-300" style="margin-top: -25px;">
+                                <i class="ni location_pin mr-2"></i>
+                                <p id="user-location">{{ user.city }}, {{ user.country }}</p>
+                            </div>
+                            <hr class="my-4"/>
+                            <p id="user-bio">{{ user.bio }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+                <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
+                    <div class="card card-profile shadow">
+                        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                    </div>
+
+                        <div class="card-body pt-0 pt-md-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
+                                    <div>
+                      <span class="heading">{{ user.projects_cnt }}
+                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.stars_cnt }}
+                          <i class="fa fa-star"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.rate }}
+                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 id="user-name">
+                                {{ user.first_name }} {{ user.last_name }}
+                            </h3>
+                            <div class="h5 font-weight-300" style="margin-top: -25px;">
+                                <i class="ni location_pin mr-2"></i>
+                                <p id="user-location">{{ user.city }}, {{ user.country }}</p>
+                            </div>
+                            <hr class="my-4"/>
+                            <p id="user-bio">{{ user.bio }}</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8 order-xl-1 scrolling">
+                <form role="form" action="" method="POST" id="profile-form">
+                    {% csrf_token %}
+                    <div class="card bg-secondary shadow">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h3 class="mb-0">Мой аккаунт</h3>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="heading-small text-muted mb-4">Общая информация</h6>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-username"
+                                                   id="focus">Никнейм</label>
+                                            {{ form.username }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-email">Почта</label>
+                                            {{ form.email }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-first-name">Имя</label>
+                                            {{ form.first_name }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-last-name">Фамилия</label>
+                                            {{ form.last_name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4"/>
+                            <!-- Address -->
+                            <h6 class="heading-small text-muted mb-4">Контактная информация (по желанию)</h6>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    {% include "blocks/countries.html" %}
+
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="country">Страна</label>
+                                            <select id="country" name="country"
+                                                    class="form-control form-control-alternative">
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="state">Город</label>
+                                            <select name="state" id="state"
+                                                    class="form-control form-control-alternative">
+                                                <option selected value="{{ user.city }}">{{ user.city }}</option>
+                                            </select></br>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-github">Ваш Github (ссылка на
+                                                профиль)</label>
+                                            {{ form.github_link }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-gitlab">или Ваш Gitlab (ссылка
+                                                на профиль)</label>
+                                            {{ form.gitlab_link }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-telegram">Telegram</label>
+                                            {{ form.telegram_link }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-linkedin">LinkedIn</label>
+                                            {{ form.linkedIn_link }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr class="my-4"/>
+                            <!-- Description -->
+                            <h6 class="heading-small text-muted mb-4">О себе</h6>
+                            <div class="pl-lg-4">
+                                <div class="form-group">
+                                    <label>Био</label>
+                                    {{ form.bio }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+</div>
+
+<ul id="popup-messages-content">
+    {% include 'blocks/messages.html' %}
+</ul>
+
+</div>
+
+
+<!-- FOOTER -->
+{% include 'blocks/footer.html' %}
+</div>
+
+
+
+<!--   Core   -->
+<script src="{{STATIC_URL}}js/plugins/jquery/jquery.min.js"></script>
+<script src="{{STATIC_URL}}js/plugins/bootstrap/bootstrap.js"></script>
+
+
+<script language="javascript">
+    populateCountries("country", "state");
+    // first parameter is id of country drop-down and second parameter is id of state drop-down
+    populateCountries("country2");
+    populateCountries("country2");
+</script>
+
+<script>
+    const answer = document.getElementById("copyResult");
+
+    function CopyLink() {
+        var dummy = document.createElement("textarea");
+        var copyText = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = copyText;
+        dummy.select();
+        const successful = document.execCommand("copy");
+        document.body.removeChild(dummy);
+        answer.style.display = '';
+        if (successful) {
+            answer.innerHTML = '<i class="em em-clap"></i>';
+        } else {
+            answer.innerHTML = 'Unable to copy!';
+        }
+        {#alert("Copied the text: " + copyText);#}
+    }
+</script>
+
+<script>
+    $(function () {
+        $('body').on('close.bs.alert', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(e.target).fadeOut();
+        });
+    });
+</script>
+<script>
+    function myFunction() {
+        $('html,body').animate({
+                scrollTop: $(".scrolling").offset().top
+            },
+            'slow');
+        document.getElementById("focus").focus();
+    }
+</script>
+
+</body>
+</html>

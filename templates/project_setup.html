@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    concat
+{% endblock %}
+
+{% block extra_links %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tags-input.css">
+	<script type="text/javascript" src="{{STATIC_URL}}js/tags-input.js"></script>
+{% endblock %}
+
+{% block styles %}
+    .CodeMirror, .CodeMirror-scroll {
+        min-height: 575px;
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="main-content pb-10 ml-4">
+        <div class="col-xl-12 order-xl-1 scrolling mb-5">
+                <form role="form" method="POST" id="project-form">
+                    {% csrf_token %}
+                    <div class="card bg-secondary shadow">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h3 class="mb-0">Ваш новый проект</h3>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h6 class="heading-small text-muted mb-2 mt--1">Постарайтесь по максимуму заполнить поля.
+                            Обязательные для заполнения поля помечены звездочкой.</h6>
+                            <hr class="my-4"/>
+
+                            <div class="row ml-lg-2">
+                            <div class="col-lg-3 column-left ml-lg--4" style="">
+                                <div class="col-lg-13">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{ form.name.id }}"
+                                                   id="focus">Название проекта</label>
+                                            {{ form.name }}
+                                </div>
+                                <div class="col-lg-15">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="{{ form.technical_spec_url.id }}">Ссылка на тех-задание (google docs)</label>
+                                        {{ form.technical_spec_url }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-15">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{ form.vcs_url.id }}">Ссылка на систему контроля версий</label>
+                                            {{ form.vcs_url }}
+                                        </div>
+                                </div>
+                                <div class="col-lg-15">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{ form.team_size.id }}">Размер команды*</label>
+                                            {{ form.team_size }}
+                                        </div>
+                                </div>
+                               <div class="col-lg-15">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{ form.team_size.id }}">Сжатое описание*</label>
+                                            {{ form.short_description }}
+                                        </div>
+                                </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="ml-lg-4 col-lg-9 mt-0">
+                                        <label class="form-control-label" for="input-description">Расширенное описание*</label>
+                                        <div class="form-group">
+                                             <textarea name="description" type="text" cols="40" rows="4" placeholder=""
+                                                       id="input-description" minlength="300" maxlength="5000"
+                                                       class="form-control form-control-alternative"></textarea>
+                                    </div>
+                            </div>
+                            </div>
+
+                            <hr class="my-4"/>
+
+                            <div class="col-lg-9 mt-0 ml--2">
+                                <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
+                                <div class="form-group">
+                                 <input class="form-control form-control-alternative" name='tags' type="tags" placeholder="..." id="tags"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'blocks/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let $ = s => [].slice.call(document.querySelectorAll(s));
+
+        // log events as they happen:
+        let t = $('#tags')[0];
+        t.addEventListener('input', log);
+        t.addEventListener('change', log);
+        function log(e) {
+            $('#out')[0].textContent = `${e.type}: ${this.value.replace(/,/g,', ')}`;
+        }
+
+        // hook 'em up:
+        $('input[type="tags"]').forEach(tagsInput);
+    </script>
+    <script>
+        new SimpleMDE({
+            element: document.getElementById("input-description"),
+            autosave: {
+                enabled: true,
+                unique_id: "input-description",
+		    },
+            spellChecker: false,
+            previewRender: function(plainText, preview) { // Async method
+                setTimeout(function(){
+                    preview.innerHTML = customMarkdownParser(plainText);
+                }, 250);
+
+                return "Загрузка...";
+            },
+            placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
+        });
+    </script>
+{% endblock %}
