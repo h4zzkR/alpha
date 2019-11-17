@@ -17,9 +17,9 @@ def get_context(request, pagename):
     context = {
         'pagename': pagename,
     }
-
-    # if request.user.is_authenticated:
     context.update({'user': request.user})
+    # TEMP FIX OF MISSING MEDIA_URL AND STATIC_URL
+    # context.update({'BASE_DIR': settings.BASE_DIR})
     return context
 
 

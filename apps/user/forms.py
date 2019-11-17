@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms.widgets import PasswordInput, TextInput, EmailInput
 from .models import User
 from django.contrib.auth import authenticate
-from modules.helpers import gen_avatar, update_avatar
+from modules.helpers import update_avatar
 from .models import UserProfile
 from alpha.settings import DEBUG
 
@@ -79,11 +79,10 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
             user.refresh_from_db()
-            user.profile.first_name = 'smth'
             # TODO: Connect userprofile
-            # user_profile = UserProfile.objects.create(user=user)
             if DEBUG == True:
                 user.profile.confirmed = True
+            update_avatar(self.data['avatar'], user)
             user.save()
 
         # print(profile)

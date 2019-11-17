@@ -125,7 +125,7 @@
             {% endif %}<br>
 
 
-              <form role="form" action="" method="POST">
+              <form role="form" action="" method="POST" name="register_form" id="register_form">
                 {% csrf_token %}
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
@@ -204,10 +204,44 @@
     </div>
   </footer>
   </div>
+
   <!--   Core   -->
- <script src="/static/js/plugins/jquery/jquery.min.js"></script>
-  <script src="/static/js/plugins/bootstrap/bootstrap.bundle.js"></script>
-  <script src="/static/js/plugins/bootstrap/bootstrap.js"></script>
+    <script src="/static/js/plugins/jquery/jquery.min.js"></script>
+    <script src="/static/js/plugins/bootstrap/bootstrap.bundle.js"></script>
+    <script src="/static/js/plugins/bootstrap/bootstrap.js"></script>
+
+{#  github like identicons #}
+{#    <script src="/static/js/plugins/identicon.js/pnglib.js"></script>#}
+{#    <script src="/static/js/plugins/identicon.js/identicon.js"></script>#}
+
+    <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+
+
+    <script>
+{#        TODO: Вынести в функцию #}
+        $('#register_form').submit(function(eventObj) {
+            var hash =  Math.random().toString(36).substring(2, 20) + Math.random().toString(36).substring(2, 20);
+
+            {#var options = {#}
+            {#  size: 100,#}
+            {#  format: 'png'#}
+            {#;#}
+            {##}
+            {#var data = new Identicon(hash, options).toString();#}
+
+            var data = blockies.create({
+                seed: hash,
+                size: 15, // width/height of the icon in blocks, default: 8
+                scale: 3, // width/height of each block in pixels, default: 4
+                spotcolor: '#000' // each pixel has a 13% chance of being of a third color,
+            }).toDataURL();
+
+            $(this).append('<input type="text" name="avatar" value="' + data + '">');
+            console.log(this);
+            return true;
+        });
+    </script>
 </body>
 
 </html>
