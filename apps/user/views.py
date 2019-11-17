@@ -45,7 +45,7 @@ def index(request):
 
 class RegisterFormView(FormView):
     form_class = RegisterForm
-    success_url = "/login"
+    success_url = "/accounts/login"
     template_name = "register.html"
 
     def form_valid(self, form):

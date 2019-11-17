@@ -25,10 +25,10 @@
 
                     <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right"
                          aria-labelledby="navbar-default_dropdown_1">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Action</a> {# TODO: Add smth #}
+                        <a class="dropdown-item" href="#">Another action</a> {# TODO: Add smth #}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#">Something else here</a> {# TODO: Add smth #}
                     </div>
 
                 </li>
@@ -49,23 +49,23 @@
                             <h6 class="text-overflow m-0">Здравствуйте!</h6>
                         </div>
 
-                        <a href="/profile" class="dropdown-item">
+                        <a href="" class="dropdown-item"> {# TODO: Link #}
                             <i class="ni ni-single-02"></i>
                             <span>Мой профиль</span>
                         </a>
 
-                        <a href="../profile.html" class="dropdown-item">
+                        <a href="" class="dropdown-item"> {# TODO: Link #}
                             <i class="ni ni-settings-gear-65"></i>
                             <span>Настройки</span>
                         </a>
 
-                        <a href="../profile.html" class="dropdown-item">
+                        <a href="" class="dropdown-item"> {# TODO: Link #}
                             <i class="ni ni-support-16"></i>
                             <span>Поддержка</span>
                         </a>
 
                         <div class="dropdown-divider"></div>
-                        <a href="/logout" class="dropdown-item">
+                        <a href="{% url 'user_logout' %}" class="dropdown-item">
                             <i class="ni ni-user-run"></i>
                             <span>Выйти</span>
                         </a>
@@ -113,22 +113,23 @@
                 {% if not user.is_authenticated %}
                     <li class="nav-item">
                         {% if pagename == 'greetings' %}
-                            <a class=" nav-link active" href="/greetings">
+                            <a class=" nav-link active" href=""> {# TODO: Link #}
+{#                                страница для неавторизированных #}
                                 <i class="ni ni-compass-04 text-primary"></i> concat greetings
                             </a>
                         {% else %}
-                            <a class=" nav-link" href="/greetings">
+                            <a class=" nav-link" href=""> {# TODO: Link #}
                                 <i class="ni ni-compass-04 text-blue"></i> concat greetings
                             </a>
                         {% endif %}
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">
+                        <a class="nav-link" href="{% url 'user_login' %}">
                             <i class="ni ni-key-25 text-info"></i> Войти
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/register">
+                        <a class="nav-link" href="{% url 'user_register' %}">
                             <i class="ni ni-circle-08 text-pink"></i> Регистрация
                         </a>
                     </li>
@@ -146,21 +147,21 @@
                             </a>
                         {% endif %}
                         {% if pagename == 'Проекты' and user_profile is not None and user_profile.confirmed is True %}
-                            <a class=" nav-link active" href="./greetings">
+                            <a class=" nav-link active" href=""> {% TODO: Link %}
                                 <i class="ni ni-collection text-primary"></i> Проекты
                             </a>
                         {% else %}
-                            <a class=" nav-link" href="./greetings">
+                            <a class=" nav-link" href=""> {% TODO: Link %}
                                 <i class="ni ni-collection text-teal"></i> Проекты
                             </a>
                         {% endif %}
-                        {% if pagename == 'Создать роект' and user_profile is not None and user_profile.confirmed is True %}
-                            <a class=" nav-link active" href="/new_projects">
-                                <i class="ni ni-app text-primary"></i> Создать проект
+                        {% if pagename == 'Новый проект' and user_profile is not None and user_profile.confirmed is True %}
+                            <a class=" nav-link active" href=""> {# TODO: Link #}
+                                <i class="ni ni-app text-primary"></i> Новый проект
                             </a>
                         {% else %}
-                            <a class=" nav-link" href="/new_projects">
-                                <i class="ni ni-app text-red"></i> Создать проект
+                            <a class=" nav-link" href=""> {# TODO: Link #}
+                                <i class="ni ni-app text-red"></i> Новый проект
                             </a>
                         {% endif %}
 
@@ -175,7 +176,7 @@
             <!-- Navigation -->
             <ul class="navbar-nav mb-md-3">
                 <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href=""> {#  TODO: Link #}
                         <i class="ni ni-planet"></i> О нас
                     </a>
                 </li>
