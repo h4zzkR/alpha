@@ -9,7 +9,8 @@ from .forms import AuthForm, RegisterForm
 from .models import UserProfile
 
 from django.conf import settings
-# Create your views here.
+
+# To profile fields : user.profile.profile_field
 
 
 def get_context(request, pagename):
@@ -19,25 +20,13 @@ def get_context(request, pagename):
 
     # if request.user.is_authenticated:
     context.update({'user': request.user})
-    try:
-        context.update({'user_profile': profile(request.user)})
-    except:
-        context.update({'user_profile': None })
     return context
-
-def profile(user_obj):
-    """
-    Вернуть объект UserProfile для объекта User
-    :param user_obj:
-    :return:
-    """
-    return UserProfile.objects.get(user=user_obj)
 
 
 def index(request):
     if request.user.is_authenticated:
         context = get_context(request, 'Хаб')
-        print(request.user.profile)
+        # print(request.user.profile)
         return render(request, 'index.html', context)
     else:
         context = get_context(request, 'greetings')

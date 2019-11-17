@@ -38,7 +38,7 @@
                        aria-expanded="false">
                         <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="{{ user.username }}" src="{{ MEDIA_URL }}{{ user.picture }}">
+                <img alt="{{ user.username }}" src="{{ MEDIA_URL }}{{ user.profile.avatar }}">
               </span>
                         </div>
                     </a>
@@ -146,7 +146,7 @@
                                 <i class="ni ni-tv-2 text-blue"></i> Хаб
                             </a>
                         {% endif %}
-                        {% if pagename == 'Проекты' and user_profile is not None and user_profile.confirmed is True %}
+                        {% if pagename == 'Проекты' and user.profile.confirmed is True %}
                             <a class=" nav-link active" href=""> {# TODO: Link #}
                                 <i class="ni ni-collection text-primary"></i> Проекты
                             </a>
@@ -155,7 +155,7 @@
                                 <i class="ni ni-collection text-teal"></i> Проекты
                             </a>
                         {% endif %}
-                        {% if pagename == 'Новый проект' and user_profile is not None and user_profile.confirmed is True %}
+                        {% if pagename == 'Новый проект' and user.profile.confirmed is True %}
                             <a class=" nav-link active" href=""> {# TODO: Link #}
                                 <i class="ni ni-app text-primary"></i> Новый проект
                             </a>
