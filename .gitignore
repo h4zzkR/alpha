@@ -127,4 +127,4 @@ dmypy.json
 # Media folder
 media/profile/photos/*.png
 media/profile/photos/*.svg
-!pmedia/profile/photos/
+!media/profile/photos/
