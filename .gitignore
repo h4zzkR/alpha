@@ -125,5 +125,5 @@ dmypy.json
 .pyre/
 
 # Media folder
-media/*.png
-media/*.svg
+media/profile/photos/*.png
+media/profile/photos/*.svg
