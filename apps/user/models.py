@@ -7,19 +7,33 @@ from apps.project.models import Skill, Project
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from django.db.models.signals import post_save
+
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
     photo = models.ImageField(upload_to="profile/photos/", blank=True)  # TODO add default userpic
     confirmed = models.BooleanField(default=False) # is account confirmed by email
     rating = models.IntegerField(default=0)
     good_teamlead = models.IntegerField(default=0) # users sets this user as a good teamlead
     # phone = models.TextField(default="") мы не фейсбук
-    status = models.TextField(default="")
-    github = models.TextField(default="")
-    trello = models.TextField(default="")
-    vk = models.TextField(default="")
-    facebook = models.TextField(default="")
+    # status = models.TextField(default="")
+    # github = models.TextField(default="")
+    # trello = models.TextField(default="")
+    # vk = models.TextField(default="")
+    # facebook = models.TextField(default="")
+
+    def __str__(self):
+        return self.user.username
+
+
+@receiver(post_save, sender=User)
+def update_profile_signal(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+    instance.profile.save()
 
 
 class UserPasswordRecovery(models.Model):

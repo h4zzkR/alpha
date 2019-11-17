@@ -78,10 +78,13 @@ class RegisterForm(UserCreationForm):
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
-            user_profile = UserProfile.objects.create(user=user)
+            user.refresh_from_db()
+            user.profile.first_name = 'smth'
+            # TODO: Connect userprofile
+            # user_profile = UserProfile.objects.create(user=user)
             if DEBUG == True:
-                user_profile.confirmed = True
-            user_profile.save()
+                user.profile.confirmed = True
+            user.save()
 
         # print(profile)
         return user

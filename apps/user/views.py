@@ -37,6 +37,7 @@ def profile(user_obj):
 def index(request):
     if request.user.is_authenticated:
         context = get_context(request, 'Хаб')
+        print(request.user.profile)
         return render(request, 'index.html', context)
     else:
         context = get_context(request, 'greetings')

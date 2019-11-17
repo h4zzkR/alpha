@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'apps.project.apps.ProjectConfig',
     'apps.user.apps.UserConfig',
     'apps.events.apps.EventsConfig',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,12 @@ DATABASES = {
 
     }
 }
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 WSGI_APPLICATION = 'alpha.wsgi.application'
 
