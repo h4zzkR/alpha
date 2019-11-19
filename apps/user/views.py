@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth import logout
@@ -65,3 +65,22 @@ class LogoutView(View):
         logout(request)
         return HttpResponseRedirect("/")
 
+class UserUpdate(UpdateView):
+    form_class = ProfileEditForm
+    template_name = 'profile_.html'
+    success_url = '/profile'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(get_context(self.request, 'Профиль'))
+        print(context['user_profile'].photo)
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.save()
+        super(UserUpdate, self).form_valid(form)
+        return super(UserUpdate, self).form_valid(form)
