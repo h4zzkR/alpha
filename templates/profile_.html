@@ -19,17 +19,6 @@
 
 {% block content %}
     <div class="main-content" style="padding-bottom: 60px;">
-    
-    <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
-        <div class="container-fluid" >
-            <!-- Brand -->
-            <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
-            <!-- Form -->
-            {% include "blocks/search.html" %}
-            <!-- User -->
-            {% include "blocks/profile_menu.html" %}
-        </div>
-    </nav>
     <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
          style="min-height: 600px; background-size: cover; background-position: center top;">
         <!-- Mask -->
@@ -165,7 +154,13 @@
                             </h3>
                             <div class="h5 font-weight-300" style="margin-top: -25px;">
                                 <i class="ni location_pin mr-2"></i>
-                                <p id="user-location">{{ user.city }}, {{ user.country }}</p>
+                                <p id="user-location">
+                                    {{ user.city }}
+                                    {%  if user.city and user.country %}
+                                    ,
+                                    {% endif %}
+                                     {{ user.country }}
+                                </p>
                             </div>
                             <hr class="my-4"/>
                             <p id="user-bio">{{ user.bio }}</p>

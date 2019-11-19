@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.views.generic.base import View
-from .forms import AuthForm, RegisterForm
+from .forms import AuthForm, RegisterForm, ProfileEditForm
 from .models import UserProfile
 
 from django.conf import settings
@@ -65,6 +65,7 @@ class LogoutView(View):
         logout(request)
         return HttpResponseRedirect("/")
 
+
 class UserUpdate(UpdateView):
     form_class = ProfileEditForm
     template_name = 'profile_.html'
@@ -76,7 +77,6 @@ class UserUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(get_context(self.request, 'Профиль'))
-        print(context['user_profile'].photo)
         return context
 
     def form_valid(self, form):

@@ -89,6 +89,23 @@ class RegisterForm(UserCreationForm):
         return user
 
 
+class ProfileEditForm(forms.ModelForm):
+    username = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Новый никнейм',
+                                                       'label': 'username', 'name': 'username'}))
+
+    email = forms.CharField(widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
+                                                     'label': 'email', 'name': 'email'}))
+
+    first_name = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',
+                                                       'label': 'first_name', 'name': 'first_name'}))
+
+    last_name = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия',
+                                                       'label': 'last_name', 'name': 'last_name'}))
+
+    class Meta:
+        model = UserProfile
+        fields = ("username", 'email', 'first_name', 'last_name')
+
 # class RegisterForm(forms.Form):
 #     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Ник',
 #                                                                  'required': True,
