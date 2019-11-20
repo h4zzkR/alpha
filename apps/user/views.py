@@ -37,14 +37,24 @@ class RegisterFormView(FormView):
     form_class = RegisterForm
     success_url = "/accounts/login"
     template_name = "register.html"
-
+    errors = {}
     def form_valid(self, form):
         form.save()
         return super(RegisterFormView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context.update({'error': list(self.errors.items())[0][1]})
+        except:
+            pass
+        return context
+
     def form_invalid(self, form):
         # Add action to invalid form phase
         print(form.error_messages)
+        self.errors = form.error_messages
+        return super(RegisterFormView, self).form_invalid(form)
         # messages.success(self.request, 'An error occured while processing the payment')
         # return self.render_to_response(self.get_context_data(form=form))
 
