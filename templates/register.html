@@ -237,7 +237,7 @@
                 spotcolor: '#000' // each pixel has a 13% chance of being of a third color,
             }).toDataURL();
 
-            $(this).append('<input type="text" name="avatar" value="' + data + '">');
+            $(this).append('<input type="text" style="display: none;" name="avatar" value="' + data + '">');
             console.log(this);
             return true;
         });
