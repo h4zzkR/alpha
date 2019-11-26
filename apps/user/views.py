@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.base import View
 from .forms import AuthForm, RegisterForm, ProfileEditForm
 from .models import UserProfile
+from django.contrib.auth.models import User
 
 from django.conf import settings
 
@@ -66,12 +67,22 @@ class LogoutView(View):
         return HttpResponseRedirect("/")
 
 
+def get_user(request, username):
+    if username == request.user.username:
+        return UserUpdate.as_view()(request, username)
+    else:
+        # return profile page for showing
+        pass
+
+
 class UserUpdate(UpdateView):
     form_class = ProfileEditForm
     template_name = 'profile_.html'
     success_url = '/profile'
 
+
     def get_object(self, queryset=None):
+        # username = self.kwargs.get("username")
         return self.request.user
 
     def get_context_data(self, **kwargs):
