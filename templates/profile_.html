@@ -8,6 +8,7 @@
 {% block extra_links %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
     <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
+    <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
     <script src="/static/js/main.js"></script>
 {% endblock %}
 
@@ -121,6 +122,7 @@
     <div class="container-fluid mt--7">
         <div class="row"></div>
             <div class="col-xl-4 float-lg-right">
+                <!-- ИНФО В ОБЩЕМ ВИДЕ -->
                 <div class="order-xl-2 mb-5 mb-xl-0">
                 <div class="card card-profile shadow">
                     <div class="row justify-content-center">
@@ -190,8 +192,9 @@
                     </div>
                 </div>
             </div>
+                <!-- END OF ИНФО В ОБЩЕМ ВИДЕ -->
 
-
+                <!-- ИНФО РЕЙТИНГ -->
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
                         <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
@@ -233,7 +236,9 @@
                     </div>
                     </div>
                 </div>
+                <!-- END OF ИНФО РЕЙТИНГ -->
             </div>
+
             <div class="col-xl-8 order-xl-1 scrolling">
                 <form role="form" action="" method="POST" id="profile-form">
                     {% csrf_token %}
@@ -344,34 +349,43 @@
 
 {% block scripts %}
     <script>
-        let $ = s => [].slice.call(document.querySelectorAll(s));
+        const answer = document.getElementById("copyResult");
 
-        // log events as they happen:
-        let t = $('#tags')[0];
-        t.addEventListener('input', log);
-        t.addEventListener('change', log);
-        function log(e) {
-            $('#out')[0].textContent = `${e.type}: ${this.value.replace(/,/g,', ')}`;
+        function CopyLink() {
+            var dummy = document.createElement("textarea");
+            var copyText = window.location.href;
+            document.body.appendChild(dummy);
+            dummy.value = copyText;
+            dummy.select();
+            const successful = document.execCommand("copy");
+            document.body.removeChild(dummy);
+            answer.style.display = '';
+            if (successful) {
+                answer.innerHTML = '<i class="ec ec-call-me-hand"></i>';
+            } else {
+                answer.innerHTML = 'Unable to copy!';
+            }
+            {#alert("Copied the text: " + copyText);#}
         }
-
-        // hook 'em up:
-        $('input[type="tags"]').forEach(tagsInput);
     </script>
-    <script>
-        new SimpleMDE({
-            element: document.getElementById("input-description"),
-            autosave: {
-                enabled: true,
-                unique_id: "input-description",
-		    },
-            previewRender: function(plainText, preview) { // Async method
-                setTimeout(function(){
-                    preview.innerHTML = customMarkdownParser(plainText);
-                }, 250);
 
-                return "Загрузка...";
-            },
-            placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
+    <script>
+    $(function () {
+        $('body').on('close.bs.alert', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(e.target).fadeOut();
         });
+    });
+    </script>
+
+    <script>
+    function myFunction() {
+        $('html,body').animate({
+                scrollTop: $(".scrolling").offset().top
+            },
+            'slow');
+        document.getElementById("focus").focus();
+    }
     </script>
 {% endblock %}

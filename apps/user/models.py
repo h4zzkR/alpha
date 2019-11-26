@@ -23,6 +23,7 @@ class UserProfile(models.Model):
     avatar = models.ImageField(upload_to="profile/photos/", blank=True)  # TODO add default userpic
     confirmed = models.BooleanField(default=False) # is account confirmed by email
     rating = models.IntegerField(default=0)
+    active_projects_cnt = models.IntegerField(default=0)
     good_teamlead = models.IntegerField(default=0) # users sets this user as a good teamlead
     # phone = models.TextField(default="")
     status = models.TextField(default="")
