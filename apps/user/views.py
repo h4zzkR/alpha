@@ -67,8 +67,8 @@ class LogoutView(View):
         return HttpResponseRedirect("/")
 
 
-def get_user(request, username):
-    if username == request.user.username:
+def get_user(request, username=None):
+    if username == request.user.username or username is None:
         return UserUpdate.as_view()(request, username)
     else:
         # return profile page for showing
