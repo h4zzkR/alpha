@@ -90,94 +90,59 @@ class RegisterForm(UserCreationForm):
 
 
 class ProfileEditForm(forms.ModelForm):
-    username = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Новый никнейм',
+    username = forms.CharField(max_length=User._meta.get_field('username').max_length,
+                                                     widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Новый никнейм',
                                                        'label': 'username', 'name': 'username'}))
 
-    email = forms.CharField(widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
+    email = forms.CharField(max_length=User._meta.get_field('email').max_length,
+                            widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
                                                      'label': 'email', 'name': 'email'}))
 
-    first_name = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',
+    first_name = forms.CharField(max_length=UserProfile._meta.get_field('first_name').max_length,
+                                 widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',
                                                        'label': 'first_name', 'name': 'first_name'}))
 
-    last_name = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия',
+    last_name = forms.CharField(max_length=UserProfile._meta.get_field('last_name').max_length,
+                                widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия',
                                                        'label': 'last_name', 'name': 'last_name'}))
+
+    github = forms.URLField(required=False, max_length=UserProfile._meta.get_field('github').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'input-github',
+                                                              'name': 'github',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    telegram = forms.URLField(required=False, max_length=UserProfile._meta.get_field('telegram').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'telegram',
+                                                              'name': 'telegram',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    linked_in = forms.URLField(required=False, max_length=UserProfile._meta.get_field('linked_in').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'linked_in',
+                                                              'name': 'linked_in',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    vk = forms.URLField(required=False, max_length=UserProfile._meta.get_field('vk').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'vk',
+                                                              'name': 'vk',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    bio = forms.CharField(required=False, max_length=UserProfile._meta.get_field('bio').max_length,
+                          widget=forms.Textarea(attrs={'placeholder': "Любые детали такие как возраст, страна или город.",
+                                                       "rows": "4",
+                                                       'id': 'bio',
+                                                       "maxlength": UserProfile._meta.get_field('bio').max_length,
+                                                       'name': 'bio',
+                                                       'class': 'form-control form-control-alternative'}))
 
     class Meta:
         model = UserProfile
-        fields = ("username", 'email', 'first_name', 'last_name')
-
-# class RegisterForm(forms.Form):
-#     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Ник',
-#                                                                  'required': True,
-#                                                                  'label': 'email',
-#                                                                  'name': 'email',
-#                                                                  'class': 'form-control',
-#                                                            'onkeyup':'saveValue(this);'}))
-#
-#     email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder': 'Email',
-#                                                                  'required': True,
-#                                                                  'label': 'email',
-#                                                                  'name': 'email',
-#                                                                  'class': 'form-control',
-#                                                            'onkeyup':'saveValue(this);'}))
-#
-#     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Пароль',
-#                                                                  'required': True,
-#                                                                  'id': 'password',
-#                                                                  'label': 'password',
-#                                                                  'name': 'password',
-#                                                                  'class': 'form-control'}))
-#
-#     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Еще раз пароль',
-#                                                                  'required': True,
-#                                                                  'id': 'confirm_password',
-#                                                                  'label': 'confirm_password',
-#                                                                  'name': 'confirm_password',
-#                                                                  'class': 'form-control'}))
-#
-#     agreed = forms.BooleanField(widget=forms.CheckboxInput(attrs={
-#         'id': 'customCheckRegister',
-#         'required': True,
-#         'class': 'custom-control-input'}))
-#
-#     def clean_renewal_date(self):
-#         from email_validator import validate_email, EmailNotValidError
-#         password = self.cleaned_data['pasword']
-#         email = self.cleaned_data['email']
-#         remember = self.cleaned_data['remember']
-#         username = self.cleaned_data['username']
-#
-#         if len(password) < 6:
-#             raise ValidationError(_('Длина вашего пароля должна быть больше 6 символов'))
-#
-#         if CHECK_MAIL is True:
-#             try:
-#                 v = validate_email(email)  # validate and get info
-#             except EmailNotValidError as e:
-#                 raise ValidationError(_('Такой почты не существует. Убедитесь, что ящик реален.'))
-#
-#         return username, email, password
-#
-#     def send_or_confirm_mail(self, request, user, is_debug):
-#         if is_debug is True:
-#             state = user.send_confirm_token(request)
-#             auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-#         else:
-#             user.is_confirmed = True
-#             user.save()
-
-# class CustomUserCreationForm(UserCreationForm):
-#
-#     class Meta(UserCreationForm):
-#         model = User
-#         fields = ('username', 'email')
-#
-# class CustomUserChangeForm(UserChangeForm):
-#
-#     class Meta(UserChangeForm):
-#         model = User
-#         # fields = UserChangeForm.Meta.fields
-#
-#         fields = ('username', 'email', 'first_name', 'last_name',
-#                   'bio', 'city', 'country', 'is_active', 'picture', 'is_admin',
-#                   'is_staff')
+        fields = ("username", 'email', 'first_name', 'last_name', 'github', 'telegram',
+                  'linked_in', 'vk', 'bio')

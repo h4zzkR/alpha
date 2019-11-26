@@ -2,13 +2,14 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    concat
+    {{ user.username }}
 {% endblock %}
 
 {% block extra_links %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
     <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
-    <script src="/static/js/main.js"></script>
+    <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
+    <script src="/static/js/profile_submit.js"></script>
 {% endblock %}
 
 {% block styles %}
@@ -17,8 +18,24 @@
     }
 {% endblock %}
 
+{% block header %}{% endblock %}
+
+{% block main_content_class %}
+<div class="main-content" style="padding-bottom: 60px;">
+{% endblock %}
+
 {% block content %}
-    <div class="main-content" style="padding-bottom: 60px;">
+    <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
+        <div class="container-fluid" >
+            <!-- Brand -->
+            <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
+            <!-- Form -->
+            {% include "blocks/search.html" %}
+            <!-- User -->
+            {% include "blocks/profile_menu.html" %}
+        </div>
+    </nav>
+
     <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
          style="min-height: 600px; background-size: cover; background-position: center top;">
         <!-- Mask -->
@@ -30,6 +47,12 @@
                     <h1 class="display-2 text-white">Привет, {{ user.username }}</h1>
                     <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
                         информацию о себе.</p>
+
+{#                    <table>#}
+{#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
+{#                       <tr><th>Online</th><td>{{ profile.online }}</td></tr>#}
+{#                     </table>#}
+
                     <div class="btn-group">
                         <button onclick="myFunction()" href="#!" class="btn btn-info btn-xs">Редактировать</button>
                         <button onclick="CopyLink();" class="btn btn-outline-primary btn-xs" id="copyButton">Ссылка на
@@ -53,7 +76,7 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="{{ MEDIA_URL }}{{ picture }}" class="rounded-circle">
+                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -99,13 +122,14 @@
     <div class="container-fluid mt--7">
         <div class="row"></div>
             <div class="col-xl-4 float-lg-right">
+                <!-- ИНФО В ОБЩЕМ ВИДЕ -->
                 <div class="order-xl-2 mb-5 mb-xl-0">
                 <div class="card card-profile shadow">
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="{{ MEDIA_URL }}{{ picture }}" class="rounded-circle"
+                                    <img src="{{ user.profile.avatar.url }}" class="rounded-circle"
                                          style="width: 135px;">
                                 </a>
                             </div>
@@ -168,8 +192,9 @@
                     </div>
                 </div>
             </div>
+                <!-- END OF ИНФО В ОБЩЕМ ВИДЕ -->
 
-
+                <!-- ИНФО РЕЙТИНГ -->
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
                         <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
@@ -211,7 +236,9 @@
                     </div>
                     </div>
                 </div>
+                <!-- END OF ИНФО РЕЙТИНГ -->
             </div>
+
             <div class="col-xl-8 order-xl-1 scrolling">
                 <form role="form" action="" method="POST" id="profile-form">
                     {% csrf_token %}
@@ -262,47 +289,20 @@
                             <hr class="my-4"/>
                             <!-- Address -->
                             <h6 class="heading-small text-muted mb-4">Контактная информация (по желанию)</h6>
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    {% include "blocks/countries.html" %}
-
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="country">Страна</label>
-                                            <select id="country" name="country"
-                                                    class="form-control form-control-alternative">
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="state">Город</label>
-                                            <select name="state" id="state"
-                                                    class="form-control form-control-alternative">
-                                                <option selected value="{{ user.city }}">{{ user.city }}</option>
-                                            </select></br>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
 
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-github">Ваш Github (ссылка на
+                                            <label class="form-control-label" for="input-github">Ваш Github/Gitlab (ссылка на
                                                 профиль)</label>
-                                            {{ form.github_link }}
+                                            {{ form.github }}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-gitlab">или Ваш Gitlab (ссылка
-                                                на профиль)</label>
-                                            {{ form.gitlab_link }}
+                                            <label class="form-control-label" for="input-gitlab">LinkedIn</label>
+                                            {{ form.linked_in }}
                                         </div>
                                     </div>
                                 </div>
@@ -312,13 +312,13 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-telegram">Telegram</label>
-                                            {{ form.telegram_link }}
+                                            {{ form.telegram }}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-linkedin">LinkedIn</label>
-                                            {{ form.linkedIn_link }}
+                                            <label class="form-control-label" for="input-linkedin">Vk</label>
+                                            {{ form.vk }}
                                         </div>
                                     </div>
                                 </div>
@@ -349,34 +349,43 @@
 
 {% block scripts %}
     <script>
-        let $ = s => [].slice.call(document.querySelectorAll(s));
+        const answer = document.getElementById("copyResult");
 
-        // log events as they happen:
-        let t = $('#tags')[0];
-        t.addEventListener('input', log);
-        t.addEventListener('change', log);
-        function log(e) {
-            $('#out')[0].textContent = `${e.type}: ${this.value.replace(/,/g,', ')}`;
+        function CopyLink() {
+            var dummy = document.createElement("textarea");
+            var copyText = window.location.href;
+            document.body.appendChild(dummy);
+            dummy.value = copyText;
+            dummy.select();
+            const successful = document.execCommand("copy");
+            document.body.removeChild(dummy);
+            answer.style.display = '';
+            if (successful) {
+                answer.innerHTML = '<i class="ec ec-call-me-hand"></i>';
+            } else {
+                answer.innerHTML = 'Unable to copy!';
+            }
+            {#alert("Copied the text: " + copyText);#}
         }
-
-        // hook 'em up:
-        $('input[type="tags"]').forEach(tagsInput);
     </script>
-    <script>
-        new SimpleMDE({
-            element: document.getElementById("input-description"),
-            autosave: {
-                enabled: true,
-                unique_id: "input-description",
-		    },
-            previewRender: function(plainText, preview) { // Async method
-                setTimeout(function(){
-                    preview.innerHTML = customMarkdownParser(plainText);
-                }, 250);
 
-                return "Загрузка...";
-            },
-            placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
+    <script>
+    $(function () {
+        $('body').on('close.bs.alert', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(e.target).fadeOut();
         });
+    });
+    </script>
+
+    <script>
+    function myFunction() {
+        $('html,body').animate({
+                scrollTop: $(".scrolling").offset().top
+            },
+            'slow');
+        document.getElementById("focus").focus();
+    }
     </script>
 {% endblock %}

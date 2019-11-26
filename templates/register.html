@@ -237,12 +237,12 @@
 
             var data = blockies.create({
                 seed: hash,
-                size: 15, // width/height of the icon in blocks, default: 8
-                scale: 3, // width/height of each block in pixels, default: 4
+                size: 9, // width/height of the icon in blocks, default: 8
+                scale: 15, // width/height of each block in pixels, default: 4
                 spotcolor: '#000' // each pixel has a 13% chance of being of a third color,
             }).toDataURL();
 
-            $(this).append('<input type="text" name="avatar" value="' + data + '">');
+            $(this).append('<input type="text" style="display: none;" name="avatar" value="' + data + '">');
             console.log(this);
             return true;
         });

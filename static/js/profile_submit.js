@@ -1,3 +1,5 @@
+//IN DEVELOPMENT: AJAX PROFILE UPDATE
+
 $(function() {
 
     $('#profile-form').on('submit', function(event){
