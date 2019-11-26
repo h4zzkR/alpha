@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    concat
+    {{ user.username }}
 {% endblock %}
 
 {% block extra_links %}
@@ -17,8 +17,24 @@
     }
 {% endblock %}
 
+{% block header %}{% endblock %}
+
+{% block main_content_class %}
+<div class="main-content" style="padding-bottom: 60px;">
+{% endblock %}
+
 {% block content %}
-    <div class="main-content" style="padding-bottom: 60px;">
+    <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
+        <div class="container-fluid" >
+            <!-- Brand -->
+            <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
+            <!-- Form -->
+            {% include "blocks/search.html" %}
+            <!-- User -->
+            {% include "blocks/profile_menu.html" %}
+        </div>
+    </nav>
+
     <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
          style="min-height: 600px; background-size: cover; background-position: center top;">
         <!-- Mask -->
@@ -30,6 +46,12 @@
                     <h1 class="display-2 text-white">Привет, {{ user.username }}</h1>
                     <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
                         информацию о себе.</p>
+
+{#                    <table>#}
+{#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
+{#                       <tr><th>Online</th><td>{{ profile.online }}</td></tr>#}
+{#                     </table>#}
+
                     <div class="btn-group">
                         <button onclick="myFunction()" href="#!" class="btn btn-info btn-xs">Редактировать</button>
                         <button onclick="CopyLink();" class="btn btn-outline-primary btn-xs" id="copyButton">Ссылка на
@@ -53,7 +75,7 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="{{ MEDIA_URL }}{{ picture }}" class="rounded-circle">
+                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -105,7 +127,7 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="{{ MEDIA_URL }}{{ picture }}" class="rounded-circle"
+                                    <img src="{{ user.profile.avatar.url }}" class="rounded-circle"
                                          style="width: 135px;">
                                 </a>
                             </div>
@@ -262,47 +284,20 @@
                             <hr class="my-4"/>
                             <!-- Address -->
                             <h6 class="heading-small text-muted mb-4">Контактная информация (по желанию)</h6>
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    {% include "blocks/countries.html" %}
-
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="country">Страна</label>
-                                            <select id="country" name="country"
-                                                    class="form-control form-control-alternative">
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="state">Город</label>
-                                            <select name="state" id="state"
-                                                    class="form-control form-control-alternative">
-                                                <option selected value="{{ user.city }}">{{ user.city }}</option>
-                                            </select></br>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
 
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-github">Ваш Github (ссылка на
+                                            <label class="form-control-label" for="input-github">Ваш Github/Gitlab (ссылка на
                                                 профиль)</label>
-                                            {{ form.github_link }}
+                                            {{ form.github }}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-gitlab">или Ваш Gitlab (ссылка
-                                                на профиль)</label>
-                                            {{ form.gitlab_link }}
+                                            <label class="form-control-label" for="input-gitlab">LinkedIn</label>
+                                            {{ form.linked_in }}
                                         </div>
                                     </div>
                                 </div>
@@ -312,13 +307,13 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-telegram">Telegram</label>
-                                            {{ form.telegram_link }}
+                                            {{ form.telegram }}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-linkedin">LinkedIn</label>
-                                            {{ form.linkedIn_link }}
+                                            <label class="form-control-label" for="input-linkedin">Vk</label>
+                                            {{ form.vk }}
                                         </div>
                                     </div>
                                 </div>

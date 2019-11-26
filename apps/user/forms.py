@@ -90,17 +90,57 @@ class RegisterForm(UserCreationForm):
 
 
 class ProfileEditForm(forms.ModelForm):
-    username = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Новый никнейм',
+    username = forms.CharField(max_length=User._meta.get_field('username').max_length,
+                                                     widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Новый никнейм',
                                                        'label': 'username', 'name': 'username'}))
 
-    email = forms.CharField(widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
+    email = forms.CharField(max_length=User._meta.get_field('email').max_length,
+                            widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
                                                      'label': 'email', 'name': 'email'}))
 
-    first_name = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',
+    first_name = forms.CharField(max_length=UserProfile._meta.get_field('first_name').max_length,
+                                 widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',
                                                        'label': 'first_name', 'name': 'first_name'}))
 
-    last_name = forms.CharField(widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия',
+    last_name = forms.CharField(max_length=UserProfile._meta.get_field('last_name').max_length,
+                                widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия',
                                                        'label': 'last_name', 'name': 'last_name'}))
+
+    github = forms.URLField(required=False, max_length=UserProfile._meta.get_field('github').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'input-github',
+                                                              'name': 'github',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    telegram = forms.URLField(required=False, max_length=UserProfile._meta.get_field('telegram').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'telegram',
+                                                              'name': 'telegram',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    linked_in = forms.URLField(required=False, max_length=UserProfile._meta.get_field('linked_in').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'linked_in',
+                                                              'name': 'linked_in',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    vk = forms.URLField(required=False, max_length=UserProfile._meta.get_field('vk').max_length,
+                                 widget=forms.URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                                                              'id': 'vk',
+                                                              'name': 'vk',
+                                                              'class': 'form-control form-control-alternative',
+                                                              }))
+
+    bio = forms.CharField(required=False, max_length=UserProfile._meta.get_field('bio').max_length,
+                          widget=forms.Textarea(attrs={'placeholder': "Любые детали такие как возраст, страна или город.",
+                                                       "rows": "4",
+                                                       'id': 'bio',
+                                                       "maxlength": UserProfile._meta.get_field('bio').max_length,
+                                                       'name': 'bio',
+                                                       'class': 'form-control form-control-alternative'}))
 
     class Meta:
         model = UserProfile
