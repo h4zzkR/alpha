@@ -29,7 +29,7 @@
     <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
       <div class="container px-4">
         <a class="" href="/">
-          <img src="/static/img/brand/black-bg.png" width="100px" height="100px"/>
+          <img src="/static/img/brand/logo.png" alt="..." width="110px" height="120px">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
         data-target="#navbar-collapse-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,15 +112,28 @@
                 <small>Обычная аутентификация</small>
               </div>
 
+{#            {% if messages %}#}
+{#                {% for message in messages %}#}
+{#                    <div class="alert {{ message.tags }} alert-dismissible" role="alert">#}
+{#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+{#                      <span aria-hidden="true">&times;</span>#}
+{#                    </button>#}
+{#                    {{ message }}#}
+{#                  </div>#}
+{#                {% endfor %}#}
+{#            {% endif %}#}
+
+
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
+                    <div class="alert {{ message.tags }} alert-dismissible" id="message{{ forloop.counter0 }}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
                     {{ message }}
                   </div>
                 {% endfor %}
+
             {% endif %}
 
             <br>
@@ -197,6 +210,21 @@
   <script src="/static/js/plugins/jquery/jquery.min.js"></script>
   <script src="/static/js/plugins/bootstrap/bootstrap.bundle.js"></script>
   <script src="/static/js/plugins/bootstrap/bootstrap.js"></script>
+  {% if messages %}
+    <script>
+    //add delay
+     $(document).ready(function hideMessages() {
+        for (var i = 0; i < parseInt({{ messages|length }}); i++) {
+            var x = "#message" + i.toString();
+            console.log(x);
+            $(x).fadeTo(2000, 500).slideUp(500, function () {
+                $(x).slideUp(500);
+            });
+        }
+    });
+    </script>
+
+{% endif %}
 </body>
 
 </html>
