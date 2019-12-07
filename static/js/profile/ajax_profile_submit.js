@@ -11,7 +11,6 @@ function update_fields(json) {
     $("h3[id=user_full_name]").text(json.first_name + "\x20" + json.last_name);
     $("h1[id=username]").text("Привет, " + json.username + "!");
     $("p[id=user-bio]").text(json.bio);
-    update_messages(json.messages);
 }
 
 function update_messages(messages){
@@ -38,6 +37,7 @@ function create_post() {
         success:function(json){
             // document.getElementById("profile-form").reset();
             update_fields(json);
+            update_messages(json.messages);
             ajaxAutoHideMessages(json.messages.length);
             // console.log(json);
             // updating fields

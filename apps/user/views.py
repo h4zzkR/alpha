@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect, reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotFound
 from django.views.generic.edit import FormView, UpdateView
 from django.conf import settings
@@ -170,3 +171,18 @@ def update_profile(request):
         'form': user_form,
         'form2': profile_form
     })
+
+
+@login_required
+@csrf_exempt
+def update_profile_avatar(request):
+    from modules.helpers import update_avatar
+    m = Messages()
+    if request.method == 'POST':
+        user = User.objects.get(id=request.user.id)
+        update_avatar(request.POST['image'], user)
+        user.save()
+        response_data = {}
+        m.add(request, 'success', 'Аватар обновлен!')
+        response_data.update({'messages': ajax_messages(request)})
+        return JsonResponse(response_data)

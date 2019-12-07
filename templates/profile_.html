@@ -72,11 +72,11 @@
                 <h3 class="mb-2" style="z-index: 700;">Обновление аватара</h3>
             </div>
             <div class="row justify-content-center mt-2">
-                <a class="close" href="#">&times;</a>
+                <a class="close" id="close-popup" href="#">&times;</a>
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle">
+                            <img src="{{ user.profile.avatar.url }}" id='card-avatar-0' class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -97,11 +97,11 @@
 
             <div class="card-body pt-0 pt-md-4">
                 <div class="text-center">
-                    <a href='/gencon'>
-                <span class="btn btn-outline-danger">
+{#                    <a href='/gencon'>#}
+                <span class="btn btn-outline-danger" id="gen_new_avatar" onclick="avatar()">
                   Сгенерировать Identicon
                 <span class="font-weight-light"></span>
-                </span></a>
+                </span>
                     <div class="h5 font-weight-300">
                         <i class="ni location_pin mr-2"></i>
                     </div>
@@ -129,8 +129,8 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="{{ user.profile.avatar.url }}" class="rounded-circle"
-                                         style="width: 135px;x">
+                                    <img src="{{ user.profile.avatar.url }}" id="card-avatar-1" class="rounded-circle"
+                                         style="width: 135px;">
                                 </a>
                             </div>
                         </div>
@@ -328,6 +328,9 @@
 
 {% block scripts %}
     <script src="/static/js/profile/ajax_profile_submit.js"></script>
+    <script src="/static/js/gen_avatar.js"></script>
+    <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
 {#    TODO добавить проверку на ссылки#}
     <script>
         const answer = document.getElementById("copyResult");
