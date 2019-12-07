@@ -3,16 +3,16 @@
     {# disable ugly shadow #}
     <div class="container-fluid">
         <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Brand -->
+{#        <button class="navbar-toggler" type="button" data-toggle="collapse"#}
+{#                data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false"#}
+{#                aria-label="Toggle navigation">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
+{#        <!-- Brand -->#}
         {#      <a class="pt-0" href="/">#}
-        <div class="nav align-items-center pt-sm-0" style="margin-left: 44px;">
-            <img src="/static/img/brand/logo.png" width="110px" height="120px" alt="...">
-        </div>
+{#        <div class="nav align-items-center pt-sm-0" style="margin-left: 44px;">#}
+{#            <img src="/static/img/brand/logo.png" width="110px" height="120px" alt="...">#}
+{#        </div>#}
         <!-- User -->
         {% if user.is_authenticated %}
             <ul class="nav align-items-center d-md-none">
@@ -164,8 +164,35 @@
                                 <i class="ni ni-app text-red"></i> Новый проект
                             </a>
                         {% endif %}
+                        {% if pagename == 'Соревнования' and user.profile.confirmed is True %}
+                                <a class=" nav-link active" href=""> {# TODO: Link #}
+                                    <i class="ni ni-app text-primary"></i> Соревнования
+                                </a>
+                        {% else %}
+                             <a class="nav-link" href=""> {# TODO: Link #}
+                                    <i class="ni ni-app text-primary"></i> Соревнования
+                            </a>
+                        {% endif %}
+                             {% if pagename == 'Мероприятия' and user.profile.confirmed is True %}
+                                <a class=" nav-link active" href=""> {# TODO: Link #}
+                                    <i class="ni ni-app text-primary"></i> Мероприятия
+                                </a>
+                        {% else %}
+                             <a class="nav-link" href=""> {# TODO: Link #}
+                                    <i class="ni ni-app text-primary"></i> Мероприятия
+                            </a>
+                        {% endif %}
 
                     </li>
+                {% endif %}
+            </ul>
+            <br>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+{#                    15171e#}
+                    {% include "blocks/user_projects.html" %}
+                </li>
                 {% endif %}
             </ul>
 
@@ -183,6 +210,9 @@
             </ul>
         </div>
         <div class="social-buttons">
+        <div class="nav align-items-center pt-sm-0" style="margin-top: 1px;">
+            <img src="/static/img/brand/logo.png" width="55px" height="55px" alt="...">
+        </div>
             <a href="#" class="social-buttons__button social-button social-button--facebook" aria-label="VK">
     <span class="social-button__inner">
      <i class="fab fa-vk" style="font-size: 20px;"></i>

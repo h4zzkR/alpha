@@ -10,6 +10,34 @@
   /*background-size: cover !important;*/
 }
 
+.list-group-mine .list-group-item {
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #393a3e;
+  font-size: 15px ;
+  color: lightslategray;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 1px;
+  border-bottom: 1px solid #2c2d30;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+
+  overflow: hidden;
+white-space: nowrap; /* Don't forget this one */
+text-overflow: ellipsis;
+
+}
+
+.list-group-mine .list-group-item:hover {
+  background-color: #2c2d30;
+}
+
+.list-group-mine .list-group-item:focus  {
+  background-color: #2c2d30;
+}
+
 .scrolling {
 
 }
