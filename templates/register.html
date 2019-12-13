@@ -125,7 +125,7 @@
             {% endif %}<br>
 
 
-              <form role="form" action="" method="POST" name="register_form" id="register_form">
+              <form role="form" action="{% url 'user_register' %}" method="POST" name="register_form" id="register_form">
                 {% csrf_token %}
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
@@ -166,7 +166,7 @@
                     <div class="custom-control custom-control-alternative custom-checkbox">
                       {{ form.agreed }}
                       <label class="custom-control-label" for="customCheckRegister">
-                        <span class="text-muted">Я согласен с <a href="#!">Политикой конфиденциальности</a></span>
+                        <span class="text-muted">Я согласен с <a href="">Политикой конфиденциальности</a></span>
                       </label>
                     </div>
                   </div>
