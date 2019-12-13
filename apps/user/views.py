@@ -17,6 +17,7 @@ from .models import UserProfile
 import json
 from django.core.serializers import serialize
 
+
 # To profile fields : user.profile.profile_field
 
 
@@ -28,6 +29,7 @@ def get_context(request, pagename):
     # TEMP FIX OF MISSING MEDIA_URL AND STATIC_URL
     # context.update({'BASE_DIR': settings.BASE_DIR})
     return context
+
 
 def ajax_messages(request):
     django_messages = []
@@ -52,8 +54,6 @@ def index(request):
         return render(request, 'greetings.html', context)
 
 
-
-
 class RegisterFormView(FormView):
     form_class = RegisterForm
     success_url = "/accounts/login"
@@ -73,6 +73,7 @@ class RegisterFormView(FormView):
 def messages_parser(request, query=None):
     messages.error(request, 'Неправильный логин/пароль', extra_tags='safe')
 
+
 class Messages():
     def __init__(self):
         pass
@@ -84,7 +85,7 @@ class Messages():
                 if k == 'invalid_login':
                     msgs.update({'error': 'Неправильный логин/пароль'})
                 else:
-                    msgs.update({'error' : st[k]})
+                    msgs.update({'error': st[k]})
         return msgs
 
     def add(self, request, level, message):
@@ -123,11 +124,12 @@ class LogoutView(View):
         logout(request)
         return HttpResponseRedirect("/")
 
+
 def profile_resolver(request, username):
     if request.user.is_authenticated and request.user.username == username:
         # user is profile owner
         a = update_profile(request)
-        return redirect('/profile/', get_context(request, 'Профиль'))
+        return redirect(reverse('user_profile'), get_context(request, 'Профиль'))
     else:
         # client tries to look smb profile
         try:
@@ -159,7 +161,7 @@ def update_profile(request):
             response_data.update(profile_form.cleaned_data)
             m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
             response_data.update({'messages': ajax_messages(request)})
-            # return redirect('/profile/', get_context(request, 'Профиль'))
+            # return redirect(reverse('user_profile'), get_context(request, 'Профиль'))
         else:
             m.add(request, 'error', 'Что-то пошло не так...')
             response_data.update({'messages': ajax_messages(request)})

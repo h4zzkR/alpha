@@ -15,7 +15,7 @@
           <div class="dropdown-item-text noti-title text-center">
               <a href="/profile"><p class="text-overflow mb-0"><small>Вы вошли как {{ user.username }}</small></p></a>
           </div>
-          <a href="/profile" class="dropdown-item"> {# TODO: Link #}
+          <a href="{% url 'user_profile' %}" class="dropdown-item">
             <i class="ni ni-single-02"></i>
             <span>Профиль</span>
           </a>

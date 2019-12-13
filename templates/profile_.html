@@ -2,7 +2,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ user.username }}
+    {% if user.first_name == "" or user.last_name ==    "" %}
+        {{ user.username }} | Аккаунт Concat
+    {% else %}
+    {{ user.first_name }} {{ user.last_name }} | Аккаунт Concat
+    {% endif %}
 {% endblock %}
 
 {% block extra_links %}
@@ -54,11 +58,10 @@
 {#                     </table>#}
 
                     <div class="btn-group">
-                        <button onclick="myFunction()" href="#!" class="btn btn-info btn-xs">Редактировать</button>
-                        <button onclick="CopyLink();" class="btn btn-outline-primary btn-xs" id="copyButton">Ссылка на
-                            профиль
+                        <button onclick="scrollTop()" href="#!" class="btn btn-info btn-xs">Редактировать</button>
+                        <button onclick="CopyLink();" class="btn btn-outline-primary btn-xs" id="copyButton">@{{ user.username }}
                         </button>
-                        <button class="btn btn-outline-danger btn-xs" id="copyResult">&lt;</button>
+                        <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
                     </div>
                 </div>
             </div>
@@ -296,7 +299,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-linkedin">Vk</label>
+                                            <label class="form-control-label" for="input-vk">Vk</label>
                                             {{ form2.vk }}
                                         </div>
                                     </div>
@@ -331,14 +334,13 @@
     <script src="/static/js/gen_avatar.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
-{#    TODO добавить проверку на ссылки#}
     <script>
         const answer = document.getElementById("copyResult");
 
         function CopyLink() {
             var dummy = document.createElement("textarea");
             //ATTN: URL MUST BE some.domain/some_path/
-            var copyText = window.location.href.split('/').slice(0, 3).join("") + "/u/{{ user.username }}";
+            var copyText = "{{ request.scheme }}://{{ request.get_host }}{% url 'user_get_profile' user.username %}";
             document.body.appendChild(dummy);
             dummy.value = copyText;
             dummy.select();
@@ -346,9 +348,9 @@
             document.body.removeChild(dummy);
             answer.style.display = '';
             if (successful) {
-                answer.innerHTML = '<i class="ec ec-call-me-hand"></i>';
+                answer.innerHTML = 'Скопировано';
             } else {
-                answer.innerHTML = 'Unable to copy!';
+                answer.innerHTML = 'Невозможно скопировать';
             }
             {#alert("Copied the text: " + copyText);#}
         }
@@ -365,7 +367,7 @@
     </script>
 
     <script>
-    function myFunction() {
+    function scrollTop() {
         $('html,body').animate({
                 scrollTop: $(".scrolling").offset().top
             },
@@ -374,11 +376,11 @@
     }
     </script>
 
-    <script>
-        function checkURL(o) {
-            if (!/^https?:\/\//i.test(o.value) && o.value != "") {
-                o.value = "https://" + o.value;
-            }
-        }
-    </script>
+{#    <script>#}
+{#        function checkURL(o) {#}
+{#            if (!/^https?:\/\//i.test(o.value) && o.value != "") {#}
+{#                o.value = "https://" + o.value;#}
+{#            }#}
+{#        }#}
+{#    </script>#}
 {% endblock %}
