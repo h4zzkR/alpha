@@ -24,6 +24,10 @@ function update_messages(messages){
             i++;
 
         })
+        setTimeout(function(){
+            location = ''
+        },3000)
+
 };
 
 function create_post() {

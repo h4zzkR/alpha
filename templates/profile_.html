@@ -48,7 +48,7 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white" id="username">Привет, {{ user.username }}!</h1>
+                    <h1 class="display-2 text-white" id="username_logo">Привет, {{ user.username }}!</h1>
                     <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
                         информацию о себе.</p>
 
@@ -58,8 +58,8 @@
 {#                     </table>#}
 
                     <div class="btn-group">
-                        <button onclick="scrollTop()" href="#!" class="btn btn-info btn-xs">Редактировать</button>
-                        <button onclick="CopyLink();" class="btn btn-outline-primary btn-xs" id="copyButton">@{{ user.username }}
+                        <button onclick="FocusOnUsername();" class="btn btn-outline-info btn-xs">Редактировать</button>
+                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user.username }}
                         </button>
                         <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
                     </div>
@@ -349,6 +349,7 @@
             answer.style.display = '';
             if (successful) {
                 answer.innerHTML = 'Скопировано';
+                answer.classList.add('active');
             } else {
                 answer.innerHTML = 'Невозможно скопировать';
             }
@@ -367,12 +368,12 @@
     </script>
 
     <script>
-    function scrollTop() {
+    function FocusOnUsername() {
         $('html,body').animate({
                 scrollTop: $(".scrolling").offset().top
             },
             'slow');
-        document.getElementById("focus").focus();
+        $("#username").focus();
     }
     </script>
 
