@@ -8,16 +8,25 @@ class Skill(models.Model):
     name = models.TextField(default="")
 
 
+class Tag(models.Model):
+    pass
+
 class Project(models.Model):
-    name = models.TextField(default="")
-    description = models.TextField(default="")
+    name = models.TextField(default="", blank=True)
+    description = models.TextField(default="", blank=False)
     max_people = models.IntegerField(default=0)  # 0 - no limit
-    public = models.BooleanField(default=True)
+
+    technical_spec_url = models.URLField(default="", max_length=100)
+    is_public = models.BooleanField(default=0)
+
     status = models.IntegerField(default=True)  # 0 - finding team; 1 - developing; 2 - refinding people; 3 - closed
-    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    trello = models.TextField(default="")
-    github = models.TextField(default="")
-    discord = models.TextField(default="")
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
+
+    trello = models.TextField(default="", blank=True)
+    vcs = models.TextField(default="", blank=True)
+    callback = models.TextField(default="", blank=True)
+
+    # tags
 
 
 class ProjectSkills(models.Model):

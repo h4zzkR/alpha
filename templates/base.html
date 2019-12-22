@@ -48,7 +48,7 @@
 <div class="main-content">
 {% endblock %}
     <span class="user-background">
-        <img src="/static/img/brand/back0.png" class="bg" style="pointer-events: none; user-select: none;">
+        <img src="/static/img/brand/dark_back.png" class="bg" style="pointer-events: none; user-select: none;">
     </span>
     {% block header %}
     {% include "blocks/header.html" %}
@@ -72,13 +72,48 @@
     {% endblock %}
 
     {% include "blocks/messages.html" %}
-    {% block footer %}
-    {% endblock %}
+{#    {% block footer %}#}
+{#    {% endblock %}#}
 </div>
 
 <!--   Core   -->
 <script src="/static/js/plugins/jquery/jquery.min.js"></script>
 <script src="/static/js/plugins/bootstrap/bootstrap.js"></script>
+<script>
+    $("#message").fadeTo(1000, 500).slideUp(500, function(){
+        $("#message").alert('close');
+    });
+</script>
+
+{% if messages %}
+    <script> // django alerts auto hide
+    //add delay
+     $(document).ready(function() {
+        for (var i = 0; i < parseInt({{ messages|length }}); i++) {
+            var x = "#message" + i.toString();
+           // console.log(x);
+            $(x).fadeTo(2000, 500).slideUp(500, function () {
+                $(x).slideUp(500);
+            });
+        }
+    });
+    </script>
+
+{% endif %}
+
+<script>
+    function ajaxAutoHideMessages(arrayLength) {
+    // TODO ADD HIDING IN ORDER WITH DELAY
+        for (var i = 0; i < parseInt(arrayLength); i++) {
+            var x = "#message" + i.toString();
+           // console.log(x);
+            $(x).fadeTo(2000, 500).slideUp(500, function () {
+                $(x).slideUp(500);
+            });
+        }
+};
+</script>
+
 <!--   Optional JS   -->
 {% block scripts %}
 {% endblock %}

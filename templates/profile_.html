@@ -2,14 +2,19 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ user.username }}
+    {% if user.first_name == "" or user.last_name ==    "" %}
+        {{ user.username }} | Аккаунт Concat
+    {% else %}
+    {{ user.first_name }} {{ user.last_name }} | Аккаунт Concat
+    {% endif %}
 {% endblock %}
 
 {% block extra_links %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
     <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
     <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
-    <script src="/static/js/profile_submit.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+{#    <script src="/static/js/profile_submit.js"></script>#}
 {% endblock %}
 
 {% block styles %}
@@ -44,7 +49,7 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white">Привет, {{ user.username }}</h1>
+                    <h1 class="display-2 text-white" id="username_logo">Привет, {{ user.username }}!</h1>
                     <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
                         информацию о себе.</p>
 
@@ -54,11 +59,10 @@
 {#                     </table>#}
 
                     <div class="btn-group">
-                        <button onclick="myFunction()" href="#!" class="btn btn-info btn-xs">Редактировать</button>
-                        <button onclick="CopyLink();" class="btn btn-outline-primary btn-xs" id="copyButton">Ссылка на
-                            профиль
+                        <button onclick="FocusOnUsername();" class="btn btn-outline-info btn-xs">Редактировать</button>
+                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user.username }}
                         </button>
-                        <button class="btn btn-outline-danger btn-xs" id="copyResult">&lt;</button>
+                        <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
                     </div>
                 </div>
             </div>
@@ -72,18 +76,18 @@
                 <h3 class="mb-2" style="z-index: 700;">Обновление аватара</h3>
             </div>
             <div class="row justify-content-center mt-2">
-                <a class="close" href="#">&times;</a>
+                <a class="close" id="close-popup" href="#">&times;</a>
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle">
+                            <img src="{{ user.profile.avatar.url }}" id='card-avatar-0' class="rounded-circle">
                         </a>
                     </div>
                 </div>
             </div>
             <div class="card-header text-center border-0 pt-5 pt-md-2 pb-0 pb-md-4">
                 <div class="d-flex justify-content-lg-between justify-content-between">
-                    <a href="{{ user.telegram_link }}" class="btn-icon float-lg-left ml-4" style="">
+                    <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
                         <i class="fab fa-telegrams fa-3x tg-icon"></i>
                     </a>
                     <a href="#avatar_menu" class="btn-icon float-lg-right mr-4" style="transition: all 0.3s ease-out;">
@@ -97,21 +101,26 @@
 
             <div class="card-body pt-0 pt-md-4">
                 <div class="text-center">
-                    <a href='/gencon'>
-                <span class="btn btn-outline-danger">
+{#                    <a href='/gencon'>#}
+                <span class="btn btn-outline-danger" id="gen_new_avatar" onclick="avatar()">
                   Сгенерировать Identicon
                 <span class="font-weight-light"></span>
-                </span></a>
+                </span>
                     <div class="h5 font-weight-300">
                         <i class="ni location_pin mr-2"></i>
                     </div>
-                    <div>
-                        Или загрузите свое фото:
-                    </div>
+                    <form method="post" action="../update_avatar/">
+                        {% csrf_token %}
+                        <div class="file-upload">
+                          <label for="custom-file-upload" class="filupp">
+                            <span class="filupp-file-name js-value">Выберите файл</span>
+                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">
+                          </label>
+                        </div>
+                        <input type="submit"  value="Загрузить" class="btn btn-outline-danger">
+                    </form>
                     <hr class="my-4"/>
-                    <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and
-                        records all of his own music.</p>
-                    <a href="#">Show more</a>
+                    <a href="#"></a>
                 </div>
             </div>
         </div>
@@ -129,7 +138,7 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="{{ user.profile.avatar.url }}" class="rounded-circle"
+                                    <img src="{{ user.profile.avatar.url }}" id="card-avatar-1" class="rounded-circle"
                                          style="width: 135px;">
                                 </a>
                             </div>
@@ -137,7 +146,7 @@
                     </div>
                     <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                         <div class="d-flex justify-content-lg-between justify-content-between">
-                            <a href="{{ user.telegram_link }}" class="btn-icon float-lg-left ml-4" style="">
+                            <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
                                 <i class="fab fa-telegram fa-3x tg-icon"></i>
                             </a>
                             <a href="#avatar_menu" class="btn-icon float-lg-right mr-4"
@@ -155,17 +164,17 @@
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-0">
                                     <div>
-                      <span class="heading">{{ user.projects_cnt }}
+                      <span class="heading">{{ user.profile.projects_cnt }}
                           <i class="ni ni-app" style="vertical-align: -3px;"></i>
                       </span>
                                     </div>
                                     <div>
-                      <span class="heading">{{ user.stars_cnt }}
+                      <span class="heading">{{ user.profile.stars_cnt }}
                           <i class="fa fa-star"></i>
                       </span>
                                     </div>
                                     <div>
-                      <span class="heading">{{ user.rate }}
+                      <span class="heading">{{ user.profile.rate }}
                           <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
                       </span>
                                     </div>
@@ -173,21 +182,11 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <h3 id="user-name">
+                            <h3 id="user_full_name">
                                 {{ user.first_name }} {{ user.last_name }}
                             </h3>
-                            <div class="h5 font-weight-300" style="margin-top: -25px;">
-                                <i class="ni location_pin mr-2"></i>
-                                <p id="user-location">
-                                    {{ user.city }}
-                                    {%  if user.city and user.country %}
-                                    ,
-                                    {% endif %}
-                                    {{ user.country }}
-                                </p>
-                            </div>
                             <hr class="my-4"/>
-                            <p id="user-bio">{{ user.bio }}</p>
+                            <p id="user-bio">{{ user.profile.bio }}</p>
                         </div>
                     </div>
                 </div>
@@ -198,40 +197,26 @@
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
                         <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                    </div>
-
-                        <div class="card-body pt-0 pt-md-4">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
-                                    <div>
-                      <span class="heading">{{ user.projects_cnt }}
-                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
-                      </span>
-                                    </div>
-                                    <div>
-                      <span class="heading">{{ user.stars_cnt }}
-                          <i class="fa fa-star"></i>
-                      </span>
-                                    </div>
-                                    <div>
-                      <span class="heading">{{ user.rate }}
-                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
-                      </span>
-                                    </div>
-                                </div>
-                            </div>
+                            Выберите интересующие Вас сферы:
                         </div>
-                        <div class="text-center">
-                            <h3 id="user-name">
-                                {{ user.first_name }} {{ user.last_name }}
-                            </h3>
-                            <div class="h5 font-weight-300" style="margin-top: -25px;">
-                                <i class="ni location_pin mr-2"></i>
-                                <p id="user-location">{{ user.city }}, {{ user.country }}</p>
-                            </div>
-                            <hr class="my-4"/>
-                            <p id="user-bio">{{ user.bio }}</p>
+                        <div class="card-body pt-0 pt-md-4">
+                                <ul class="ks-cboxtags">
+                                {% for skill in skills %}
+                                    <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" checked="checked" multiple name="skills[]">
+                                        <label for="toggle-{{skill.id}}">{{skill.name}}</label>
+                                    </li>
+                                {% endfor %}
+                                    {% for skill in all_skills %}
+                                        {% if skill.name not in skills %}
+                                            <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" multiple name="skills[]">
+                                                <label for="toggle-{{skill.id}}">{{skill.name}}</label>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <div class="col-4 text-right">
+                                        <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                                </div>
                         </div>
                     </div>
                     </div>
@@ -240,7 +225,7 @@
             </div>
 
             <div class="col-xl-8 order-xl-1 scrolling">
-                <form role="form" action="" method="POST" id="profile-form">
+                <form role="form" method="POST" id="profile-form" action="{%  url 'user_profile' %}">
                     {% csrf_token %}
                     <div class="card bg-secondary shadow">
                         <div class="card-header bg-white border-0">
@@ -294,15 +279,15 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-github">Ваш Github/Gitlab (ссылка на
+                                            <label class="form-control-label" for="github">Ваш Github/Gitlab (ссылка на
                                                 профиль)</label>
-                                            {{ form.github }}
+                                            {{ form2.github }}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-gitlab">LinkedIn</label>
-                                            {{ form.linked_in }}
+                                            {{ form2.linked_in }}
                                         </div>
                                     </div>
                                 </div>
@@ -312,13 +297,13 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-telegram">Telegram</label>
-                                            {{ form.telegram }}
+                                            {{ form2.telegram }}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-linkedin">Vk</label>
-                                            {{ form.vk }}
+                                            <label class="form-control-label" for="input-vk">Vk</label>
+                                            {{ form2.vk }}
                                         </div>
                                     </div>
                                 </div>
@@ -331,7 +316,7 @@
                             <div class="pl-lg-4">
                                 <div class="form-group">
                                     <label>Био</label>
-                                    {{ form.bio }}
+                                    {{ form2.bio }}
                                 </div>
                             </div>
                         </div>
@@ -348,12 +333,27 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="/static/js/profile/ajax_profile_submit.js"></script>
+    <script src="/static/js/gen_avatar.js"></script>
+    <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+
+    <script>
+    $(document).ready(function() {
+    $('input[type="file"]').change(function(){
+        var value = $("input[type='file']").val();
+        $('.js-value').text(value);
+    });
+
+});
+    </script>
     <script>
         const answer = document.getElementById("copyResult");
 
         function CopyLink() {
             var dummy = document.createElement("textarea");
-            var copyText = window.location.href;
+            //ATTN: URL MUST BE some.domain/some_path/
+            var copyText = "{{ request.scheme }}://{{ request.get_host }}{% url 'user_get_profile' user.username %}";
             document.body.appendChild(dummy);
             dummy.value = copyText;
             dummy.select();
@@ -361,9 +361,10 @@
             document.body.removeChild(dummy);
             answer.style.display = '';
             if (successful) {
-                answer.innerHTML = '<i class="ec ec-call-me-hand"></i>';
+                answer.innerHTML = 'Скопировано';
+                answer.classList.add('active');
             } else {
-                answer.innerHTML = 'Unable to copy!';
+                answer.innerHTML = 'Невозможно скопировать';
             }
             {#alert("Copied the text: " + copyText);#}
         }
@@ -380,12 +381,20 @@
     </script>
 
     <script>
-    function myFunction() {
+    function FocusOnUsername() {
         $('html,body').animate({
                 scrollTop: $(".scrolling").offset().top
             },
             'slow');
-        document.getElementById("focus").focus();
+        $("#username").focus();
     }
     </script>
+
+{#    <script>#}
+{#        function checkURL(o) {#}
+{#            if (!/^https?:\/\//i.test(o.value) && o.value != "") {#}
+{#                o.value = "https://" + o.value;#}
+{#            }#}
+{#        }#}
+{#    </script>#}
 {% endblock %}

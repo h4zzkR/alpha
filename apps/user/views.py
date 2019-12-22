@@ -1,15 +1,24 @@
-from django.shortcuts import render, HttpResponse
-from django.views.generic.edit import FormView, UpdateView
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.shortcuts import render, HttpResponse, redirect, reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseNotFound
+from django.views.generic.edit import FormView
+from django.conf import settings
 from django.contrib.auth import login
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.views.generic.base import View
-from .forms import AuthForm, RegisterForm, ProfileEditForm
-from .models import UserProfile
-from django.contrib.auth.models import User
+from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
+from .models import UserProfile, Skills, Skill
+import json
+import os
+from alpha.settings import MEDIA_ROOT
+from django.core.serializers import serialize
 
-from django.conf import settings
 
 # To profile fields : user.profile.profile_field
 
@@ -24,6 +33,19 @@ def get_context(request, pagename):
     return context
 
 
+def ajax_messages(request):
+    django_messages = []
+
+    for message in messages.get_messages(request):
+        django_messages.append({
+            "level": settings.MESSAGE_TAGS[message.level],
+            "message": message.message,
+            "extra_tags": message.tags,
+        })
+
+    return django_messages
+
+
 def index(request):
     if request.user.is_authenticated:
         context = get_context(request, 'Хаб')
@@ -36,7 +58,7 @@ def index(request):
 
 class RegisterFormView(FormView):
     form_class = RegisterForm
-    success_url = "/accounts/login"
+    success_url = '/account/login/'
     template_name = "register.html"
     errors = {}
     def form_valid(self, form):
@@ -60,6 +82,35 @@ class RegisterFormView(FormView):
         # return self.render_to_response(self.get_context_data(form=form))
 
 
+def messages_parser(request, query=None):
+    messages.error(request, 'Неправильный логин/пароль', extra_tags='safe')
+
+
+class Messages():
+    def __init__(self):
+        pass
+
+    def parse_messages(self, st):
+        msgs = {}
+        for k in st.keys():
+            if k != 'inactive':
+                if k == 'invalid_login':
+                    msgs.update({'error': 'Неправильный логин/пароль'})
+                else:
+                    msgs.update({'error': st[k]})
+        return msgs
+
+    def add(self, request, level, message):
+        if level == 'error':
+            messages.error(request, message, extra_tags='safe')
+        elif level == 'warning':
+            messages.warning(request, message, extra_tags='safe')
+        elif level == 'success':
+            messages.success(request, message, extra_tags='safe')
+        elif level == 'info':
+            messages.info(request, message, extra_tags='safe')
+
+
 class LoginFormView(FormView):
     form_class = AuthForm
     template_name = "login.html"
@@ -70,6 +121,15 @@ class LoginFormView(FormView):
         login(self.request, self.user)
         return super(LoginFormView, self).form_valid(form)
 
+    def form_invalid(self, form):
+        m = Messages()
+        msgs = m.parse_messages(form.error_messages)
+        for level in msgs.keys():
+            m.add(self.request, level, msgs[level])
+        # m.add(self.request, level, msgs[level])
+        return self.render_to_response(
+            self.get_context_data(request=self.request, form=form))
+
 
 class LogoutView(View):
     def get(self, request):
@@ -77,31 +137,78 @@ class LogoutView(View):
         return HttpResponseRedirect("/")
 
 
-def get_user(request, username=None):
-    if username == request.user.username or username is None:
-        return UserUpdate.as_view()(request, username)
+def profile_resolver(request, username):
+    if request.user.is_authenticated and request.user.username == username:
+        # user is profile owner
+        a = update_profile(request)
+        return redirect(reverse('user_profile'), get_context(request, 'Профиль'))
     else:
-        # return profile page for showing
+        # client tries to look smb profile
+        try:
+            User.objects.get(username=username)
+            return HttpResponse('Good but 404')
+        except ObjectDoesNotExist:
+            return HttpResponseNotFound
+
+
+def render_to_json(request, data):
+    return HttpResponse(
+        json.dumps(data, ensure_ascii=False),
+        mimetype=request.is_ajax() and "application/json" or "text/html"
+    )
+
+
+@login_required
+def update_profile(request):
+    m = Messages()
+    if request.method == 'POST':
+        response_data = {}
+        user_form = UserEditForm(request.POST, instance=request.user)
+        profile_form = ProfileEditForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            response_data.update(user_form.cleaned_data)
+            response_data.update(profile_form.cleaned_data)
+            m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
+            response_data.update({'messages': ajax_messages(request)})
+        else:
+            m.add(request, 'error', 'Что-то пошло не так...')
+            response_data.update({'messages': ajax_messages(request)})
+        return JsonResponse(response_data)
+    else:
+        user_form = UserEditForm(instance=request.user)
+        profile_form = ProfileEditForm(instance=request.user.profile)
+    skills = []
+    if Skills.objects.filter(user=request.user):
+        for skill in Skills.objects.filter(user=request.user):
+            skills.append(skill.name)
+    all_skills = Skill.objects.all()
+    print(all_skills)
+    return render(request, 'profile_.html', {
+        'form': user_form,
+        'form2': profile_form,
+        'skills': skills,
+        'all_skills': all_skills
+    })
+
+def delete_image(id):
+    try:
+        os.remove(MEDIA_ROOT + '/profile/photos/' + str(id) + '.png')
+    except:
         pass
 
-
-class UserUpdate(UpdateView):
-    form_class = ProfileEditForm
-    template_name = 'profile_.html'
-    success_url = '/profile'
-
-
-    def get_object(self, queryset=None):
-        # username = self.kwargs.get("username")
-        return self.request.user
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(get_context(self.request, 'Профиль'))
-        return context
-
-    def form_valid(self, form):
-        self.object = form.save()
-        self.object.save()
-        super(UserUpdate, self).form_valid(form)
-        return super(UserUpdate, self).form_valid(form)
+@login_required
+@csrf_exempt
+def update_profile_avatar(request):
+    m = Messages()
+    if request.method == 'POST':
+        user = User.objects.get(id=request.user.id)
+        delete_image(user.id)
+        user_profile = UserProfile.objects.get(user=user)
+        user_profile.avatar = request.FILES['attachment-file']
+        user_profile.save()
+        response_data = {}
+        m.add(request, 'success', 'Аватар обновлен!')
+        response_data.update({'messages': ajax_messages(request)})
+        return JsonResponse(response_data)
