@@ -135,11 +135,11 @@
                             </a>
                         {% endif %}
                         {% if pagename == 'Проекты' and user.profile.confirmed is True %}
-                            <a class=" nav-link active" href=""> {# TODO: Link #}
+                            <a class=" nav-link active" href="{% url 'projects_list' %}"> {# TODO: Link #}
                                 <i class="ni ni-collection text-primary"></i> Проекты
                             </a>
                         {% else %}
-                            <a class=" nav-link" href=""> {# TODO: Link #}
+                            <a class=" nav-link" href="{% url 'projects_list' %}"> {# TODO: Link #}
                                 <i class="ni ni-collection text-teal"></i> Проекты
                             </a>
                         {% endif %}

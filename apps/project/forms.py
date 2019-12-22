@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms.widgets import PasswordInput, TextInput, EmailInput, URLInput, Textarea
 from .models import User
-from .models import Project
+from .models import Project, Tag
 from django.contrib.auth import authenticate
 from modules.helpers import update_avatar
 from alpha.settings import DEBUG
@@ -39,7 +39,7 @@ class ProjectForm(forms.ModelForm):
     max_people = forms.IntegerField(required=False, max_value=10,
                                     widget=forms.NumberInput(
                                         attrs={'class': 'form-control', 'placeholder': 'Максимальное количество участников',
-                                                            'label': 'max_people', 'name': 'max_people', 'value' : 0,}))
+                                                            'label': 'max_people', 'min' : 0, 'max' : 10, 'name': 'max_people', 'value' : 0,}))
 
     technical_spec_url = forms.URLField(required=False, max_length=Project._meta.get_field('technical_spec_url').max_length,
                         widget=URLInput(attrs={'placeholder': "Ссылка на ТЗ (если есть)",
@@ -47,15 +47,6 @@ class ProjectForm(forms.ModelForm):
                                                'name': 'technical_spec_url',
                                                'class': 'form-control form-control-alternative',
                                                }))
-
-    type = forms.ChoiceField(required=True,
-                                     widget=forms.Select(attrs={
-                                         'class' : 'form-control form-control-alternative',
-                                         'id' : 'type',
-                                         'name' : 'type'
-                                     }),
-                                     choices=('Приватный', 'Открытый')
-                                     )
 
     type = forms.CharField(label='Тип проекта',
                            widget=forms.Select(attrs={'class' : 'form-control form-control-alternative',
@@ -96,6 +87,18 @@ class ProjectForm(forms.ModelForm):
             "trello", "vcs", "callback"
         )
 
+    def clean(self):
+        import string
+        cleaned_data = super(ProjectForm, self).clean()
+        tags = self.data['tags'].split(',')
+        cleaned_tags = []
+        for i in tags:
+            # , 'https://', 'www.')
+            if 'http://' not in i and 'https://' not in i and 'www.' not in i:
+                cleaned_tags.append(i.strip(string.punctuation))
+        cleaned_data.update({'tags' : cleaned_tags})
+        return cleaned_data
+
     def save(self, commit=True):
         project = super(ProjectForm, self).save(commit=False)
         if commit:
@@ -105,6 +108,13 @@ class ProjectForm(forms.ModelForm):
                 project.is_public = True
             else:
                 project.is_public = False
+            if len(self.cleaned_data['tags']) > 0:
+                for t in self.cleaned_data['tags']:
+                    try:
+                        t = Tag.objects.get(name=t)
+                    except Tag.DoesNotExist:
+                        t = Tag(name=t); t.save()
+                    project.tags.add(t)
             project.save()
 
         return project
