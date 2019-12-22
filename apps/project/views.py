@@ -19,6 +19,7 @@ from ..user.views import get_context
 
 
 from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
 
 class ProjectCreate(FormView):
     template_name = 'project_setup.html'
@@ -36,7 +37,21 @@ class ProjectCreate(FormView):
 
     def form_invalid(self, form):
         # Add action to invalid form phase
+        print(form)
         print(form.error_messages)
         # messages.success(self.request, 'An error occured while processing the payment')
         # return self.render_to_response(self.get_context_data(form=form))
+
+
+class ProjectListView(ListView):
+
+    model = Project
+    template_name = 'project_list.html'
+    # paginate_by = 100  # if pagination is desired
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
 

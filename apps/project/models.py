@@ -9,7 +9,10 @@ class Skill(models.Model):
 
 
 class Tag(models.Model):
-    pass
+    name = models.CharField(default="", blank=True, max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class Project(models.Model):
     name = models.TextField(default="", blank=True)
@@ -26,8 +29,7 @@ class Project(models.Model):
     vcs = models.TextField(default="", blank=True)
     callback = models.TextField(default="", blank=True)
 
-    # tags
-
+    tags = models.ManyToManyField(Tag)
 
 class ProjectSkills(models.Model):
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)

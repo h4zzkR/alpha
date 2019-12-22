@@ -16,5 +16,7 @@ urlpatterns = [
     path('account/update_avatar/', u.update_profile_avatar, name="user_update_avatar"),
 
     path('projects/new', p.ProjectCreate.as_view(), name="project_create"),
+    path('projects/view', p.ProjectListView.as_view(), name='projects_list')
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
