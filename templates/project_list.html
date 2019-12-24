@@ -85,16 +85,26 @@ ellips {
                          </div>
                         {% endif %}
                         <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
-                      <button class='btn btn-primary float-right' style="">
+                            {% if pr.author.username == user.username %}
+                      <button class='btn btn-danger float-right' style="">
                            <i class="fa fa-edit" style=""></i>
                           </button>
+                            {% else %}
+                                <button class='btn btn-primary float-right' style="">
+                           <i class="fa fa-book-open" style=""></i>
+                          </button>
+                            {% endif %}
                         </div>
                     </div>
             </div>
             </div>
 
         <p class="card-text">{{ pr.description.title }}</p>
-             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+            {% if pr.author.username == user.username %}
+                <footer class="blockquote-footer">Создатель: <cite title="Source Title">Вы</cite></footer>
+            {% else %}
+                <footer class="blockquote-footer">Создатель: <cite title="Source Title">{{ pr.author.username }}</cite></footer>
+            {% endif %}
         </div>
         <div class="card-footer bg-secondary text-muted">
 {#            2 days ago#}
