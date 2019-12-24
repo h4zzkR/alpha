@@ -16,6 +16,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from .models import UserSkill, UserProfile
 from apps.project.models import Project
+from apps.user.models import Skill, Skills
 from django.core.serializers import serialize
 
 
@@ -156,7 +157,6 @@ def update_profile(request):
     m = Messages()
     if request.method == 'POST':
         response_data = {}
-        # print(request.POST)
         user_form = UserEditForm(request.POST, instance=request.user)
         profile_form = ProfileEditForm(request.POST, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
@@ -166,7 +166,6 @@ def update_profile(request):
             response_data.update(profile_form.cleaned_data)
             m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
             response_data.update({'messages': ajax_messages(request)})
-            # return redirect(reverse('user_profile'), get_context(request, 'Профиль'))
         else:
             m.add(request, 'error', 'Что-то пошло не так...')
             response_data.update({'messages': ajax_messages(request)})
@@ -174,9 +173,16 @@ def update_profile(request):
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
+    skills = []
+    if Skills.objects.filter(user=request.user):
+        for skill in Skills.objects.filter(user=request.user):
+            skills.append(skill.name)
+    all_skills = Skill.objects.all()
     return render(request, 'profile_.html', {
         'form': user_form,
-        'form2': profile_form
+        'form2': profile_form,
+        'skills': skills,
+        'all_skills': all_skills
     })
 
 
