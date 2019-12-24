@@ -31,6 +31,13 @@ class ProjectCreate(FormView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'pagename': 'Новый проект',
+        })
+        return context
+
     def form_valid(self, form):
         form.save()
         return super(ProjectCreate, self).form_valid(form)
@@ -51,6 +58,9 @@ class ProjectListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context.update({
+            'pagename': 'Проекты',
+        })
         return context
 
 
