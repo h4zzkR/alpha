@@ -14784,6 +14784,20 @@ a.text-lighter:focus {
   width: 48px;
 }
 
+.card-avatar img{
+  color: #fff;
+  background-color: #adb5bd;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+  border-radius: 50% !important;
+  margin-right: 10%;
+}
+
 .avatar img {
   width: 100%;
   border-radius: 50%;
