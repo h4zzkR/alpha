@@ -12,7 +12,7 @@ urlpatterns = [
     path('account/login/', u.LoginFormView.as_view(), name="user_login"),
     path('account/logout/', u.LogoutView.as_view(), name="user_logout"),
     path('account/profile/', u.update_profile, name="user_profile"),
-    path('account/user/<str:username>', u.profile_resolver, name="user_get_profile"),
+    path('u/<str:username>', u.profile_resolver, name="user_get_profile"),
     path('account/update_avatar/', u.update_profile_avatar, name="user_update_avatar"),
 
     path('projects/new', p.ProjectCreate.as_view(), name="project_create"),

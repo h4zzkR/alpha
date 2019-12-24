@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms.widgets import PasswordInput, TextInput, EmailInput, URLInput, Textarea
 from .models import User
-from .models import Project, Tag
+from .models import Project, Tag, Collaborator
 from django.contrib.auth import authenticate
 from modules.helpers import update_avatar
 from alpha.settings import DEBUG
@@ -108,6 +108,15 @@ class ProjectForm(forms.ModelForm):
                 project.is_public = True
             else:
                 project.is_public = False
+
+            try:
+                c = Collaborator.objects.get(member=self.user)
+            except Collaborator.DoesNotExist:
+                c = Collaborator(member=self.user);
+                c.save()
+
+            project.collaborators.add(c)
+
             if len(self.cleaned_data['tags']) > 0:
                 for t in self.cleaned_data['tags']:
                     try:

@@ -21,83 +21,126 @@ ellips {
 {% endblock %}
 
 {% block content %}
-{#    <h1>Articles</h1>#}
-{#    <ul>#}
-{#    <p>{{ object_list }}</p>#}
-{#    {% for project in object_list %}#}
-{#        <li>{{ project.name }} </li>#}
-{#    {% empty %}#}
-{#        <li>No articles yet.</li>#}
-{#    {% endfor %}#}
-{#    </ul>#}
 
-     <div class="main-content ml-5 mr-5">
-        <div class="card-deck">
-            {% for pr in object_list %}
+{#     <div class="main-content ml-5 mr-5">#}
+{#        <div class="card-deck">#}
+{#            {% for pr in object_list %}#}
 {#                <div class="col-sm-6 mb-4">#}
-                    <div class="card text-white border-0 mr--1" style="max-width: 40rem; max-height: 25rem;">
-                      <div class="card-header bg-primary text-black-50">
-                          <div class="row mx-auto">
-                          {{ pr.name }}
-                          <div class="float-right">
-                            <a href="#" class="btn btn-default fa fa-edit"></a>
-                          </div>
-                          </div>
-                      </div>
-                      <div class="card-body mb-2 overflow-hidden">
+{#                    <div class="card text-white border-0 mr--1" style="max-width: 40rem; max-height: 25rem;">#}
+{#                      <div class="card-header bg-primary text-black-50">#}
+{#                          <div class="row mx-auto">#}
+{#                          {{ pr.name }}#}
+{#                          <div class="float-right">#}
+{#                            <a href="#" class="btn btn-default fa fa-edit"></a>#}
+{#                          </div>#}
+{#                          </div>#}
+{#                      </div>#}
+{#                      <div class="card-body mb-2 overflow-hidden">#}
 {#                        <h5 class="card-title">Primary card title</h5>#}
-                        <p class="card-text text-default ">{{ pr.description }}</p>
-                      </div>
-                        <div class="card-footer pb-2 pt-1">
+{#                        <p class="card-text text-default ">{{ pr.description }}</p>#}
+{#                      </div>#}
+{#                        <div class="card-footer pb-2 pt-1">#}
 {#                          <small class="text-muted">Last updated 3 mins ago</small>#}
-                            <div class="row justify-content-around">
+{#                            <div class="row justify-content-around">#}
 {#                                <a href="#" class="btn btn-default">Подробнее о проекте</a>#}
-                            </div>
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% empty %}#}
+{#                <p></p>#}
+{#            {% endfor %}#}
+{#        </div>#}
+
+
+
+
+
+
+
+<div class="main-content ml-5 mr-5">
+<div class="card-columns">
+    {% for pr in object_list %}
+      <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-6 col-sm-12">
+                <h4 class="card-title" style="width: 100%;">
+                  <span>{{pr.name.title}}</span>
+                </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="btn-toolbar float-right" role="group">
+                        {% if pr.is_public == 1 %}
+                         <div class="btn-group mr-2 top--2 right--4" role="group" aria-label="First group">
+                          <button class='btn btn-outline-light p-1' style="font-size: 20px; margin-right: 5px;">
+                             <i class="fa fa-unlock" style=""></i>
+                            </button>
+                         </div>
+                        {% else %}
+                             <div class="btn-group mr-2 top--2 right--4" role="group" aria-label="First group">
+                          <button class='btn btn-light p-1' style="font-size: 20px; margin-right: 5px;">
+                             <i class="fa fa-lock" style=""></i>
+                            </button>
+                         </div>
+                        {% endif %}
+                        <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
+                      <button class='btn btn-primary float-right' style="">
+                           <i class="fa fa-edit" style=""></i>
+                          </button>
                         </div>
                     </div>
-{#                </div>#}
-            {% empty %}
-                <p></p>
-            {% endfor %}
+            </div>
+            </div>
 
+        <p class="card-text">{{ pr.description.title }}</p>
+             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+        </div>
+        <div class="card-footer bg-secondary text-muted">
+{#            2 days ago#}
+            <div class="row">
+            <div class="col-12 col-md-6 col-sm-12">
+                {% for c in pr.collaborators.all %}
+                    <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
+                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.member.username }}" src="{{ c.member.profile.avatar.url }}"></a>
+                    </span>
+                {% endfor %}
+            </div>
+            <div class="col-12 col-md-6 col-sm-12">
+                <h5 class="float-right">
+                {{ pr.get_status }}
+                </h5>
+                <br>
+            </div>
+            </div>
+        </div>
+      </div>
+    {% endfor %}
 
+</div>
+</div>
 
+{#  <div class="card">#}
+{#    <blockquote class="blockquote mb-0 card-body">#}
+{#      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>#}
+{#      <footer class="blockquote-footer">#}
+{#        <small class="text-muted">#}
+{#          Someone famous in <cite title="Source Title">Source Title</cite>#}
+{#        </small>#}
+{#      </footer>#}
+{#    </blockquote>#}
+{#  </div>#}
 
+{#  <div class="card bg-primary text-white text-center p-3">#}
+{#    <blockquote class="blockquote mb-0">#}
+{#      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.</p>#}
+{#      <footer class="blockquote-footer">#}
+{#        <small>#}
+{#          Someone famous in <cite title="Source Title">Source Title</cite>#}
+{#        </small>#}
+{#      </footer>#}
+{#    </blockquote>#}
+{#  </div>#}
 
-
-
-
-
-{#          <div class="col-sm-6">#}
-{#            <div class="card">#}
-{#              <div class="card-body">#}
-{#                <h5 class="card-title">Special title treatment</h5>#}
-{#                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
-{#                <a href="#" class="btn btn-primary">Go somewhere</a>#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{##}
-{#          <div class="col-sm-6 mb-4">#}
-{#            <div class="card">#}
-{#              <div class="card-body">#}
-{#                <h5 class="card-title">Special title treatment</h5>#}
-{#                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
-{#                <a href="#" class="btn btn-primary">Go somewhere</a>#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{##}
-{#            <div class="col-sm-6">#}
-{#            <div class="card">#}
-{#              <div class="card-body">#}
-{#                <h5 class="card-title">Special title treatment</h5>#}
-{#                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
-{#                <a href="#" class="btn btn-primary">Go somewhere</a>#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{#        </div>#}
-{#     </div>#}
-
+</div>
 {% endblock %}
