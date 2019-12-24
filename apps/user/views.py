@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import UserProfile
 import json
+from apps.project.models import Project
 from django.core.serializers import serialize
 
 
@@ -48,6 +49,8 @@ def index(request):
     if request.user.is_authenticated:
         context = get_context(request, 'Хаб')
         # print(request.user.profile)
+        context.update({'projects': Project.objects.all()})
+        print(context)
         return render(request, 'index.html', context)
     else:
         context = get_context(request, 'greetings')
@@ -64,10 +67,12 @@ class RegisterFormView(FormView):
         return super(RegisterFormView, self).form_valid(form)
 
     def form_invalid(self, form):
-        # Add action to invalid form phase
-        print(form.error_messages)
-        # messages.success(self.request, 'An error occured while processing the payment')
-        # return self.render_to_response(self.get_context_data(form=form))
+        m = Messages()
+        msgs = m.parse_messages(form.error_messages)
+        for level in msgs.keys():
+            m.add(self.request, level, msgs[level])
+        return self.render_to_response(
+            self.get_context_data(request=self.request, form=form))
 
 
 def messages_parser(request, query=None):
