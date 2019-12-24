@@ -8,28 +8,17 @@ class Skill(models.Model):
     name = models.TextField(default="")
 
 
-class Tag(models.Model):
-    name = models.CharField(default="", blank=True, max_length=100)
-
-    def __str__(self):
-        return self.name
-
 class Project(models.Model):
-    name = models.TextField(default="", blank=True)
-    description = models.TextField(default="", blank=False)
+    name = models.TextField(default="")
+    description = models.TextField(default="")
     max_people = models.IntegerField(default=0)  # 0 - no limit
-
-    technical_spec_url = models.URLField(default="", max_length=100)
-    is_public = models.BooleanField(default=0)
-
+    public = models.BooleanField(default=True)
     status = models.IntegerField(default=True)  # 0 - finding team; 1 - developing; 2 - refinding people; 3 - closed
-    author = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    trello = models.TextField(default="")
+    github = models.TextField(default="")
+    discord = models.TextField(default="")
 
-    trello = models.TextField(default="", blank=True)
-    vcs = models.TextField(default="", blank=True)
-    callback = models.TextField(default="", blank=True)
-
-    tags = models.ManyToManyField(Tag)
 
 class ProjectSkills(models.Model):
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
