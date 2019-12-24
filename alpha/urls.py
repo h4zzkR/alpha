@@ -14,9 +14,8 @@ urlpatterns = [
     path('account/profile/', u.update_profile, name="user_profile"),
     path('account/user/<str:username>', u.profile_resolver, name="user_get_profile"),
     path('account/update_avatar/', u.update_profile_avatar, name="user_update_avatar"),
-
     path('projects/new', p.ProjectCreate.as_view(), name="project_create"),
-    path('projects/view', p.ProjectListView.as_view(), name='projects_list')
-
+    path('projects/view', p.ProjectListView.as_view(), name='projects_list'),
+    path('projects/<int:id>', u.view_project, name='view_project')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

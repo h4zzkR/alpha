@@ -186,6 +186,10 @@ def update_profile(request):
     })
 
 
+def view_project(request, id):
+    pass
+
+
 @login_required
 @csrf_exempt
 def update_profile_avatar(request):
