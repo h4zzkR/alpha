@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
     <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
     <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 {#    <script src="/static/js/profile_submit.js"></script>#}
 {% endblock %}
 
@@ -108,13 +109,18 @@
                     <div class="h5 font-weight-300">
                         <i class="ni location_pin mr-2"></i>
                     </div>
-                    <div>
-                        Или загрузите свое фото:
-                    </div>
+                    <form method="post" action="../update_avatar/">
+                        {% csrf_token %}
+                        <div class="file-upload">
+                          <label for="custom-file-upload" class="filupp">
+                            <span class="filupp-file-name js-value">Выберите файл</span>
+                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">
+                          </label>
+                        </div>
+                        <input type="submit"  value="Загрузить" class="btn btn-outline-danger">
+                    </form>
                     <hr class="my-4"/>
-                    <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and
-                        records all of his own music.</p>
-                    <a href="#">Show more</a>
+                    <a href="#"></a>
                 </div>
             </div>
         </div>
@@ -191,29 +197,26 @@
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
                         <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                    </div>
-
+                            Выберите интересующие Вас сферы:
+                        </div>
                         <div class="card-body pt-0 pt-md-4">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
-                                    <div>
-                      <span class="heading">Заглушка для блока выбора навыков и умений пользователя
-                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
-                      </span>
-                                    </div>
-                                    <div>
-                      <span class="heading">{{ user.profile.stars_cnt }}
-                          <i class="fa fa-star"></i>
-                      </span>
-                                    </div>
-                                    <div>
-                      <span class="heading">{{ user.profile.rate }}
-                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
-                      </span>
-                                    </div>
+                                <ul class="ks-cboxtags">
+                                {% for skill in skills %}
+                                    <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" checked="checked" multiple name="skills[]">
+                                        <label for="toggle-{{skill.id}}">{{skill.name}}</label>
+                                    </li>
+                                {% endfor %}
+                                    {% for skill in all_skills %}
+                                        {% if skill.name not in skills %}
+                                            <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" multiple name="skills[]">
+                                                <label for="toggle-{{skill.id}}">{{skill.name}}</label>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <div class="col-4 text-right">
+                                        <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
                                 </div>
-                            </div>
                         </div>
                     </div>
                     </div>
@@ -334,6 +337,16 @@
     <script src="/static/js/gen_avatar.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+
+    <script>
+    $(document).ready(function() {
+    $('input[type="file"]').change(function(){
+        var value = $("input[type='file']").val();
+        $('.js-value').text(value);
+    });
+
+});
+    </script>
     <script>
         const answer = document.getElementById("copyResult");
 
