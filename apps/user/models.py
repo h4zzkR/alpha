@@ -94,3 +94,10 @@ class UserFriendInvitation(models.Model):
 class UserFriend(models.Model):
     users = models.ForeignKey(to=User, related_name="user", on_delete=models.CASCADE)
     follower = models.ForeignKey(to=User, related_name="follower", on_delete=models.CASCADE)
+
+class Skill(models.Model):
+    name = models.CharField(max_length=30)
+
+class Skills(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
