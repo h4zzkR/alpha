@@ -123,3 +123,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Media folder
+!media/profile/photos/
+media/profile/photos/*.png
+media/profile/photos/*.svg

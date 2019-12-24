@@ -1,0 +1,104 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+<style>
+    .container{
+        margin-top: 100px;
+    }
+</style>
+{% block content %}
+
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<div class="container mt--3 pb-5w">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <div class="card bg-secondary shadow border-0">
+        <div class="card-header bg-transparent pb-5">
+            <div class="socialaccount_ballot">
+
+          <div class="text-muted text-center mt-2 mb-3"><small>Что-то пошло не так. Аккаунт с такой почтой уже есть, либо вы не авторизированы.
+              Войдите на сайт с одним из ваших аккаунтов:</small></div>
+          <div class="btn-wrapper text-center">
+            <a href="/accounts/github/login/?process=login&next=%2Faccounts%2Fsocial%2Fconnections%2F" class="btn btn-neutral btn-icon">
+              <span class="btn-inner--icon"><img src="/static/img/icons/common/github.svg"></span>
+              <span class="btn-inner--text">Github</span>
+            </a>
+            <a href="/accounts/google/login/?process=login&next=%2Faccounts%2Fsocial%2Fconnections%2F" class="btn btn-neutral btn-icon">
+              <span class="btn-inner--icon"><img src="/static/img/icons/common/google.svg"></span>
+              <span class="btn-inner--text">Google</span>
+            </a>
+          </div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <div class="text-center text-muted mb-4">
+            <small>Или войдите с помощью пароля</small>
+          </div>
+              <form class="login" method="POST" action="/login">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                    </div>
+                    <input class="form-control" name="email" placeholder="Email" type="email">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                    </div>
+                    <input class="form-control" name="password" placeholder="Пароль" type="password">
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary my-4">Войти</button>
+                </div>
+              </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+<a href="{% url 'user_register' %}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+
+
+{% endblock %}
+
+{#{% block footer %}#}
+{#    <footer class="footer_fixed" style="background: #301c4f;">#}
+{#        <div class="row align-items-center">#}
+{#          <div class="col-xl-4">#}
+{#            <div class="copyright text-center text-xl-right text-muted">#}
+{#              © 2019 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>#}
+{#            </div>#}
+{#          </div>#}
+{#          <div class="col-xl-6">#}
+{#            <ul class="nav nav-footer justify-content-center justify-content-xl-end">#}
+{#              <li class="nav-item">#}
+{#                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>#}
+{#              </li>#}
+{#              <li class="nav-item">#}
+{#                <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>#}
+{#              </li>#}
+{#              <li class="nav-item">#}
+{#                <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">MIT License</a>#}
+{#              </li>#}
+{#              <li class="nav-item">#}
+{#                <a href="" class="nav-link" target="_blank">concat.support@gmail.com</a>#}
+{#              </li>#}
+{#            </ul>#}
+{#          </div>#}
+{#        </div>#}
+{#    </footer>#}
+{#{% endblock %}#}

@@ -1,0 +1,37 @@
+<ul class="navbar-nav align-items-center d-none d-md-flex">
+      <li class="nav-item dropdown">
+        <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div class="media align-items-center">
+            <span class="avatar rounded-circle">
+{#                style="border:1px solid white;"#}
+              <img alt="{{ user.username }}" id='head-avatar' src="{{ user.profile.avatar.url }}">
+            </span>
+            <div class="media-body ml-2 d-none d-lg-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+{#              <span class="mb-0 text-sm font-weight-bold" style="color: white;">{{ user.username }}</span>#}
+            </div>
+          </div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+          <div class="dropdown-item-text noti-title text-center">
+              <a href="/profile"><p class="text-overflow mb-0"><small>Вы вошли как {{ user.username }}</small></p></a>
+          </div>
+          <a href="{% url 'user_profile' %}" class="dropdown-item">
+            <i class="ni ni-single-02"></i>
+            <span>Профиль</span>
+          </a>
+          <a href="" class="dropdown-item"> {# TODO: Link #}
+            <i class="ni ni-settings-gear-65"></i>
+            <span>Настройки</span>
+          </a>
+          <a href="" class="dropdown-item"> {# TODO: Link #}
+            <i class="ni ni-support-16"></i>
+            <span>Поддержка</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'user_logout' %}" class="dropdown-item">
+            <i class="ni ni-user-run"></i>
+            <span>Выйти</span>
+          </a>
+        </div>
+      </li>
+</ul>

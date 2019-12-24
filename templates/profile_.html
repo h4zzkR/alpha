@@ -1,0 +1,387 @@
+{#Profile to template#}
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if user.first_name == "" or user.last_name ==    "" %}
+        {{ user.username }} | Аккаунт Concat
+    {% else %}
+    {{ user.first_name }} {{ user.last_name }} | Аккаунт Concat
+    {% endif %}
+{% endblock %}
+
+{% block extra_links %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
+    <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
+    <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
+{#    <script src="/static/js/profile_submit.js"></script>#}
+{% endblock %}
+
+{% block styles %}
+    .CodeMirror, .CodeMirror-scroll {
+        min-height: 575px;
+    }
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block main_content_class %}
+<div class="main-content" style="padding-bottom: 60px;">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
+        <div class="container-fluid" >
+            <!-- Brand -->
+            <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
+            <!-- Form -->
+            {% include "blocks/search.html" %}
+            <!-- User -->
+            {% include "blocks/profile_menu.html" %}
+        </div>
+    </nav>
+
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+         style="min-height: 600px; background-size: cover; background-position: center top;">
+        <!-- Mask -->
+        <span class="mask bg-gradient-default opacity-5"></span>
+        <!-- Header container -->
+        <div class="container-fluid d-flex align-items-center">
+            <div class="row">
+                <div class="col-lg-7 col-md-10">
+                    <h1 class="display-2 text-white" id="username_logo">Привет, {{ user.username }}!</h1>
+                    <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
+                        информацию о себе.</p>
+
+{#                    <table>#}
+{#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
+{#                       <tr><th>Online</th><td>{{ profile.online }}</td></tr>#}
+{#                     </table>#}
+
+                    <div class="btn-group">
+                        <button onclick="FocusOnUsername();" class="btn btn-outline-info btn-xs">Редактировать</button>
+                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user.username }}
+                        </button>
+                        <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+    <div class="overlay" id="avatar_menu">
+        <div class="col-xl-3 order-xl-2 mb-5 mb-xl-0 popup">
+            <div class="row justify-content-center mb-5">
+                <h3 class="mb-2" style="z-index: 700;">Обновление аватара</h3>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <a class="close" id="close-popup" href="#">&times;</a>
+                <div class="col-lg-3 order-lg-2">
+                    <div class="card-profile-image">
+                        <a href="#">
+                            <img src="{{ user.profile.avatar.url }}" id='card-avatar-0' class="rounded-circle">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header text-center border-0 pt-5 pt-md-2 pb-0 pb-md-4">
+                <div class="d-flex justify-content-lg-between justify-content-between">
+                    <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
+                        <i class="fab fa-telegrams fa-3x tg-icon"></i>
+                    </a>
+                    <a href="#avatar_menu" class="btn-icon float-lg-right mr-4" style="transition: all 0.3s ease-out;">
+                    <span class="fa-stack dfa-lg" style="font-size: 26px;">
+                      <i class="fa fa-circles fa-stack-2x"></i>
+                      <i class="fa fa-cameras fa-stack-1x" style="color: white; font-size: 23px;"></i>
+                    </span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-body pt-0 pt-md-4">
+                <div class="text-center">
+{#                    <a href='/gencon'>#}
+                <span class="btn btn-outline-danger" id="gen_new_avatar" onclick="avatar()">
+                  Сгенерировать Identicon
+                <span class="font-weight-light"></span>
+                </span>
+                    <div class="h5 font-weight-300">
+                        <i class="ni location_pin mr-2"></i>
+                    </div>
+                    <div>
+                        Или загрузите свое фото:
+                    </div>
+                    <hr class="my-4"/>
+                    <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and
+                        records all of his own music.</p>
+                    <a href="#">Show more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  END OF ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+
+
+    <div class="container-fluid mt--7">
+        <div class="row"></div>
+            <div class="col-xl-4 float-lg-right">
+                <!-- ИНФО В ОБЩЕМ ВИДЕ -->
+                <div class="order-xl-2 mb-5 mb-xl-0">
+                <div class="card card-profile shadow">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3 order-lg-2">
+                            <div class="card-profile-image">
+                                <a href="#">
+                                    <img src="{{ user.profile.avatar.url }}" id="card-avatar-1" class="rounded-circle"
+                                         style="width: 135px;">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                        <div class="d-flex justify-content-lg-between justify-content-between">
+                            <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
+                                <i class="fab fa-telegram fa-3x tg-icon"></i>
+                            </a>
+                            <a href="#avatar_menu" class="btn-icon float-lg-right mr-4"
+                               style="transition: all 0.3s ease-out;">
+                    <span class="fa-stack fa-lg" style="font-size: 26px;">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-camera fa-stack-1x" style="color: white; font-size: 23px;"></i>
+                    </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body pt-0 pt-md-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
+                                    <div>
+                      <span class="heading">{{ user.profile.projects_cnt }}
+                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.profile.stars_cnt }}
+                          <i class="fa fa-star"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.profile.rate }}
+                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 id="user_full_name">
+                                {{ user.first_name }} {{ user.last_name }}
+                            </h3>
+                            <hr class="my-4"/>
+                            <p id="user-bio">{{ user.profile.bio }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <!-- END OF ИНФО В ОБЩЕМ ВИДЕ -->
+
+                <!-- ИНФО РЕЙТИНГ -->
+                <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
+                    <div class="card card-profile shadow">
+                        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                    </div>
+
+                        <div class="card-body pt-0 pt-md-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
+                                    <div>
+                      <span class="heading">Заглушка для блока выбора навыков и умений пользователя
+                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.profile.stars_cnt }}
+                          <i class="fa fa-star"></i>
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading">{{ user.profile.rate }}
+                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- END OF ИНФО РЕЙТИНГ -->
+            </div>
+
+            <div class="col-xl-8 order-xl-1 scrolling">
+                <form role="form" method="POST" id="profile-form" action="{%  url 'user_profile' %}">
+                    {% csrf_token %}
+                    <div class="card bg-secondary shadow">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h3 class="mb-0">Мой аккаунт</h3>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="heading-small text-muted mb-4">Общая информация</h6>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-username"
+                                                   id="focus">Никнейм</label>
+                                            {{ form.username }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-email">Почта</label>
+                                            {{ form.email }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-first-name">Имя</label>
+                                            {{ form.first_name }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-last-name">Фамилия</label>
+                                            {{ form.last_name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4"/>
+                            <!-- Address -->
+                            <h6 class="heading-small text-muted mb-4">Контактная информация (по желанию)</h6>
+
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="github">Ваш Github/Gitlab (ссылка на
+                                                профиль)</label>
+                                            {{ form2.github }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-gitlab">LinkedIn</label>
+                                            {{ form2.linked_in }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-telegram">Telegram</label>
+                                            {{ form2.telegram }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-vk">Vk</label>
+                                            {{ form2.vk }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr class="my-4"/>
+                            <!-- Description -->
+                            <h6 class="heading-small text-muted mb-4">О себе</h6>
+                            <div class="pl-lg-4">
+                                <div class="form-group">
+                                    <label>Био</label>
+                                    {{ form2.bio }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'blocks/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/profile/ajax_profile_submit.js"></script>
+    <script src="/static/js/gen_avatar.js"></script>
+    <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+    <script>
+        const answer = document.getElementById("copyResult");
+
+        function CopyLink() {
+            var dummy = document.createElement("textarea");
+            //ATTN: URL MUST BE some.domain/some_path/
+            var copyText = "{{ request.scheme }}://{{ request.get_host }}{% url 'user_get_profile' user.username %}";
+            document.body.appendChild(dummy);
+            dummy.value = copyText;
+            dummy.select();
+            const successful = document.execCommand("copy");
+            document.body.removeChild(dummy);
+            answer.style.display = '';
+            if (successful) {
+                answer.innerHTML = 'Скопировано';
+                answer.classList.add('active');
+            } else {
+                answer.innerHTML = 'Невозможно скопировать';
+            }
+            {#alert("Copied the text: " + copyText);#}
+        }
+    </script>
+
+    <script>
+    $(function () {
+        $('body').on('close.bs.alert', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(e.target).fadeOut();
+        });
+    });
+    </script>
+
+    <script>
+    function FocusOnUsername() {
+        $('html,body').animate({
+                scrollTop: $(".scrolling").offset().top
+            },
+            'slow');
+        $("#username").focus();
+    }
+    </script>
+
+{#    <script>#}
+{#        function checkURL(o) {#}
+{#            if (!/^https?:\/\//i.test(o.value) && o.value != "") {#}
+{#                o.value = "https://" + o.value;#}
+{#            }#}
+{#        }#}
+{#    </script>#}
+{% endblock %}
