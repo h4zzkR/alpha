@@ -12,15 +12,15 @@
                                       <div class="row mx-auto" style="margin-left: 3%; color: #fff">
                                         <b>Название:</b> &nbsp  {{ project.name }}
                                       </div>
+                                      <div class="card-avatar">
+                                        <img src="{{ MEDIA_URL }}{{ project.author.profile.avatar}}" alt="Аватар">
+                                      </div>
                                   </div>
                                     <div class="text-body" style="margin-left: 3%; margin-top: 1%; font-size: larger">
                                         Описание: <br>
                                     </div>
                                   <div class="card-body mb-2 overflow-hidden" style="display: inline-block;">
                                     <p class="card-text text-default ">{{ project.description }}</p>
-                                    <div class="card-avatar">
-                                        <img src="{{ MEDIA_URL }}{{ project.author.profile.avatar}}" alt="Аватар">
-                                    </div>
                                   </div>
                                     <div class="card-footer pb-2 pt-1">
                                         <div class="row justify-content-around" style="">
