@@ -124,6 +124,8 @@ class ProfileEditForm(forms.ModelForm):
         fields = ('github', 'telegram',
                   'linked_in', 'vk', 'bio')
 
+    #   SKills user.skills.all()
+
     github = forms.URLField(required=False, max_length=UserProfile._meta.get_field('github').max_length,
                             widget=URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
                                                    'id': 'github',

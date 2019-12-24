@@ -13,8 +13,8 @@ from django.views.generic.base import View
 from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserProfile
 import json
+from .models import UserSkill, UserProfile
 from apps.project.models import Project
 from django.core.serializers import serialize
 

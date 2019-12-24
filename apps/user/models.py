@@ -12,6 +12,12 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 
+class UserSkill(models.Model):
+    name = models.CharField(default="", blank=True, max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     # user.profile.fields
@@ -33,6 +39,7 @@ class UserProfile(models.Model):
     linked_in = models.URLField(default="", max_length=len('https://') + 20, blank=True)
     telegram = models.URLField(default="",  max_length=len('https://t.me/') + 20, blank=True)
     bio = models.TextField(default="", max_length=80)
+    # skills = models.ManyToManyField(UserSkill)
 
     def __str__(self):
         return self.user.username
@@ -73,16 +80,6 @@ class UserEmailConfirmation(models.Model):
     key2 = models.TextField(max_length=64)
     expires = models.DateTimeField(default=datetime.datetime.now(
         pytz.utc) + datetime.timedelta(hours=24))
-
-
-class UserSkill(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
-
-
-class UserProject(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
 
 
 class UserFriendInvitation(models.Model):
