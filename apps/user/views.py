@@ -174,15 +174,15 @@ def update_profile(request):
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
     skills = []
-    if Skills.objects.filter(user=request.user):
-        for skill in Skills.objects.filter(user=request.user):
-            skills.append(skill.name)
-    all_skills = Skill.objects.all()
+    # if Skills.objects.filter(user=request.user):
+    #     for skill in Skills.objects.filter(user=request.user):
+    #         skills.append(skill.name)
+    # all_skills = Skill.objects.all()
     return render(request, 'profile_.html', {
         'form': user_form,
         'form2': profile_form,
-        'skills': skills,
-        'all_skills': all_skills
+        # 'skills': skills,
+        # 'all_skills': all_skills
     })
 
 

@@ -14,8 +14,9 @@ from django.views.generic.base import View
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Project
-from .forms import ProjectForm
+from .forms import ProjectEditForm, ProjectForm
 from ..user.views import get_context
+from ..user.views import Messages, ajax_messages
 
 
 from django.views.generic.edit import FormView
@@ -64,4 +65,42 @@ class ProjectListView(ListView):
         return context
 
 
+def project_view(request, id):
+    try:
+        project = Project.objects.get(id=id)
+    except Project.DoesNotExist:
+        return '404'
+
+    m = Messages()
+    if request.method == 'POST':
+        if request.user.is_authenticated and request.user == project.author:
+            response_data = {}
+            project_form = ProjectEditForm(request.POST, instance=project)
+            if project_form.is_valid() and project_form.is_valid():
+                project_form.save()
+                response_data.update(project_form.cleaned_data)
+                response_data.update(project_form.cleaned_data)
+                # m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
+                response_data.update({'messages': ajax_messages(request)})
+            else:
+                # m.add(request, 'error', 'Что-то пошло не так...')
+                response_data.update({'messages': ajax_messages(request)})
+            # return JsonResponse(response_data)
+        else:
+            raise Exception
+    else:
+        project_form = ProjectForm(instance=project, user=request.user)
+
+    return render(request, 'project_view.html', {
+        'form': project_form,
+        'user_id' : project.id
+    })
+    #
+    # if request.user.is_authenticated and request.user == project.author:
+    #     # user is project owner
+    #     return redirect(reverse('user_profile'), get_context(request, 'Профиль'))
+    # else:
+    #     # client tries to look smb profile
+    #     except ObjectDoesNotExist:
+    #         return HttpResponseNotFound
 
