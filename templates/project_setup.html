@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 {#    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />#}
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <link rel="stylesheet" href="/static/css/tagsinput.css" />
-
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tags-input.css">
-	<script type="text/javascript" src="{{STATIC_URL}}js/tags-input.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/typeagead-styles.css">
 {% endblock %}
 
 {% block styles %}
@@ -114,21 +112,12 @@
                             <div class="col-lg-9 mt-0 ml--2">
                                 <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
 {#                                <div class="bootstrap-tagsinput"><span class="badge badge badge-tag">sdsd<span data-role="remove"></span></span><input type="text" placeholder="" size="1"></div>#}
-                                <div class="bootstrap-tagsinput">
-                                <div class="form-group">
-                                    <input type="text" data-role="tagsinput" class="form-control" name="tags">
-{#                                 <input class="form-control form-control-alternative" name='tags' type="tags" placeholder="..." id="tags"/>#}
+                             <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
+                                    <input class="typeahead form-control" form="profile-form" autocomplete="off"
+                                           type="text" id="tags-input"
+                                           name="tags" data-role="tagsinput">
                                 </div>
                             </div>
-                            <div class="col-lg-9 mt-0 ml--2">
-                            <div class="bootstrap-tagsinput">
-                                <span class="tag label label-info">Amsterdam<span data-role="remove"></span></span>
-                                <span class="tag label label-info">Washington<span data-role="remove"></span></span>
-                                <span class="tag label label-info">Sydney<span data-role="remove"></span></span>
-                                <span class="tag label label-info">Beijing<span data-role="remove"></span></span>
-                                <span class="tag label label-info">Cairo<span data-role="remove"></span></span>
-                                <input type="text" placeholder="">
-                            </div></div>
 
                         </div>
                     </div>
@@ -143,9 +132,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="/static/js/tagsinput.js"></script>
 {#    <script>#}
 {#        $("#project-form").submit(function(e){#}
 {#            e.preventDefault();#}
@@ -189,5 +175,31 @@
             },
             placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
         });
+    </script>
+    <script src="/static/js/bootstrap-tagsinput.js"></script>
+    <script src="/static/js/typeahead.js"></script>
+    <script>
+    var data = '{{ skills }}'.replace(/&quot;/g, '\"');
+    var task = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      local: jQuery.parseJSON(data) //your can use json type
+    });
+
+    task.initialize();
+
+    $('#tags-input').tagsinput({
+      {#itemValue: "value",#}
+      {#itemText: "text",#}
+      typeaheadjs: {
+        name: "task",
+        displayKey: "text",
+        source: task.ttAdapter()
+      }
+    });
+
+    //insert data to input in load page
+
+
     </script>
 {% endblock %}

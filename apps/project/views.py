@@ -59,11 +59,7 @@ def project_create(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
-            print('VALID')
-            project = form.save(request.user, commit=False)
-            # project.slug = slugify(project.title)
-            project.save()
-            form.save_m2m()
+            project = form.save(request.user)
         else:
             print(form.errors)
     else:

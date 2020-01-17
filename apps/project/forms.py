@@ -10,6 +10,8 @@ from alpha.settings import DEBUG
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from taggit.forms import *
+
 
 
 
@@ -79,6 +81,15 @@ class ProjectForm(forms.ModelForm):
                                                'class': 'form-control form-control-alternative',
                                                }))
 
+    tags = TagField(min_length=2, widget=forms.TextInput(
+        attrs={
+               'data-role' : 'tagsinput',
+               'name' : 'tags'},
+
+    ))
+
+
+
 
     class Meta:
         model = Project
@@ -87,20 +98,10 @@ class ProjectForm(forms.ModelForm):
             "trello", "vcs", "callback", 'tags',
         )
 
-    # def clean(self):
-    #     import string
-    #     cleaned_data = super(ProjectForm, self).clean()
-    #     tags = self.data['tags'].split(',')
-    #     cleaned_tags = []
-    #     for i in tags:
-    #         # , 'https://', 'www.')
-    #         if 'http://' not in i and 'https://' not in i and 'www.' not in i:
-    #             cleaned_tags.append(i.strip(string.punctuation))
-    #     cleaned_data.update({'tags' : cleaned_tags})
-    #     return cleaned_data
 
-    def save(self, user, commit=True):
+    def save(self, user):
         project = super(ProjectForm, self).save(commit=False)
+        super(ProjectForm, self).save_m2m()
         project.author = user
         try:
             c = Collaborator.objects.get(member=user)
@@ -111,15 +112,8 @@ class ProjectForm(forms.ModelForm):
         project.save()
 
         project.collaborators.add(c)
-
-            # if len(self.cleaned_data['tags']) > 0:
-                # for t in self.cleaned_data['tags']:
-                #     try:
-                #         t = Tag.objects.get(name=t)
-                #     except Tag.DoesNotExist:
-                #         t = Tag(name=t); t.save()
-                #     project.tags.add(t)
         project.save()
+
 
         return project
 
@@ -130,7 +124,7 @@ class ProjectEditForm(forms.ModelForm):
         model = Project
         fields = (
             "name", "description", "max_people", "technical_spec_url",
-            "trello", "vcs", "callback"
+            "trello", "vcs", "callback", "tags"
         )
 
     name = forms.CharField(required=True, max_length=Project._meta.get_field('name').max_length,
@@ -189,19 +183,14 @@ class ProjectEditForm(forms.ModelForm):
                                                'class': 'form-control form-control-alternative',
                                                }))
 
+    tags = TagField(min_length=2, widget=forms.TextInput(
+        attrs={
+               'data-role' : 'tagsinput',
+               'name' : 'tags'},
 
-    #
-    def clean(self):
-        import string
-        cleaned_data = super(ProjectEditForm, self).clean()
-        tags = self.data['tags'].split(',')
-        cleaned_tags = []
-        for i in tags:
-            # , 'https://', 'www.')
-            if 'http://' not in i and 'https://' not in i and 'www.' not in i:
-                cleaned_tags.append(i.strip(string.punctuation))
-        cleaned_data.update({'tags' : cleaned_tags})
-        return cleaned_data
+    ))
+
+
     #
     def save(self, commit=True):
         project = super(ProjectEditForm, self).save(commit=False)
@@ -221,15 +210,6 @@ class ProjectEditForm(forms.ModelForm):
         #
         #     project.collaborators.add(c)
         #
-
-        if len(self.cleaned_data['tags']) > 0:
-            for t in self.cleaned_data['tags']:
-                if t not in project.tags.all():
-                    try:
-                        t = Tag.objects.get(name=t)
-                    except Tag.DoesNotExist:
-                        t = Tag(name=t); t.save()
-                    project.tags.add(t)
         project.save()
 
         return project

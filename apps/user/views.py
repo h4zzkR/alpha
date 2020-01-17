@@ -165,8 +165,6 @@ def render_to_json(request, data):
 def update_profile(request):
     m = Messages()
     u = request.user
-    u.profile.list_skills()
-    list_skills()
     if request.method == 'POST':
         response_data = {}
         user_form = UserEditForm(request.POST, instance=request.user)
