@@ -18,5 +18,6 @@ urlpatterns = [
     path('projects/new', p.project_create, name="project_create"),
     path('projects/view', p.ProjectListView.as_view(), name='projects_list'),
     path('p/<int:id>', p.project_view, name='project_view'),
+    path('list_skills/', u.list_skills),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

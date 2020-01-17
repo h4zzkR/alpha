@@ -14,8 +14,10 @@ from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 import json
-# from .models import UserProfile
+from .models import UserProfile
 from apps.project.models import Project
+
+from taggit.models import Tag
 from django.core.serializers import serialize
 
 
@@ -45,12 +47,20 @@ def ajax_messages(request):
     return django_messages
 
 
+def list_skills():
+    tags = UserProfile.skills.all()
+    tag_list = []
+    for i in range(len(tags)):
+        tag = tags[i].name
+        tag_list.append({ "value" : str(i), "text" : tag })
+    return tag_list
+
+
 def index(request):
     if request.user.is_authenticated:
         context = get_context(request, 'Хаб')
         # print(request.user.profile)
         context.update({'projects': Project.objects.all()})
-        print(context)
         return render(request, 'index.html', context)
     else:
         context = get_context(request, 'greetings')
@@ -156,6 +166,7 @@ def update_profile(request):
     m = Messages()
     u = request.user
     u.profile.list_skills()
+    list_skills()
     if request.method == 'POST':
         response_data = {}
         user_form = UserEditForm(request.POST, instance=request.user)
@@ -176,11 +187,12 @@ def update_profile(request):
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
 
+    import json
     return render(request, 'profile_.html', {
         'form': user_form,
         'form2': profile_form,
         'user' : u,
-        # 'skills': skills,
+        'skills': json.dumps(list_skills(), ensure_ascii=False).replace('\"','"')
         # 'all_skills': all_skills
     })
 

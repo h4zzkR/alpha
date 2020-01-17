@@ -15,6 +15,7 @@
     <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/typeagead-styles.css">
 {#    <script src="/static/js/profile_submit.js"></script>#}
 {% endblock %}
 
@@ -22,7 +23,6 @@
     .CodeMirror, .CodeMirror-scroll {
         min-height: 575px;
     }
-
 {% endblock %}
 
 {% block header %}{% endblock %}
@@ -200,11 +200,13 @@
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
                         <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                            Выберите интересующие Вас сферы:
+                            Расскажите, в чем Вы хороши:
                         </div>
                         <div class="card-body pt-0 pt-md-4">
-                                 <div class="bootstrap-tagsinput">
-                                    <input form="profile-form" type="text" name="skills"  value="{{ user.profile.list_skills }}" data-role="tagsinput">
+                                 <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
+                                    <input class="typeahead form-control" form="profile-form" autocomplete="off"
+                                           type="text" id="skills-input"
+                                           name="skills"  value="{{ user.profile.list_skills }}" data-role="tagsinput">
                                 </div>
                         </div>
                     </div>
@@ -281,6 +283,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -328,6 +331,7 @@
     <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
 
     <script src="/static/js/bootstrap-tagsinput.js"></script>
+    <script src="/static/js/typeahead.js"></script>
 
     <script>
     $(document).ready(function() {
@@ -381,11 +385,37 @@
     }
     </script>
 
-{#    <script>#}
-{#        function checkURL(o) {#}
-{#            if (!/^https?:\/\//i.test(o.value) && o.value != "") {#}
-{#                o.value = "https://" + o.value;#}
-{#            }#}
-{#        }#}
-{#    </script>#}
+    <script>
+        function checkURL(o) {
+            if (!/^https?:\/\//i.test(o.value) && o.value != "") {
+                o.value = "https://" + o.value;
+            }
+        }
+    </script>
+
+    <script>
+    var data = '{{ skills }}'.replace(/&quot;/g, '\"');
+    var task = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      local: jQuery.parseJSON(data) //your can use json type
+    });
+
+    task.initialize();
+
+    $('#skills-input').tagsinput({
+      {#itemValue: "value",#}
+      {#itemText: "text",#}
+      typeaheadjs: {
+        name: "task",
+        displayKey: "text",
+        source: task.ttAdapter()
+      }
+    });
+
+    //insert data to input in load page
+
+
+    </script>
+
 {% endblock %}
