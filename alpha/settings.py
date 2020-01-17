@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.user.apps.UserConfig',
     'apps.events.apps.EventsConfig',
     'social_django',
+    'taggit',
 ]
 
 

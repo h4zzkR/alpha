@@ -10,6 +10,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from django.db.models.signals import post_save
+from taggit.managers import TaggableManager
 
 
 class UserSkill(models.Model):
@@ -39,7 +40,8 @@ class UserProfile(models.Model):
     linked_in = models.URLField(default="", max_length=len('https://') + 20, blank=True)
     telegram = models.URLField(default="",  max_length=len('https://t.me/') + 20, blank=True)
     bio = models.TextField(default="", max_length=80)
-    # skills = models.ManyToManyField(UserSkill)
+
+    skills = TaggableManager()
 
     def __str__(self):
         return self.user.username

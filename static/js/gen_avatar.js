@@ -28,7 +28,7 @@ function avatar() {
     // console.log(form);
     $.ajax({
         type: 'POST',
-        url: '/update_avatar/',
+        url: '/account/update_avatar/',
         contentType: false,
         cache: false,
         processData:false,

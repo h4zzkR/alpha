@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from taggit.managers import TaggableManager
 
 
 # Create your models here.
@@ -35,7 +36,8 @@ class Project(models.Model):
     vcs = models.TextField(default="", blank=True)
     callback = models.TextField(default="", blank=True)
 
-    tags = models.ManyToManyField(Tag)
+    # tags = models.ManyToManyField(Tag)
+    tags = TaggableManager()
 
     def get_status(self):
         if self.status == 0:

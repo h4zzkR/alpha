@@ -19,9 +19,9 @@ class ProjectForm(forms.ModelForm):
     #     'password_mismatch': _("Введенные пароли не совпадают"),
     # }
 
-    def __init__(self, user, *args, **kwargs):
-        super(ProjectForm, self).__init__(*args, **kwargs)
-        self.user = user
+    # def __init__(self, user, *args, **kwargs):
+    #     super(ProjectForm, self).__init__(*args, **kwargs)
+    #     self.user = user
 
     name = forms.CharField(required=True, max_length=Project._meta.get_field('name').max_length,
                             widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Название',
@@ -84,48 +84,42 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = (
             "name", "description", "max_people", "technical_spec_url",
-            "trello", "vcs", "callback"
+            "trello", "vcs", "callback", 'tags',
         )
 
-    def clean(self):
-        import string
-        cleaned_data = super(ProjectForm, self).clean()
-        tags = self.data['tags'].split(',')
-        cleaned_tags = []
-        for i in tags:
-            # , 'https://', 'www.')
-            if 'http://' not in i and 'https://' not in i and 'www.' not in i:
-                cleaned_tags.append(i.strip(string.punctuation))
-        cleaned_data.update({'tags' : cleaned_tags})
-        return cleaned_data
+    # def clean(self):
+    #     import string
+    #     cleaned_data = super(ProjectForm, self).clean()
+    #     tags = self.data['tags'].split(',')
+    #     cleaned_tags = []
+    #     for i in tags:
+    #         # , 'https://', 'www.')
+    #         if 'http://' not in i and 'https://' not in i and 'www.' not in i:
+    #             cleaned_tags.append(i.strip(string.punctuation))
+    #     cleaned_data.update({'tags' : cleaned_tags})
+    #     return cleaned_data
 
-    def save(self, commit=True):
+    def save(self, user, commit=True):
         project = super(ProjectForm, self).save(commit=False)
-        print(project)
-        if commit:
-            project.save()
-            project.author = self.user
-            if self.cleaned_data['type'] == 'open':
-                project.is_public = True
-            else:
-                project.is_public = False
+        project.author = user
+        try:
+            c = Collaborator.objects.get(member=user)
+        except Collaborator.DoesNotExist:
+            c = Collaborator(member=user)
+            c.save()
 
-            try:
-                c = Collaborator.objects.get(member=self.user)
-            except Collaborator.DoesNotExist:
-                c = Collaborator(member=self.user);
-                c.save()
+        project.save()
 
-            project.collaborators.add(c)
+        project.collaborators.add(c)
 
-            if len(self.cleaned_data['tags']) > 0:
-                for t in self.cleaned_data['tags']:
-                    try:
-                        t = Tag.objects.get(name=t)
-                    except Tag.DoesNotExist:
-                        t = Tag(name=t); t.save()
-                    project.tags.add(t)
-            project.save()
+            # if len(self.cleaned_data['tags']) > 0:
+                # for t in self.cleaned_data['tags']:
+                #     try:
+                #         t = Tag.objects.get(name=t)
+                #     except Tag.DoesNotExist:
+                #         t = Tag(name=t); t.save()
+                #     project.tags.add(t)
+        project.save()
 
         return project
 
@@ -165,7 +159,7 @@ class ProjectEditForm(forms.ModelForm):
                                                }))
 
     type = forms.CharField(label='Тип проекта',
-                           widget=forms.Select(attrs={'class' : 'form-control form-control-alternative',
+                           widget=forms.Select(attrs={'class' : 'form-control',
                                                       'id': 'type',
                                                       'name': 'type'
                                                       },
@@ -194,45 +188,48 @@ class ProjectEditForm(forms.ModelForm):
                                                'name': 'callback',
                                                'class': 'form-control form-control-alternative',
                                                }))
+
+
     #
-    # def clean(self):
-    #     import string
-    #     cleaned_data = super(ProjectEditForm, self).clean()
-    #     tags = self.data['tags'].split(',')
-    #     cleaned_tags = []
-    #     for i in tags:
-    #         # , 'https://', 'www.')
-    #         if 'http://' not in i and 'https://' not in i and 'www.' not in i:
-    #             cleaned_tags.append(i.strip(string.punctuation))
-    #     cleaned_data.update({'tags' : cleaned_tags})
-    #     return cleaned_data
+    def clean(self):
+        import string
+        cleaned_data = super(ProjectEditForm, self).clean()
+        tags = self.data['tags'].split(',')
+        cleaned_tags = []
+        for i in tags:
+            # , 'https://', 'www.')
+            if 'http://' not in i and 'https://' not in i and 'www.' not in i:
+                cleaned_tags.append(i.strip(string.punctuation))
+        cleaned_data.update({'tags' : cleaned_tags})
+        return cleaned_data
     #
-    # def save(self, commit=True):
-    #     project = super(ProjectEditForm, self).save(commit=False)
-    #     print(project)
-    #     if commit:
-    #         project.save()
-    #         project.author = self.user
-    #         if self.cleaned_data['type'] == 'open':
-    #             project.is_public = True
-    #         else:
-    #             project.is_public = False
-    #
-    #         try:
-    #             c = Collaborator.objects.get(member=self.user)
-    #         except Collaborator.DoesNotExist:
-    #             c = Collaborator(member=self.user);
-    #             c.save()
-    #
-    #         project.collaborators.add(c)
-    #
-    #         if len(self.cleaned_data['tags']) > 0:
-    #             for t in self.cleaned_data['tags']:
-    #                 try:
-    #                     t = Tag.objects.get(name=t)
-    #                 except Tag.DoesNotExist:
-    #                     t = Tag(name=t); t.save()
-    #                 project.tags.add(t)
-    #         project.save()
-    #
-    #     return project
+    def save(self, commit=True):
+        project = super(ProjectEditForm, self).save(commit=False)
+        # if commit:
+        #     project.save()
+        #     project.author = self.user
+        #     if self.cleaned_data['type'] == 'open':
+        #         project.is_public = True
+        #     else:
+        #         project.is_public = False
+        #
+        #     try:
+        #         c = Collaborator.objects.get(member=self.user)
+        #     except Collaborator.DoesNotExist:
+        #         c = Collaborator(member=self.user);
+        #         c.save()
+        #
+        #     project.collaborators.add(c)
+        #
+
+        if len(self.cleaned_data['tags']) > 0:
+            for t in self.cleaned_data['tags']:
+                if t not in project.tags.all():
+                    try:
+                        t = Tag.objects.get(name=t)
+                    except Tag.DoesNotExist:
+                        t = Tag(name=t); t.save()
+                    project.tags.add(t)
+        project.save()
+
+        return project

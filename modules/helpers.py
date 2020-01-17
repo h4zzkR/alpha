@@ -24,12 +24,12 @@ def pillow_update_avatar(pil_obj, user_obj, format='png'):
         #update_avatar
         pil_obj.save(new_avatar, format=format)
         s = new_avatar.getvalue()
-        user_obj.picture.save(user_obj.picture,
+        user_obj.profile.avatar.save(user_obj.profile.avatar,
                               ContentFile(s))
         user_obj.save()
     except TypeError:
         # if user_obj has no avatar
-        user_obj.picture.save(f'{str(user_obj.id)}.{format}', ContentFile(s))
+        user_obj.profile.avatar.save(f'{str(user_obj.id)}.{format}', ContentFile(s))
     finally:
         new_avatar.close()
 

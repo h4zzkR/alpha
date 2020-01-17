@@ -6,8 +6,9 @@
 
 {% block extra_links %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />
+{#    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />#}
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <link rel="stylesheet" href="/static/css/tagsinput.css" />
 
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tags-input.css">
 	<script type="text/javascript" src="{{STATIC_URL}}js/tags-input.js"></script>
@@ -112,10 +113,22 @@
 
                             <div class="col-lg-9 mt-0 ml--2">
                                 <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
+{#                                <div class="bootstrap-tagsinput"><span class="badge badge badge-tag">sdsd<span data-role="remove"></span></span><input type="text" placeholder="" size="1"></div>#}
+                                <div class="bootstrap-tagsinput">
                                 <div class="form-group">
-                                 <input class="form-control form-control-alternative" name='tags' type="tags" placeholder="..." id="tags"/>
+                                    <input type="text" data-role="tagsinput" class="form-control" name="tags">
+{#                                 <input class="form-control form-control-alternative" name='tags' type="tags" placeholder="..." id="tags"/>#}
                                 </div>
                             </div>
+                            <div class="col-lg-9 mt-0 ml--2">
+                            <div class="bootstrap-tagsinput">
+                                <span class="tag label label-info">Amsterdam<span data-role="remove"></span></span>
+                                <span class="tag label label-info">Washington<span data-role="remove"></span></span>
+                                <span class="tag label label-info">Sydney<span data-role="remove"></span></span>
+                                <span class="tag label label-info">Beijing<span data-role="remove"></span></span>
+                                <span class="tag label label-info">Cairo<span data-role="remove"></span></span>
+                                <input type="text" placeholder="">
+                            </div></div>
 
                         </div>
                     </div>
@@ -130,6 +143,19 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="/static/js/tagsinput.js"></script>
+{#    <script>#}
+{#        $("#project-form").submit(function(e){#}
+{#            e.preventDefault();#}
+{#            });#}
+{#    </script>#}
+    <script>
+        $(function() {
+          $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+        });
+    </script>
     <script>
         let $ = s => [].slice.call(document.querySelectorAll(s));
 
@@ -143,6 +169,8 @@
 
         // hook 'em up:
         $('input[type="tags"]').forEach(tagsInput);
+    </script>
+    <script>
     </script>
     <script>
         new SimpleMDE({
