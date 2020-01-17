@@ -52,6 +52,9 @@ class UserProfile(models.Model):
     def last_seen(self):
         return cache.get('seen_%s' % self.user.username)
 
+    def list_skills(self):
+        return ','.join([t.name for t in self.skills.all()])
+
     def online(self):
         if self.last_seen():
             now = datetime.datetime.now()

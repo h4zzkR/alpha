@@ -154,13 +154,16 @@ def render_to_json(request, data):
 @login_required
 def update_profile(request):
     m = Messages()
+    u = request.user
+    u.profile.list_skills()
     if request.method == 'POST':
         response_data = {}
         user_form = UserEditForm(request.POST, instance=request.user)
         profile_form = ProfileEditForm(request.POST, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
-            profile_form.save()
+            obj = profile_form.save(commit=False)
+            profile_form.save_m2m()
             response_data.update(user_form.cleaned_data)
             response_data.update(profile_form.cleaned_data)
             m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
@@ -172,21 +175,14 @@ def update_profile(request):
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
-    skills = []
-    # if Skills.objects.filter(user=request.user):
-    #     for skill in Skills.objects.filter(user=request.user):
-    #         skills.append(skill.name)
-    # all_skills = Skill.objects.all()
+
     return render(request, 'profile_.html', {
         'form': user_form,
         'form2': profile_form,
+        'user' : u,
         # 'skills': skills,
         # 'all_skills': all_skills
     })
-
-
-def view_project(request, id):
-    pass
 
 
 @login_required

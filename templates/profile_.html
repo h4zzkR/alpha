@@ -14,6 +14,7 @@
     <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
     <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
 {#    <script src="/static/js/profile_submit.js"></script>#}
 {% endblock %}
 
@@ -21,6 +22,7 @@
     .CodeMirror, .CodeMirror-scroll {
         min-height: 575px;
     }
+
 {% endblock %}
 
 {% block header %}{% endblock %}
@@ -128,6 +130,7 @@
     <!--  END OF ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
 
 
+
     <div class="container-fluid mt--7">
         <div class="row"></div>
             <div class="col-xl-4 float-lg-right">
@@ -200,22 +203,8 @@
                             Выберите интересующие Вас сферы:
                         </div>
                         <div class="card-body pt-0 pt-md-4">
-                                <ul class="ks-cboxtags">
-                                {% for skill in skills %}
-                                    <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" checked="checked" multiple name="skills[]">
-                                        <label for="toggle-{{skill.id}}">{{skill.name}}</label>
-                                    </li>
-                                {% endfor %}
-                                    {% for skill in all_skills %}
-                                        {% if skill.name not in skills %}
-                                            <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" multiple name="skills[]">
-                                                <label for="toggle-{{skill.id}}">{{skill.name}}</label>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                                <div class="col-4 text-right">
-                                        <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                                 <div class="bootstrap-tagsinput">
+                                    <input form="profile-form" type="text" name="skills"  value="{{ user.profile.list_skills }}" data-role="tagsinput">
                                 </div>
                         </div>
                     </div>
@@ -337,6 +326,8 @@
     <script src="/static/js/gen_avatar.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+
+    <script src="/static/js/bootstrap-tagsinput.js"></script>
 
     <script>
     $(document).ready(function() {
