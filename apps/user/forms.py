@@ -8,6 +8,7 @@ from .models import UserProfile
 from alpha.settings import DEBUG
 
 from django.core.exceptions import ValidationError
+from taggit.forms import *
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -122,9 +123,9 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('github', 'telegram',
-                  'linked_in', 'vk', 'bio')
+                  'linked_in', 'vk', 'bio',
+                  'skills')
 
-    #   SKills user.skills.all()
 
     github = forms.URLField(required=False, max_length=UserProfile._meta.get_field('github').max_length,
                             widget=URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
@@ -166,3 +167,5 @@ class ProfileEditForm(forms.ModelForm):
                                      "maxlength": UserProfile._meta.get_field('bio').max_length,
                                      'name': 'bio',
                                      'class': 'form-control form-control-alternative'}))
+
+    skills = TagField(max_length=14, min_length=2)

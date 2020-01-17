@@ -14,9 +14,8 @@ from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 import json
-from .models import UserSkill, UserProfile
+# from .models import UserProfile
 from apps.project.models import Project
-from apps.user.models import Skill, Skills
 from django.core.serializers import serialize
 
 

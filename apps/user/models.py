@@ -13,11 +13,11 @@ from django.db.models.signals import post_save
 from taggit.managers import TaggableManager
 
 
-class UserSkill(models.Model):
-    name = models.CharField(default="", blank=True, max_length=100)
-
-    def __str__(self):
-        return self.name
+# class UserSkill(models.Model):
+#     name = models.CharField(default="", blank=True, max_length=100)
+#
+#     def __str__(self):
+#         return self.name
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -97,9 +97,9 @@ class UserFriend(models.Model):
     users = models.ForeignKey(to=User, related_name="user", on_delete=models.CASCADE)
     follower = models.ForeignKey(to=User, related_name="follower", on_delete=models.CASCADE)
 
-class Skill(models.Model):
-    name = models.CharField(max_length=30)
-
-class Skills(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
+# class Skill(models.Model):
+#     name = models.CharField(max_length=30)
+#
+# class Skills(models.Model):
+#     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+#     skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
