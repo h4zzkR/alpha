@@ -80,19 +80,21 @@
                                         </div>
                                 </div>
 
-                           <div class="col-lg-15">
+                          <div class="col-lg-15">
                                    <div class="form-group">
-                                        <label for="{{ form.type.id }}">Тип проекта</label>
-                                        {{ form.type }}
-                                      </div>
-                                </div>
-{#                               <div class="col-lg-15">#}
-{#                                        <div class="form-group">#}
-{#                                            <label class="form-control-label" for="{{ form.team_size.id }}">Сжатое описание*</label>#}
-{#                                            {{ form.short_description }}#}
-{#                                        </div>#}
-{#                                </div>#}
+                                        <label for="">Тип проекта</label>
+                                        <select name="is_public" class="form-control form-control-alternative" id="type">
+                                        {% if project.is_public == 1 %}
+                                          <option selected="selected" value="1">Открытый</option>
+                                          <option value="0">Приватный</option>
+                                        {% else %}
+                                            <option value="1">Открытый</option>
+                                            <option selected="selected" value="0">Приватный</option>
+                                        {% endif %}
 
+                                        </select>
+                                          </div>
+                                </div>
 
                                 </div>
                             </div>
@@ -111,12 +113,10 @@
 
                             <div class="col-lg-9 mt-0 ml--2">
                                 <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
-{#                                <div class="bootstrap-tagsinput"><span class="badge badge badge-tag">sdsd<span data-role="remove"></span></span><input type="text" placeholder="" size="1"></div>#}
-                             <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
-                                    <input class="typeahead form-control" form="profile-form" autocomplete="off"
-                                           type="text" id="tags-input"
-                                           name="tags" data-role="tagsinput">
-                                </div>
+                            <div class="bootstrap-tagsinput">
+                                <input class="typeahead form-control" type="text" name="tags"
+                                       data-role="tagsinput" id="tags-input" minlength="2" required="">
+                            </div>
                             </div>
 
                         </div>
@@ -132,31 +132,15 @@
 {% endblock %}
 
 {% block scripts %}
-{#    <script>#}
-{#        $("#project-form").submit(function(e){#}
-{#            e.preventDefault();#}
-{#            });#}
-{#    </script>#}
+
     <script>
-        $(function() {
-          $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+        $('#project-form').on('keyup keypress', function(e) {
+          var keyCode = e.keyCode || e.which;
+          if (keyCode === 13) {
+            e.preventDefault();
+            return false;
+          }
         });
-    </script>
-    <script>
-        let $ = s => [].slice.call(document.querySelectorAll(s));
-
-        // log events as they happen:
-        let t = $('#tags')[0];
-        t.addEventListener('input', log);
-        t.addEventListener('change', log);
-        function log(e) {
-            $('#out')[0].textContent = `${e.type}: ${this.value.replace(/,/g,', ')}`;
-        }
-
-        // hook 'em up:
-        $('input[type="tags"]').forEach(tagsInput);
-    </script>
-    <script>
     </script>
     <script>
         new SimpleMDE({
@@ -179,27 +163,34 @@
     <script src="/static/js/bootstrap-tagsinput.js"></script>
     <script src="/static/js/typeahead.js"></script>
     <script>
-    var data = '{{ skills }}'.replace(/&quot;/g, '\"');
-    var task = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      local: jQuery.parseJSON(data) //your can use json type
-    });
+        var data = '{{ tags }}'.replace(/&quot;/g,'"');
+        var task = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          local: jQuery.parseJSON(data) //your can use json type
+        });
 
-    task.initialize();
+        task.initialize();
 
-    $('#tags-input').tagsinput({
-      {#itemValue: "value",#}
-      {#itemText: "text",#}
-      typeaheadjs: {
-        name: "task",
-        displayKey: "text",
-        source: task.ttAdapter()
-      }
-    });
+        $('#tags-input').tagsinput({
+          {#itemValue: "value",#}
+          {#itemText: "text",#}
+          typeaheadjs: {
+            name: "task",
+            displayKey: "text",
+            source: task.ttAdapter()
+          }
+        });
 
-    //insert data to input in load page
+        //insert data to input in load page
 
 
+    </script>
+    <script>
+        function checkURL(o) {
+            if (!/^https?:\/\//i.test(o.value) && o.value != "") {
+                o.value = "https://" + o.value;
+            }
+        }
     </script>
 {% endblock %}

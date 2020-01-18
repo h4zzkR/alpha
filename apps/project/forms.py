@@ -17,14 +17,6 @@ from taggit.forms import *
 
 
 class ProjectForm(forms.ModelForm):
-    # error_messages = {
-    #     'password_mismatch': _("Введенные пароли не совпадают"),
-    # }
-
-    # def __init__(self, user, *args, **kwargs):
-    #     super(ProjectForm, self).__init__(*args, **kwargs)
-    #     self.user = user
-
     name = forms.CharField(required=True, max_length=Project._meta.get_field('name').max_length,
                             widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Название',
                                                        'label': 'name', 'name': 'name'}))
@@ -50,14 +42,14 @@ class ProjectForm(forms.ModelForm):
                                                'class': 'form-control form-control-alternative',
                                                }))
 
-    type = forms.CharField(label='Тип проекта',
+    is_public = forms.CharField(label='Тип проекта',
                            widget=forms.Select(attrs={'class' : 'form-control form-control-alternative',
                                                       'id': 'type',
                                                       'name': 'type'
                                                       },
                                                     choices=
-                                                        [('open', 'Открытый'),
-                                                         ('private', 'Приватный')])
+                                                        [(1, 'Открытый'),
+                                                         (0, 'Приватный')])
                            )
 
     trello = forms.URLField(required=False, max_length=Project._meta.get_field('trello').max_length,
@@ -84,132 +76,27 @@ class ProjectForm(forms.ModelForm):
     tags = TagField(min_length=2, widget=forms.TextInput(
         attrs={
                'data-role' : 'tagsinput',
-               'name' : 'tags'},
+               'name' : 'tags',
+               'id' : 'tags-input'},
 
     ))
-
-
-
 
     class Meta:
         model = Project
         fields = (
             "name", "description", "max_people", "technical_spec_url",
-            "trello", "vcs", "callback", 'tags',
+            "trello", "vcs", "callback", 'tags', 'is_public',
         )
 
 
     def save(self, user):
         project = super(ProjectForm, self).save(commit=False)
-        super(ProjectForm, self).save_m2m()
+        project.is_public = int(self.cleaned_data['is_public'])
         project.author = user
-        try:
-            c = Collaborator.objects.get(member=user)
-        except Collaborator.DoesNotExist:
-            c = Collaborator(member=user)
-            c.save()
-
         project.save()
 
-        project.collaborators.add(c)
+        project.collaborators.add(user)
         project.save()
 
-
-        return project
-
-
-
-class ProjectEditForm(forms.ModelForm):
-    class Meta:
-        model = Project
-        fields = (
-            "name", "description", "max_people", "technical_spec_url",
-            "trello", "vcs", "callback", "tags"
-        )
-
-    name = forms.CharField(required=True, max_length=Project._meta.get_field('name').max_length,
-                            widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Название',
-                                                       'label': 'name', 'name': 'name'}))
-
-    description = forms.CharField(required=False, max_length=Project._meta.get_field('description').max_length,
-                          widget=forms.Textarea(
-                              attrs={'placeholder': "Подробно опишите идею Вашего проекта",
-                                     "rows": "4",
-                                     'id': 'description',
-                                     "maxlength": Project._meta.get_field('description').max_length,
-                                     'name': 'description',
-                                     'class': 'form-control form-control-alternative'}))
-
-    max_people = forms.IntegerField(required=False, max_value=10,
-                                    widget=forms.NumberInput(
-                                        attrs={'class': 'form-control', 'placeholder': 'Максимальное количество участников',
-                                                            'label': 'max_people', 'min' : 0, 'max' : 10, 'name': 'max_people', 'value' : 0,}))
-
-    technical_spec_url = forms.URLField(required=False, max_length=Project._meta.get_field('technical_spec_url').max_length,
-                        widget=URLInput(attrs={'placeholder': "Ссылка на ТЗ (если есть)",
-                                               'id': 'technical_spec_url',
-                                               'name': 'technical_spec_url',
-                                               'class': 'form-control form-control-alternative',
-                                               }))
-
-    type = forms.CharField(label='Тип проекта',
-                           widget=forms.Select(attrs={'class' : 'form-control',
-                                                      'id': 'type',
-                                                      'name': 'type'
-                                                      },
-                                                    choices=
-                                                        [('open', 'Открытый'),
-                                                         ('private', 'Приватный')])
-                           )
-
-    trello = forms.URLField(required=False, max_length=Project._meta.get_field('trello').max_length,
-                        widget=URLInput(attrs={'placeholder': "Ссылка на Kanban (Trello)",
-                                               'id': 'trello',
-                                               'name': 'trello',
-                                               'class': 'form-control form-control-alternative',
-                                               }))
-
-    vcs = forms.URLField(required=False, max_length=Project._meta.get_field('vcs').max_length,
-                        widget=URLInput(attrs={'placeholder': "Ссылка на VCS",
-                                               'id': 'vcs',
-                                               'name': 'vcs',
-                                               'class': 'form-control form-control-alternative',
-                                               }))
-
-    callback = forms.URLField(required=False, max_length=Project._meta.get_field('callback').max_length,
-                        widget=URLInput(attrs={'placeholder': "Связь и общение (Telegram, Discord, Slack)",
-                                               'id': 'callback',
-                                               'name': 'callback',
-                                               'class': 'form-control form-control-alternative',
-                                               }))
-
-    tags = TagField(min_length=2, widget=forms.TextInput(
-        attrs={
-               'data-role' : 'tagsinput',
-               'name' : 'tags'},
-
-    ))
-
-
-    #
-    def save(self, commit=True):
-        project = super(ProjectEditForm, self).save(commit=False)
-        # if commit:
-        #     project.save()
-        #     project.author = self.user
-        #     if self.cleaned_data['type'] == 'open':
-        #         project.is_public = True
-        #     else:
-        #         project.is_public = False
-        #
-        #     try:
-        #         c = Collaborator.objects.get(member=self.user)
-        #     except Collaborator.DoesNotExist:
-        #         c = Collaborator(member=self.user);
-        #         c.save()
-        #
-        #     project.collaborators.add(c)
-        #
-        project.save()
 
         return project

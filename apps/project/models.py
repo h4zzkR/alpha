@@ -25,7 +25,8 @@ class Project(models.Model):
     max_people = models.IntegerField(default=0)  # 0 - no limit
 
     author = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
-    collaborators = models.ManyToManyField(Collaborator)
+    # collaborators = models.ManyToManyField(Collaborator, related_name='collabs')
+    collaborators = models.ManyToManyField(User, related_name='collabs')
 
     technical_spec_url = models.URLField(default="", max_length=100)
     is_public = models.BooleanField(default=0)
@@ -35,6 +36,8 @@ class Project(models.Model):
     trello = models.TextField(default="", blank=True)
     vcs = models.TextField(default="", blank=True)
     callback = models.TextField(default="", blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     # tags = models.ManyToManyField(Tag)
     tags = TaggableManager()
@@ -48,6 +51,9 @@ class Project(models.Model):
             return 'Поиск участников'
         elif self.status == 3:
             return 'Завершен'
+
+    def list_tags(self):
+        return ','.join([t.name for t in self.tags.all()])
 
 
 

@@ -72,21 +72,29 @@ ellips {
             {% else %}
                 <footer class="blockquote-footer">Создатель: <cite title="Source Title">{{ pr.author.username }}</cite></footer>
             {% endif %}
+            <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
+
+        </div>
+        <div class="card-footer bg-secondary">
+             <div style="display:flex">
+                {% for tag in pr.tags.all %}
+                    <a class="mr-1 badge badge-info">#{{ tag }}</a>
+                {% endfor %}
+            </div>
         </div>
         <div class="card-footer bg-secondary text-muted">
-{#            2 days ago#}
             <div class="row">
             <div class="col-12 col-md-6 col-sm-12">
                 {% for c in pr.collaborators.all %}
                     <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
-                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.member.username }}" src="{{ c.member.profile.avatar.url }}"></a>
+                       <a href="{{ c.profile.link }}"><img alt="{{ c.username }}" src="{{ c.profile.avatar.url }}"></a>
                     </span>
                 {% endfor %}
             </div>
             <div class="col-12 col-md-6 col-sm-12">
-                <h5 class="float-right">
+                <h5  class="float-right">
                 {{ pr.get_status }}
-                </h5>
+                </h5 >
                 <br>
             </div>
             </div>

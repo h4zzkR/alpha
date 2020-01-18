@@ -14,9 +14,11 @@ from django.views.generic.base import View
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Project
-from .forms import ProjectEditForm, ProjectForm
+from .forms import ProjectForm
 from ..user.views import get_context
 from ..user.views import Messages, ajax_messages
+
+from ..user.views import json_skills
 from django.template.defaultfilters import slugify
 
 
@@ -49,7 +51,7 @@ class ProjectCreate(FormView):
     def form_invalid(self, form):
         # Add action to invalid form phase
         print(form)
-        print(form.error_messages)
+        # print(form.error_messages)
         # messages.success(self.request, 'An error occured while processing the payment')
         # return self.render_to_response(self.get_context_data(form=form))
 
@@ -58,8 +60,10 @@ def project_create(request):
     m = Messages()
     if request.method == 'POST':
         form = ProjectForm(request.POST)
+        print(form.data)
         if form.is_valid():
             project = form.save(request.user)
+            form.save_m2m()
         else:
             print(form.errors)
     else:
@@ -68,6 +72,7 @@ def project_create(request):
     return render(request, 'project_setup.html', {
         'form': form,
         'pagename': 'Новый проект',
+        'tags' : json_skills(Project.tags.all())
     })
 
 
@@ -84,6 +89,14 @@ class ProjectListView(ListView):
         })
         return context
 
+    def get_queryset(self):
+        # new_context = Project.objects.filter(
+        #     author=self.request.user
+        # ).order_by("-created_at")
+        new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
+        # for p in Project.objects.filter()
+        return new_context
+
 
 def project_view(request, id):
     try:
@@ -96,28 +109,30 @@ def project_view(request, id):
         if request.user.is_authenticated and request.user == project.author:
             response_data = {}
             project_form = ProjectForm(request.POST, instance=project)
-            if project_form.is_valid() and project_form.is_valid():
-                project = project_form.save(request.user, commit=False)
+            print(project_form.data)
+            if project_form.is_valid():
+                project = project_form.save(request.user)
                 # response_data.update(project_form.cleaned_data)
                 # response_data.update(project_form.cleaned_data)
-                # m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
+                # m.add(request, 'success', 'Успешно')
                 project.save()
                 project_form.save_m2m()
                 response_data.update({'messages': ajax_messages(request)})
             else:
-                # m.add(request, 'error', 'Что-то пошло не так...')
+                m.add(request, 'error', 'Что-то пошло не так...')
                 response_data.update({'messages': ajax_messages(request)})
             # return JsonResponse(response_data)
         else:
             raise Exception
     else:
         project_form = ProjectForm()
-        print(project_form)
+        # print(project_form)
 
     return render(request, 'project_view.html', {
         'form': project_form,
         'user_id' : project.id,
         'project' : project,
+        'tags': json_skills(Project.tags.all())
     })
     #
     # if request.user.is_authenticated and request.user == project.author:

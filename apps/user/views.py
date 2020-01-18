@@ -47,13 +47,12 @@ def ajax_messages(request):
     return django_messages
 
 
-def list_skills():
-    tags = UserProfile.skills.all()
+def json_skills(tags = UserProfile.skills.all()):
     tag_list = []
     for i in range(len(tags)):
         tag = tags[i].name
         tag_list.append({ "value" : str(i), "text" : tag })
-    return tag_list
+    return json.dumps(tag_list, ensure_ascii=False).replace('\"','"')
 
 
 def index(request):
@@ -190,7 +189,7 @@ def update_profile(request):
         'form': user_form,
         'form2': profile_form,
         'user' : u,
-        'skills': json.dumps(list_skills(), ensure_ascii=False).replace('\"','"')
+        'skills': json_skills()
         # 'all_skills': all_skills
     })
 
