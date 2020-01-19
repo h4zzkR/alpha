@@ -13,7 +13,7 @@ from django.views.generic.base import View
 # from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Project
+from .models import Project, Collaborator
 from .forms import ProjectForm
 from ..user.views import get_context
 from ..user.views import Messages, ajax_messages
@@ -86,15 +86,13 @@ class ProjectListView(ListView):
         context = super().get_context_data(**kwargs)
         context.update({
             'pagename': 'Проекты',
+            'user' : self.request.user,
         })
         return context
 
     def get_queryset(self):
-        # new_context = Project.objects.filter(
-        #     author=self.request.user
-        # ).order_by("-created_at")
-        new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
-        # for p in Project.objects.filter()
+        # new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
+        new_context = Project.objects.filter(collaborators__member = self.request.user ).order_by("-created_at")
         return new_context
 
 
@@ -106,7 +104,8 @@ def project_view(request, id):
 
     m = Messages()
     if request.method == 'POST':
-        if request.user.is_authenticated and request.user == project.author:
+        col = project.collaborators.get(member=request.user)
+        if request.user.is_authenticated and col.can_edit_project is True:
             response_data = {}
             project_form = ProjectForm(request.POST, instance=project)
             print(project_form.data)

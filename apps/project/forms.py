@@ -92,10 +92,14 @@ class ProjectForm(forms.ModelForm):
     def save(self, user):
         project = super(ProjectForm, self).save(commit=False)
         project.is_public = int(self.cleaned_data['is_public'])
-        project.author = user
-        project.save()
 
-        project.collaborators.add(user)
+        if not project.author:
+            project.author = user
+            project.save()
+            t = Collaborator(member=user, is_author=True,
+                             can_edit_project=True, is_teamlead=True)
+            t.save()
+            project.collaborators.add(t)
         project.save()
 
 

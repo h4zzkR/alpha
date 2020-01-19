@@ -2,6 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 from taggit.managers import TaggableManager
 
+from django import template
+
+register = template.Library()
+
+@register.simple_tag
+def call_method(obj, method_name, *args):
+    method = getattr(obj, method_name)
+    return method(*args)
 
 # Create your models here.
 
@@ -18,6 +26,12 @@ class Tag(models.Model):
 
 class Collaborator(models.Model):
     member = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
+    role = models.CharField(default='не задано', blank=True, max_length=30)
+
+    entered_at = models.DateTimeField(auto_now_add=True)
+    can_edit_project = models.BooleanField(default=False)
+    is_teamlead = models.BooleanField(default=False)
+    is_author = models.BooleanField(default=False)
 
 class Project(models.Model):
     name = models.TextField(default="", blank=True)
@@ -25,8 +39,8 @@ class Project(models.Model):
     max_people = models.IntegerField(default=0)  # 0 - no limit
 
     author = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
-    # collaborators = models.ManyToManyField(Collaborator, related_name='collabs')
-    collaborators = models.ManyToManyField(User, related_name='collabs')
+    collaborators = models.ManyToManyField(Collaborator, related_name='collabs')
+    # collaborators = models.ManyToManyField(User, related_name='collabs')
 
     technical_spec_url = models.URLField(default="", max_length=100)
     is_public = models.BooleanField(default=0)
@@ -54,6 +68,11 @@ class Project(models.Model):
 
     def list_tags(self):
         return ','.join([t.name for t in self.tags.all()])
+
+    def members_with_edit_rights(self):
+        return [i.member for i in self.collaborators.filter(can_edit_project=True)]
+
+
 
 
 

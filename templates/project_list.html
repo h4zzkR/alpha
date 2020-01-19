@@ -50,7 +50,7 @@ ellips {
                          </div>
                         {% endif %}
                         <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
-                            {% if pr.author.username == user.username %}
+                            {% if user in pr.members_with_edit_rights%}
                             <a href="/p/{{ pr.id }}">
                               <button class='btn btn-danger float-right' style="" href="/p/{{ pr.id }}">
                                    <i class="fa fa-edit" style=""></i>
@@ -87,7 +87,7 @@ ellips {
             <div class="col-12 col-md-6 col-sm-12">
                 {% for c in pr.collaborators.all %}
                     <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
-                       <a href="{{ c.profile.link }}"><img alt="{{ c.username }}" src="{{ c.profile.avatar.url }}"></a>
+                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}" src="{{ c.member.profile.avatar.url }}"></a>
                     </span>
                 {% endfor %}
             </div>
