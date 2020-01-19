@@ -15,10 +15,9 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Project, Collaborator
 from .forms import ProjectForm
-from ..user.views import get_context
-from ..user.views import Messages, ajax_messages
+from ..main.views import get_context, ajax_messages, json_skills, Messages
 
-from ..user.views import json_skills
+from django.http import Http404
 from django.template.defaultfilters import slugify
 
 
@@ -133,12 +132,19 @@ def project_view(request, id):
         'project' : project,
         'tags': json_skills(Project.tags.all())
     })
-    #
-    # if request.user.is_authenticated and request.user == project.author:
-    #     # user is project owner
-    #     return redirect(reverse('user_profile'), get_context(request, 'Профиль'))
-    # else:
-    #     # client tries to look smb profile
-    #     except ObjectDoesNotExist:
-    #         return HttpResponseNotFound
+
+def kick_from_project(request, project_id, user_to_kick):
+    project = Project.objects.get(id=project_id)
+    m = Messages()
+    response_data = {}
+    if request.user in project.members_with_edit_rights():
+        project.kick_member(user_to_kick)
+    else:
+        raise Http404
+    response_data.update({'messages': ajax_messages(request)})
+    response_data.update(project.collaborators.all())
+    m.add(request, 'success', f'Пользователь {user_to_kick.username} больше не в команде!')
+    return JsonResponse(response_data)
+    # email kicked user
+
 

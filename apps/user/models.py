@@ -2,22 +2,31 @@ import pytz
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from apps.project.models import Skill, Project
+from apps.project.models import Project
 from django.core.cache import cache
 from django.conf import settings
 
-from django.db.models.signals import post_save
+from django.core.mail import send_mail
+import os
+from django.core.mail import EmailMultiAlternatives
+
+from django.conf import settings
+
 from django.dispatch import receiver
 
 from django.db.models.signals import post_save
 from taggit.managers import TaggableManager
 
+import hashlib
+from modules.helpers import random_string
 
-# class UserSkill(models.Model):
-#     name = models.CharField(default="", blank=True, max_length=100)
-#
-#     def __str__(self):
-#         return self.name
+
+class UserPasswordRecovery(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    key1 = models.TextField(max_length=64)
+    expires = models.DateTimeField(default=datetime.datetime.now(
+        pytz.utc) + datetime.timedelta(hours=24))
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -66,20 +75,48 @@ class UserProfile(models.Model):
         else:
             return False
 
+    def email_user(self, subject, arguments, text_content=None, message=None):
+        # arguments = { KEY : VALUE } for template
+        # {{ link }}
+        template_name = os.path.join(settings.BASE_DIR, 'templates/mail/' + arguments['template_name'])
+        del arguments['template_name']
+
+        text_content = f'Привет, { self.user.username }!'
+
+        with open(template_name, "r", encoding='utf-8') as f:
+            html_content = f.read()
+            for var in arguments.keys():
+                html_content = html_content.replace('{{ ' + var + ' }}', arguments[var])
+
+
+            msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [self.user.email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+    def reset_password(self):
+        hash = str(hashlib.md5(self.user.username.encode('utf-8')).hexdigest()) + random_string(10)
+        hash = hashlib.md5(hash.encode('utf-8')).hexdigest()
+
+        # http://127.0.0.1:8000/
+
+        arguments = arguments = {'template_name' : 'concat_reset.html',
+                'link' : settings.HOST + 'reset_password/' + hash,
+                'unsub' : os.path.join(settings.HOST, 'unsub_email'),
+                'domain' : settings.DOMAIN
+                                 }
+
+        reset_object = UserPasswordRecovery(user=self.user, key1=hash)
+        reset_object.save()
+
+        self.email_user('Восстановление пароля', arguments)
+
+
 
 @receiver(post_save, sender=User)
 def update_profile_signal(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
     instance.profile.save()
-
-
-class UserPasswordRecovery(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    key1 = models.TextField(max_length=64)
-    key2 = models.TextField(max_length=64)
-    expires = models.DateTimeField(default=datetime.datetime.now(
-        pytz.utc) + datetime.timedelta(hours=24))
 
 
 class UserEmailConfirmation(models.Model):

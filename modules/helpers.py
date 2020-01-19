@@ -1,10 +1,11 @@
 from PIL import Image, ImageDraw
 from io import BytesIO
 from django.conf import settings
-import string, random
 from django.core.files.base import ContentFile
 import string, random
 import base64
+from random import choice
+from string import ascii_lowercase
 
 from django.core.files.base import ContentFile
 
@@ -42,3 +43,6 @@ def update_avatar(base64_image, user_obj, format='png'):
     except TypeError:
         # if user_obj has no avatar
         user_obj.profile.avatar.save(f'{str(user_obj.id)}.{format}', avatar)
+
+def random_string(length):
+    return ''.join([choice(ascii_lowercase) for _ in range(length)])

@@ -1,8 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotFound
-from django.views.generic.edit import FormView, UpdateView
-from django.conf import settings
+from django.views.generic.edit import FormView
 from django.contrib.auth import login
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -13,57 +12,14 @@ from django.views.generic.base import View
 from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-import json
-from .models import UserProfile
-from apps.project.models import Project
+import json, pytz
 
-from taggit.models import Tag
-from django.core.serializers import serialize
-
+from .models import UserPasswordRecovery
+from django.http import Http404
+import datetime
 
 # To profile fields : user.profile.profile_field
-
-
-def get_context(request, pagename):
-    context = {
-        'pagename': pagename,
-    }
-    context.update({'user': request.user})
-    # TEMP FIX OF MISSING MEDIA_URL AND STATIC_URL
-    # context.update({'BASE_DIR': settings.BASE_DIR})
-    return context
-
-
-def ajax_messages(request):
-    django_messages = []
-
-    for message in messages.get_messages(request):
-        django_messages.append({
-            "level": settings.MESSAGE_TAGS[message.level],
-            "message": message.message,
-            "extra_tags": message.tags,
-        })
-
-    return django_messages
-
-
-def json_skills(tags = UserProfile.skills.all()):
-    tag_list = []
-    for i in range(len(tags)):
-        tag = tags[i].name
-        tag_list.append({ "value" : str(i), "text" : tag })
-    return json.dumps(tag_list, ensure_ascii=False).replace('\"','"')
-
-
-def index(request):
-    if request.user.is_authenticated:
-        context = get_context(request, 'Хаб')
-        # print(request.user.profile)
-        context.update({'projects': Project.objects.all()})
-        return render(request, 'index.html', context)
-    else:
-        context = get_context(request, 'greetings')
-        return render(request, 'greetings.html', context)
+from ..main.views import get_context, ajax_messages, json_skills, Messages
 
 
 class RegisterFormView(FormView):
@@ -86,31 +42,6 @@ class RegisterFormView(FormView):
 
 def messages_parser(request, query=None):
     messages.error(request, 'Неправильный логин/пароль', extra_tags='safe')
-
-
-class Messages():
-    def __init__(self):
-        pass
-
-    def parse_messages(self, st):
-        msgs = {}
-        for k in st.keys():
-            if k != 'inactive':
-                if k == 'invalid_login':
-                    msgs.update({'error': 'Неправильный логин/пароль'})
-                else:
-                    msgs.update({'error': st[k]})
-        return msgs
-
-    def add(self, request, level, message):
-        if level == 'error':
-            messages.error(request, message, extra_tags='safe')
-        elif level == 'warning':
-            messages.warning(request, message, extra_tags='safe')
-        elif level == 'success':
-            messages.success(request, message, extra_tags='safe')
-        elif level == 'info':
-            messages.info(request, message, extra_tags='safe')
 
 
 class LoginFormView(FormView):
@@ -184,7 +115,6 @@ def update_profile(request):
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
 
-    import json
     return render(request, 'profile_.html', {
         'form': user_form,
         'form2': profile_form,
@@ -207,3 +137,23 @@ def update_profile_avatar(request):
         m.add(request, 'success', 'Аватар обновлен!')
         response_data.update({'messages': ajax_messages(request)})
         return JsonResponse(response_data)
+
+
+def reset_password(request, user):
+    pass
+
+
+
+def reset_password_check_hash(request, hash):
+    try:
+        reset_obj = UserPasswordRecovery.objects.get(key1=hash)
+    except:
+        print('Not Found')
+        print(UserPasswordRecovery.objects.all())
+        raise Http404
+    if reset_obj.expires > datetime.datetime.now(pytz.utc):
+        print('YAY')
+        reset_password(request, reset_obj.user)
+
+    else:
+        raise Http404

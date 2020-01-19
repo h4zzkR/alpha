@@ -11,11 +11,6 @@ def call_method(obj, method_name, *args):
     method = getattr(obj, method_name)
     return method(*args)
 
-# Create your models here.
-
-class Skill(models.Model):
-    name = models.TextField(default="")
-
 
 class Tag(models.Model):
     name = models.CharField(default="", blank=True, max_length=100)
@@ -40,7 +35,6 @@ class Project(models.Model):
 
     author = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
     collaborators = models.ManyToManyField(Collaborator, related_name='collabs')
-    # collaborators = models.ManyToManyField(User, related_name='collabs')
 
     technical_spec_url = models.URLField(default="", max_length=100)
     is_public = models.BooleanField(default=0)
@@ -72,13 +66,28 @@ class Project(models.Model):
     def members_with_edit_rights(self):
         return [i.member for i in self.collaborators.filter(can_edit_project=True)]
 
+    def add_member(self, user, role=None, can_edit_project=False, is_teamlead=False, is_author=False):
+        c = Collaborator.objects.create(member=user,
+                                        role=role, can_edit_project=can_edit_project,
+                                        is_teamlead=is_teamlead, is_author=is_author)
+        c.save()
+        self.collaborators.add(c)
 
+    def kick_member(self, user):
+        try:
+            self.collaborators.remove(Collaborator.objects.get(member=user))
+        except Collaborator.DoesNotExist:
+            pass
 
-
-
-class ProjectSkills(models.Model):
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
-    skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
+    def change_rights(self, user, can_edit_project=None, is_teamlead=None, is_author=None):
+        col = self.collaborators.get(member=user)
+        if can_edit_project is not None:
+            col.can_edit_project = can_edit_project
+        if is_teamlead is not None:
+            col.is_teamlead = is_teamlead
+        if is_author is not None:
+            col.is_author = is_author
+        col.save()
 
 
 class ProjectInvitation(models.Model):
