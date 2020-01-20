@@ -53,7 +53,7 @@ def index(request):
                 'domain' : 'concat.org'}
 
         user = User.objects.get(username=request.user.username)
-        user.profile.reset_password()
+        # user.profile.reset_password()
 
         return render(request, 'index.html', context)
     else:

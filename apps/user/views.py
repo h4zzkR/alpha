@@ -120,7 +120,6 @@ def update_profile(request):
         'form2': profile_form,
         'user' : u,
         'skills': json_skills()
-        # 'all_skills': all_skills
     })
 
 
@@ -139,8 +138,24 @@ def update_profile_avatar(request):
         return JsonResponse(response_data)
 
 
-def reset_password(request, user):
-    pass
+def reset_password(request, reset_obj):
+    if request.method == 'POST':
+        m = Messages()
+        try:
+            password = request.POST.get('password')
+            reset_obj = UserPasswordRecovery.objects.get(key1=reset_obj)
+            user = reset_obj.user
+            user.set_password(password)
+            user.save()
+            reset_obj.delete()
+            m.add(request, 'success', 'Ваш пароль обновлён. Войдите с новыми данными.')
+            return redirect('/', request)
+        except Exception as err:
+            print(err)
+            raise Http404
+    else:
+        return render(request, 'reset_password.html', {'reset_obj' : reset_obj.key1, 'user' : reset_obj.user.username})
+
 
 
 
@@ -148,12 +163,28 @@ def reset_password_check_hash(request, hash):
     try:
         reset_obj = UserPasswordRecovery.objects.get(key1=hash)
     except:
-        print('Not Found')
-        print(UserPasswordRecovery.objects.all())
         raise Http404
     if reset_obj.expires > datetime.datetime.now(pytz.utc):
-        print('YAY')
-        reset_password(request, reset_obj.user)
+        return reset_password(request, reset_obj)
 
     else:
         raise Http404
+
+def request_reset(request):
+    if request.method == 'POST':
+        user_or_mail = request.POST.get('user_or_email')
+        m = Messages()
+        try:
+            if '@' in user_or_mail:
+                mail = user_or_mail
+                User.objects.get(email=mail).profile.reset_password()
+            else:
+                username = user_or_mail
+                User.objects.get(username=username).profile.reset_password()
+            m.add(request, 'success', 'Письмо с ссылкой на страницу восстановление пароля отправлено.')
+        except:
+            raise Http404
+        return redirect('/', request)
+    else:
+        return render(request, 'reset_password_request.html')
+
