@@ -104,7 +104,8 @@ class UserEditForm(forms.ModelForm):
 
     email = forms.CharField(max_length=User._meta.get_field('email').max_length, required=True,
                             widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
-                                                     'label': 'email', 'name': 'email', 'id': 'email'}))
+                                                     'label': 'email', 'name': 'email', 'id': 'email',
+                                                     'readonly' : True,}))
 
     first_name = forms.CharField(max_length=UserProfile._meta.get_field('first_name').max_length, required=False,
                                  widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',

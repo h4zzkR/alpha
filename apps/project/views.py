@@ -101,6 +101,10 @@ def project_view(request, id):
     except Project.DoesNotExist:
         return '404'
 
+    # project.add_member(role='aas', user=User.objects.get(username='root'), is_author=False,
+    #                  can_edit_project=True, is_teamlead=False)
+    # project.save()
+
     m = Messages()
     if request.method == 'POST':
         col = project.collaborators.get(member=request.user)

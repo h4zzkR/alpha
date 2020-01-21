@@ -43,7 +43,7 @@ class ProjectForm(forms.ModelForm):
                                                }))
 
     is_public = forms.CharField(label='Тип проекта',
-                           widget=forms.Select(attrs={'class' : 'form-control form-control-alternative',
+                           widget=forms.Select(attrs={'class' : 'selectpicker',
                                                       'id': 'type',
                                                       'name': 'type'
                                                       },
@@ -93,12 +93,13 @@ class ProjectForm(forms.ModelForm):
         project = super(ProjectForm, self).save(commit=False)
         project.is_public = int(self.cleaned_data['is_public'])
 
-        if not project.author:
+        if project.author is None:
             project.author = user
             project.save()
-            t = Collaborator(member=user, is_author=True,
+            t = Collaborator(user, is_author=True,
                              can_edit_project=True, is_teamlead=True)
             t.save()
+            # print(t)
             project.collaborators.add(t)
         project.save()
 

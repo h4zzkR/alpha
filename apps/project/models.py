@@ -21,7 +21,7 @@ class Tag(models.Model):
 
 class Collaborator(models.Model):
     member = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
-    role = models.CharField(default='не задано', blank=True, max_length=30)
+    role = models.CharField(default='Роль не задана', blank=True, max_length=30)
 
     entered_at = models.DateTimeField(auto_now_add=True)
     can_edit_project = models.BooleanField(default=False)
