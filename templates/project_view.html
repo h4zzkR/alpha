@@ -62,6 +62,8 @@
                           <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list" href="#team" role="tab" aria-controls="team">Команда</a>
                           <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Чат и файлы</a>
                           <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="extra" href="#extra" role="tab" aria-controls="extra">Настройки</a>
+{#                          <a class="list-group-item list-group-item-action"></a>#}
+                        <button type="submit" form="project-form" class="btn btn-sm btn-primary mt-2">Сохранить</button>
                         </div>
 
                 </div>
@@ -148,12 +150,12 @@
                                                 </div>
                                             </div>
 
-                                            <div class="ml-lg-4 col-lg-9 mt-0">
-                                                        <label class="form-control-label" for="input-description">Расширенное описание*</label>
+                                             <div class="ml-lg-4 col-lg-9 mt-0">
+                                                        <label class="form-control-label" for="input-description">Расширенное описание</label>
                                                         <div class="form-group">
                                                              <textarea name="description" type="text" cols="40" rows="4" placeholder=""
                                                                        id="input-description" minlength="300" maxlength="5000"
-                                                                       class="form-control form-control-alternative">{{ form.description.value }}</textarea>
+                                                                       class="form-control form-control-alternative">{{ project.description }}</textarea>
                                                     </div>
                                             </div>
                                 </div>
@@ -199,7 +201,7 @@
         new SimpleMDE({
             element: document.getElementById("input-description"),
             autosave: {
-                enabled: true,
+                enabled: false,
                 unique_id: "input-description",
 		    },
             spellChecker: false,

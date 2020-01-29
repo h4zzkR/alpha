@@ -59,7 +59,6 @@ def project_create(request):
     m = Messages()
     if request.method == 'POST':
         form = ProjectForm(request.POST)
-        print(form.data)
         if form.is_valid():
             project = form.save(request.user)
             form.save_m2m()
@@ -128,6 +127,8 @@ def project_view(request, id):
             raise Exception
     else:
         project_form = ProjectForm()
+        project = Project.objects.get(id=id)
+        # print(project.description)
         # print(project_form)
 
     return render(request, 'project_view.html', {

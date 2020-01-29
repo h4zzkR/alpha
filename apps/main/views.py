@@ -43,7 +43,7 @@ def json_skills(tags = UserProfile.skills.all()):
 
 def index(request):
     if request.user.is_authenticated:
-        context = get_context(request, 'Хаб')
+        context = get_context(request, 'Dashboard')
         # print(request.user.profile)
         context.update({'projects': Project.objects.all()})
 

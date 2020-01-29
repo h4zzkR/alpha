@@ -96,7 +96,7 @@ class ProjectForm(forms.ModelForm):
         if project.author is None:
             project.author = user
             project.save()
-            t = Collaborator(user, is_author=True,
+            t = Collaborator(member=user, is_author=True,
                              can_edit_project=True, is_teamlead=True)
             t.save()
             # print(t)
