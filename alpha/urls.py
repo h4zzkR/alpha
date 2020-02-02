@@ -21,8 +21,8 @@ urlpatterns = [
     path('reset_update/<str:reset_obj>', u.reset_password, name='reset_update'),
     # path('projects/new', p.ProjectCreate.as_view(), name="project_create"),
     path('projects/new', p.project_create, name="project_create"),
-    path('projects/view', p.ProjectListView.as_view(), name='projects_list'),
-    path('p/<int:id>', p.project_view, name='project_view'),
+    path('projects/', p.ProjectListView.as_view(), name='projects_list'),
+    path('project/view/<int:id>', p.project_view, name='project_view'),
     path('list_skills/', apps.main.views.json_skills),
 
     path('oauth/', include('social_django.urls', namespace='social')),

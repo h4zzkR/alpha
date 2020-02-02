@@ -1,11 +1,11 @@
 <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
-  <div class="container-fluid">
-    <!-- Brand -->
-{#    <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>#}
-  {% include "blocks/search.html" %}
-    <!-- User -->
-  {% if user.is_authenticated %}
-  {% include "blocks/profile_menu.html" %}
-  {%  endif %}
-  </div>
+    <div class="container-fluid">
+        <!-- Brand -->
+        {#    <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>#}
+        {% include "blocks/search.html" %}
+        <!-- User -->
+        {% if user.is_authenticated %}
+            {% include "blocks/profile_menu.html" %}
+        {% endif %}
+    </div>
 </nav>

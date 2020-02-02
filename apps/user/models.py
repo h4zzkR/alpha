@@ -4,9 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from apps.project.models import Project
 from django.core.cache import cache
-from django.conf import settings
-
-from django.core.mail import send_mail
 import os
 from django.core.mail import EmailMultiAlternatives
 

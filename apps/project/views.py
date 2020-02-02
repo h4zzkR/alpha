@@ -1,34 +1,51 @@
-from django.shortcuts import render, HttpResponse, redirect, reverse,  get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseNotFound
-from django.views.generic.edit import FormView, UpdateView
-from django.conf import settings
-from django.contrib.auth import login
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
-from django.views.generic.base import View
-# from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
-from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from .models import Project, Collaborator
-from .forms import ProjectForm
-from ..main.views import get_context, ajax_messages, json_skills, Messages
-
-from django.http import Http404
-from django.template.defaultfilters import slugify
-
-
-
+from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from django.core.exceptions import ObjectDoesNotExist
+from .forms import ProjectForm
+# from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
+from .models import Project
+from ..main.views import ajax_messages, json_skills, Messages
+
+
+def handler404(request):
+    """
+    Страница ошибки 404
+    :param request: объект c деталями запроса
+    :type request: :class:`django.http.HttpRequest`
+    :return: объект ответа сервера с HTML-кодом внутри
+    :rtype: :class:`django.http.HttpResponse`
+    """
+    return render(request, "404.html", status=404)
+
+
+def handler403(request):
+    """
+    Страница ошибки 403
+    :param request: объект c деталями запроса
+    :type request: :class:`django.http.HttpRequest`
+    :return: объект ответа сервера с HTML-кодом внутри
+    :rtype: :class:`django.http.HttpResponse`
+    """
+    return render(request, "403.html", status=403)
+
+
+def handler500(request):
+    """
+    Страница ошибки 505
+    :param request: объект c деталями запроса
+    :type request: :class:`django.http.HttpRequest`
+    :return: объект ответа сервера с HTML-кодом внутри
+    :rtype: :class:`django.http.HttpResponse`
+    """
+    return render(request, "505.html", status=500)
+
 
 class ProjectCreate(FormView):
     template_name = 'project_setup.html'
     form_class = ProjectForm
-    success_url = '/'   #change
+    success_url = '/'  # change
 
     def get_form_kwargs(self):
         kwargs = super(ProjectCreate, self).get_form_kwargs()
@@ -70,27 +87,27 @@ def project_create(request):
     return render(request, 'project_setup.html', {
         'form': form,
         'pagename': 'Новый проект',
-        'tags' : json_skills(Project.tags.all())
+        'tags': json_skills(Project.tags.all())
     })
 
 
 class ProjectListView(ListView):
-
     model = Project
     template_name = 'project_list.html'
+
     # paginate_by = 100  # if pagination is desired
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
             'pagename': 'Проекты',
-            'user' : self.request.user,
+            'user': self.request.user,
         })
         return context
 
     def get_queryset(self):
         # new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
-        new_context = Project.objects.filter(collaborators__member = self.request.user ).order_by("-created_at")
+        new_context = Project.objects.filter(collaborators__member=self.request.user).order_by("-created_at")
         return new_context
 
 
@@ -98,7 +115,7 @@ def project_view(request, id):
     try:
         project = Project.objects.get(id=id)
     except Project.DoesNotExist:
-        return '404'
+        return handler404(request)
 
     # project.add_member(role='aas', user=User.objects.get(username='root'), is_author=False,
     #                  can_edit_project=True, is_teamlead=False)
@@ -106,9 +123,12 @@ def project_view(request, id):
 
     m = Messages()
     if request.method == 'POST':
-        col = project.collaborators.get(member=request.user)
+        response_data = {}
+        try:
+            col = project.collaborators.get(member=request.user)
+        except ObjectDoesNotExist:
+            return handler403(request)
         if request.user.is_authenticated and col.can_edit_project is True:
-            response_data = {}
             project_form = ProjectForm(request.POST, instance=project)
             print(project_form.data)
             if project_form.is_valid():
@@ -124,7 +144,7 @@ def project_view(request, id):
                 response_data.update({'messages': ajax_messages(request)})
             # return JsonResponse(response_data)
         else:
-            raise Exception
+            return handler403(request)
     else:
         project_form = ProjectForm()
         project = Project.objects.get(id=id)
@@ -133,10 +153,11 @@ def project_view(request, id):
 
     return render(request, 'project_view.html', {
         'form': project_form,
-        'user_id' : project.id,
-        'project' : project,
+        'user_id': project.id,
+        'project': project,
         'tags': json_skills(Project.tags.all())
     })
+
 
 def kick_from_project(request, project_id, user_to_kick):
     project = Project.objects.get(id=project_id)
@@ -145,11 +166,9 @@ def kick_from_project(request, project_id, user_to_kick):
     if request.user in project.members_with_edit_rights():
         project.kick_member(user_to_kick)
     else:
-        raise Http404
+        raise handler404(request)
     response_data.update({'messages': ajax_messages(request)})
     response_data.update(project.collaborators.all())
     m.add(request, 'success', f'Пользователь {user_to_kick.username} больше не в команде!')
     return JsonResponse(response_data)
     # email kicked user
-
-
