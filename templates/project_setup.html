@@ -6,11 +6,11 @@
 
 {% block extra_links %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />
+{#    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />#}
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/typeagead-styles.css">
 
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tags-input.css">
-	<script type="text/javascript" src="{{STATIC_URL}}js/tags-input.js"></script>
 {% endblock %}
 
 {% block styles %}
@@ -81,25 +81,27 @@
                                         </div>
                                 </div>
 
-                           <div class="col-lg-15">
+                          <div class="col-lg-15">
                                    <div class="form-group">
-                                        <label for="{{ form.type.id }}">Тип проекта</label>
-                                        {{ form.type }}
-                                      </div>
-                                </div>
-{#                               <div class="col-lg-15">#}
-{#                                        <div class="form-group">#}
-{#                                            <label class="form-control-label" for="{{ form.team_size.id }}">Сжатое описание*</label>#}
-{#                                            {{ form.short_description }}#}
-{#                                        </div>#}
-{#                                </div>#}
+                                        <label for="">Тип проекта</label>
+                                        <select name="is_public" class="form-control form-control-alternative" id="type">
+                                        {% if project.is_public == 1 %}
+                                          <option selected="selected" value="1">Открытый</option>
+                                          <option value="0">Приватный</option>
+                                        {% else %}
+                                            <option value="1">Открытый</option>
+                                            <option selected="selected" value="0">Приватный</option>
+                                        {% endif %}
 
+                                        </select>
+                                          </div>
+                                </div>
 
                                 </div>
                             </div>
 
                             <div class="ml-lg-4 col-lg-9 mt-0">
-                                        <label class="form-control-label" for="input-description">Расширенное описание*</label>
+                                        <label class="form-control-label" for="input-description">Расширенное описание</label>
                                         <div class="form-group">
                                              <textarea name="description" type="text" cols="40" rows="4" placeholder=""
                                                        id="input-description" minlength="300" maxlength="5000"
@@ -112,13 +114,15 @@
 
                             <div class="col-lg-9 mt-0 ml--2">
                                 <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
-                                <div class="form-group">
-                                 <input class="form-control form-control-alternative" name='tags' type="tags" placeholder="..." id="tags"/>
-                                </div>
+                            <div class="bootstrap-tagsinput">
+                                <input class="typeahead form-control" type="text" name="tags"
+                                       data-role="tagsinput" id="tags-input" minlength="2" required="">
+                            </div>
                             </div>
 
                         </div>
                     </div>
+                
                 </form>
         </div>
     </div>
@@ -130,19 +134,15 @@
 {% endblock %}
 
 {% block scripts %}
+
     <script>
-        let $ = s => [].slice.call(document.querySelectorAll(s));
-
-        // log events as they happen:
-        let t = $('#tags')[0];
-        t.addEventListener('input', log);
-        t.addEventListener('change', log);
-        function log(e) {
-            $('#out')[0].textContent = `${e.type}: ${this.value.replace(/,/g,', ')}`;
-        }
-
-        // hook 'em up:
-        $('input[type="tags"]').forEach(tagsInput);
+        $('#project-form').on('keyup keypress', function(e) {
+          var keyCode = e.keyCode || e.which;
+          if (keyCode === 13) {
+            e.preventDefault();
+            return false;
+          }
+        });
     </script>
     <script>
         new SimpleMDE({
@@ -161,5 +161,38 @@
             },
             placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
         });
+    </script>
+    <script src="/static/js/bootstrap-tagsinput.js"></script>
+    <script src="/static/js/typeahead.js"></script>
+    <script>
+        var data = '{{ tags }}'.replace(/&quot;/g,'"');
+        var task = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          local: jQuery.parseJSON(data) //your can use json type
+        });
+
+        task.initialize();
+
+        $('#tags-input').tagsinput({
+          {#itemValue: "value",#}
+          {#itemText: "text",#}
+          typeaheadjs: {
+            name: "task",
+            displayKey: "text",
+            source: task.ttAdapter()
+          }
+        });
+
+        //insert data to input in load page
+
+
+    </script>
+    <script>
+        function checkURL(o) {
+            if (!/^https?:\/\//i.test(o.value) && o.value != "") {
+                o.value = "https://" + o.value;
+            }
+        }
     </script>
 {% endblock %}

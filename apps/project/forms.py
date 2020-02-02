@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms.widgets import PasswordInput, TextInput, EmailInput, URLInput, Textarea
 from .models import User
-from .models import Project, Tag
+from .models import Project, Tag, Collaborator
 from django.contrib.auth import authenticate
 from modules.helpers import update_avatar
 from alpha.settings import DEBUG
@@ -10,19 +10,13 @@ from alpha.settings import DEBUG
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from taggit.forms import *
+
 
 
 
 
 class ProjectForm(forms.ModelForm):
-    # error_messages = {
-    #     'password_mismatch': _("Введенные пароли не совпадают"),
-    # }
-
-    def __init__(self, user, *args, **kwargs):
-        super(ProjectForm, self).__init__(*args, **kwargs)
-        self.user = user
-
     name = forms.CharField(required=True, max_length=Project._meta.get_field('name').max_length,
                             widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Название',
                                                        'label': 'name', 'name': 'name'}))
@@ -48,14 +42,14 @@ class ProjectForm(forms.ModelForm):
                                                'class': 'form-control form-control-alternative',
                                                }))
 
-    type = forms.CharField(label='Тип проекта',
-                           widget=forms.Select(attrs={'class' : 'form-control form-control-alternative',
+    is_public = forms.CharField(label='Тип проекта',
+                           widget=forms.Select(attrs={'class' : 'selectpicker',
                                                       'id': 'type',
                                                       'name': 'type'
                                                       },
                                                     choices=
-                                                        [('open', 'Открытый'),
-                                                         ('private', 'Приватный')])
+                                                        [(1, 'Открытый'),
+                                                         (0, 'Приватный')])
                            )
 
     trello = forms.URLField(required=False, max_length=Project._meta.get_field('trello').max_length,
@@ -79,42 +73,35 @@ class ProjectForm(forms.ModelForm):
                                                'class': 'form-control form-control-alternative',
                                                }))
 
+    tags = TagField(min_length=2, widget=forms.TextInput(
+        attrs={
+               'data-role' : 'tagsinput',
+               'name' : 'tags',
+               'id' : 'tags-input'},
+
+    ))
 
     class Meta:
         model = Project
         fields = (
             "name", "description", "max_people", "technical_spec_url",
-            "trello", "vcs", "callback"
+            "trello", "vcs", "callback", 'tags', 'is_public',
         )
 
-    def clean(self):
-        import string
-        cleaned_data = super(ProjectForm, self).clean()
-        tags = self.data['tags'].split(',')
-        cleaned_tags = []
-        for i in tags:
-            # , 'https://', 'www.')
-            if 'http://' not in i and 'https://' not in i and 'www.' not in i:
-                cleaned_tags.append(i.strip(string.punctuation))
-        cleaned_data.update({'tags' : cleaned_tags})
-        return cleaned_data
 
-    def save(self, commit=True):
+    def save(self, user):
         project = super(ProjectForm, self).save(commit=False)
-        if commit:
+        project.is_public = int(self.cleaned_data['is_public'])
+
+        if project.author is None:
+            project.author = user
             project.save()
-            project.author = self.user
-            if self.cleaned_data['type'] == 'open':
-                project.is_public = True
-            else:
-                project.is_public = False
-            if len(self.cleaned_data['tags']) > 0:
-                for t in self.cleaned_data['tags']:
-                    try:
-                        t = Tag.objects.get(name=t)
-                    except Tag.DoesNotExist:
-                        t = Tag(name=t); t.save()
-                    project.tags.add(t)
-            project.save()
+            t = Collaborator(member=user, is_author=True,
+                             can_edit_project=True, is_teamlead=True)
+            t.save()
+            # print(t)
+            project.collaborators.add(t)
+        project.save()
+
 
         return project

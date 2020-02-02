@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
     <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
     <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/typeagead-styles.css">
 {#    <script src="/static/js/profile_submit.js"></script>#}
 {% endblock %}
 
@@ -48,7 +51,7 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white" id="username_logo">Привет, {{ user.username }}!</h1>
+                    <h1 class="display-2 text-white" id="username">Привет, {{ user.username }}!</h1>
                     <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
                         информацию о себе.</p>
 
@@ -108,18 +111,33 @@
                     <div class="h5 font-weight-300">
                         <i class="ni location_pin mr-2"></i>
                     </div>
-                    <div>
-                        Или загрузите свое фото:
-                    </div>
+                    <form method="post" action="../update_avatar/">
+                        {% csrf_token %}
+{#                        <div class="file-upload">#}
+{#                          <label for="custom-file-upload" class="filupp">#}
+{#                            <span class="filupp-file-name js-value">Выберите файл</span>#}
+{#                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">#}
+{#                          </label>#}
+{#                        </div>#}
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Upload</span>
+                          </div>
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="attachment-file" id="inputGroupFile01">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                          </div>
+                        </div>
+                        <input type="submit"  value="Загрузить" class="btn btn-outline-danger">
+                    </form>
                     <hr class="my-4"/>
-                    <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and
-                        records all of his own music.</p>
-                    <a href="#">Show more</a>
+                    <a href="#"></a>
                 </div>
             </div>
         </div>
     </div>
     <!--  END OF ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+
 
 
     <div class="container-fluid mt--7">
@@ -131,9 +149,9 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
-                                <a href="#">
+                                <a href="#avatar_menu">
                                     <img src="{{ user.profile.avatar.url }}" id="card-avatar-1" class="rounded-circle"
-                                         style="width: 135px;">
+                                         style="width: 135px; pointer-events: none;">
                                 </a>
                             </div>
                         </div>
@@ -190,30 +208,15 @@
                 <!-- ИНФО РЕЙТИНГ -->
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
-                        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                    </div>
-
+                        <div class="card-header text-center border-0 pt-8 pt-md-4">
+                            Расскажите, в чем Вы хороши:
+                        </div>
                         <div class="card-body pt-0 pt-md-4">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
-                                    <div>
-                      <span class="heading">Заглушка для блока выбора навыков и умений пользователя
-                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
-                      </span>
-                                    </div>
-                                    <div>
-                      <span class="heading">{{ user.profile.stars_cnt }}
-                          <i class="fa fa-star"></i>
-                      </span>
-                                    </div>
-                                    <div>
-                      <span class="heading">{{ user.profile.rate }}
-                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
-                      </span>
-                                    </div>
+                                 <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
+                                    <input class="typeahead form-control" form="profile-form" autocomplete="off"
+                                           type="text" id="skills-input"
+                                           name="skills"  value="{{ user.profile.list_skills }}" data-role="tagsinput">
                                 </div>
-                            </div>
                         </div>
                     </div>
                     </div>
@@ -289,6 +292,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -334,6 +338,19 @@
     <script src="/static/js/gen_avatar.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
     <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+
+    <script src="/static/js/bootstrap-tagsinput.js"></script>
+    <script src="/static/js/typeahead.js"></script>
+
+    <script>
+    $(document).ready(function() {
+    $('input[type="file"]').change(function(){
+        var value = $("input[type='file']").val();
+        $('.js-value').text(value);
+    });
+
+});
+    </script>
     <script>
         const answer = document.getElementById("copyResult");
 
@@ -377,11 +394,37 @@
     }
     </script>
 
-{#    <script>#}
-{#        function checkURL(o) {#}
-{#            if (!/^https?:\/\//i.test(o.value) && o.value != "") {#}
-{#                o.value = "https://" + o.value;#}
-{#            }#}
-{#        }#}
-{#    </script>#}
+    <script>
+        function checkURL(o) {
+            if (!/^https?:\/\//i.test(o.value) && o.value != "") {
+                o.value = "https://" + o.value;
+            }
+        }
+    </script>
+
+    <script>
+        var data = '{{ skills }}'.replace(/&quot;/g, '\"');
+        var task = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          local: jQuery.parseJSON(data) //your can use json type
+        });
+
+        task.initialize();
+
+        $('#skills-input').tagsinput({
+          {#itemValue: "value",#}
+          {#itemText: "text",#}
+          typeaheadjs: {
+            name: "task",
+            displayKey: "text",
+            source: task.ttAdapter()
+          }
+        });
+
+        //insert data to input in load page
+
+
+    </script>
+
 {% endblock %}

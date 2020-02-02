@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from django.contrib.messages import constants as messages
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+HOST = 'http://127.0.0.1:8000/'
+DOMAIN = 'concat.org'
+
 SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -47,7 +50,9 @@ INSTALLED_APPS = [
     'apps.project.apps.ProjectConfig',
     'apps.user.apps.UserConfig',
     'apps.events.apps.EventsConfig',
+    'apps.main.apps.MainConfig',
     'social_django',
+    'taggit',
 ]
 
 
@@ -125,6 +130,14 @@ USER_ONLINE_TIMEOUT = 300
 USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
 
 WSGI_APPLICATION = 'alpha.wsgi.application'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'concat.no.reply@gmail.com'
+EMAIL_HOST_PASSWORD = 'b&FS!(h@<4}sF`Ss'
 
 if not DEBUG:
     AUTH_PASSWORD_VALIDATORS = [

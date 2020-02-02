@@ -8,6 +8,7 @@ from .models import UserProfile
 from alpha.settings import DEBUG
 
 from django.core.exceptions import ValidationError
+from taggit.forms import *
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -103,7 +104,8 @@ class UserEditForm(forms.ModelForm):
 
     email = forms.CharField(max_length=User._meta.get_field('email').max_length, required=True,
                             widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
-                                                     'label': 'email', 'name': 'email', 'id': 'email'}))
+                                                     'label': 'email', 'name': 'email', 'id': 'email',
+                                                     'readonly' : True,}))
 
     first_name = forms.CharField(max_length=UserProfile._meta.get_field('first_name').max_length, required=False,
                                  widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',
@@ -122,7 +124,9 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('github', 'telegram',
-                  'linked_in', 'vk', 'bio')
+                  'linked_in', 'vk', 'bio',
+                  'skills')
+
 
     github = forms.URLField(required=False, max_length=UserProfile._meta.get_field('github').max_length,
                             widget=URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
@@ -164,3 +168,10 @@ class ProfileEditForm(forms.ModelForm):
                                      "maxlength": UserProfile._meta.get_field('bio').max_length,
                                      'name': 'bio',
                                      'class': 'form-control form-control-alternative'}))
+
+    skills = TagField(min_length=2, widget=forms.TextInput(
+        attrs={
+               'data-role' : 'tagsinput',
+               'name' : 'skills'},
+
+    ))

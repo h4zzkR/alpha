@@ -1,8 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotFound
-from django.views.generic.edit import FormView, UpdateView
-from django.conf import settings
+from django.views.generic.edit import FormView
 from django.contrib.auth import login
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -13,48 +12,14 @@ from django.views.generic.base import View
 from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserProfile
-import json
-from apps.project.models import Project
-from django.core.serializers import serialize
+import json, pytz
 
+from .models import UserPasswordRecovery
+from django.http import Http404
+import datetime
 
 # To profile fields : user.profile.profile_field
-
-
-def get_context(request, pagename):
-    context = {
-        'pagename': pagename,
-    }
-    context.update({'user': request.user})
-    # TEMP FIX OF MISSING MEDIA_URL AND STATIC_URL
-    # context.update({'BASE_DIR': settings.BASE_DIR})
-    return context
-
-
-def ajax_messages(request):
-    django_messages = []
-
-    for message in messages.get_messages(request):
-        django_messages.append({
-            "level": settings.MESSAGE_TAGS[message.level],
-            "message": message.message,
-            "extra_tags": message.tags,
-        })
-
-    return django_messages
-
-
-def index(request):
-    if request.user.is_authenticated:
-        context = get_context(request, 'Хаб')
-        # print(request.user.profile)
-        context.update({'projects': Project.objects.all()})
-        print(context)
-        return render(request, 'index.html', context)
-    else:
-        context = get_context(request, 'greetings')
-        return render(request, 'greetings.html', context)
+from ..main.views import get_context, ajax_messages, json_skills, Messages
 
 
 class RegisterFormView(FormView):
@@ -77,31 +42,6 @@ class RegisterFormView(FormView):
 
 def messages_parser(request, query=None):
     messages.error(request, 'Неправильный логин/пароль', extra_tags='safe')
-
-
-class Messages():
-    def __init__(self):
-        pass
-
-    def parse_messages(self, st):
-        msgs = {}
-        for k in st.keys():
-            if k != 'inactive':
-                if k == 'invalid_login':
-                    msgs.update({'error': 'Неправильный логин/пароль'})
-                else:
-                    msgs.update({'error': st[k]})
-        return msgs
-
-    def add(self, request, level, message):
-        if level == 'error':
-            messages.error(request, message, extra_tags='safe')
-        elif level == 'warning':
-            messages.warning(request, message, extra_tags='safe')
-        elif level == 'success':
-            messages.success(request, message, extra_tags='safe')
-        elif level == 'info':
-            messages.info(request, message, extra_tags='safe')
 
 
 class LoginFormView(FormView):
@@ -154,19 +94,19 @@ def render_to_json(request, data):
 @login_required
 def update_profile(request):
     m = Messages()
+    u = request.user
     if request.method == 'POST':
         response_data = {}
-        # print(request.POST)
         user_form = UserEditForm(request.POST, instance=request.user)
         profile_form = ProfileEditForm(request.POST, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
-            profile_form.save()
+            obj = profile_form.save(commit=False)
+            profile_form.save_m2m()
             response_data.update(user_form.cleaned_data)
             response_data.update(profile_form.cleaned_data)
             m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
             response_data.update({'messages': ajax_messages(request)})
-            # return redirect(reverse('user_profile'), get_context(request, 'Профиль'))
         else:
             m.add(request, 'error', 'Что-то пошло не так...')
             response_data.update({'messages': ajax_messages(request)})
@@ -174,9 +114,12 @@ def update_profile(request):
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
+
     return render(request, 'profile_.html', {
         'form': user_form,
-        'form2': profile_form
+        'form2': profile_form,
+        'user' : u,
+        'skills': json_skills()
     })
 
 
@@ -193,3 +136,56 @@ def update_profile_avatar(request):
         m.add(request, 'success', 'Аватар обновлен!')
         response_data.update({'messages': ajax_messages(request)})
         return JsonResponse(response_data)
+
+
+def reset_password(request, reset_obj):
+    if request.method == 'POST':
+        m = Messages()
+        try:
+            password = request.POST.get('password')
+            reset_obj = UserPasswordRecovery.objects.get(key1=reset_obj)
+            user = reset_obj.user
+            user.set_password(password)
+            user.save()
+            reset_obj.delete()
+            m.add(request, 'success', 'Ваш пароль обновлён. Войдите с новыми данными.')
+            return redirect('/', request)
+        except Exception as err:
+            print(err)
+            raise Http404
+    else:
+        return render(request, 'reset_password.html', {'reset_obj' : reset_obj.key1, 'user' : reset_obj.user.username})
+
+
+
+
+def reset_password_check_hash(request, hash):
+    try:
+        reset_obj = UserPasswordRecovery.objects.get(key1=hash)
+    except:
+        raise Http404
+    if reset_obj.expires > datetime.datetime.now(pytz.utc):
+        return reset_password(request, reset_obj)
+
+    else:
+        raise Http404
+
+def request_reset(request):
+    if request.method == 'POST':
+        user_or_mail = request.POST.get('user_or_email')
+        m = Messages()
+        try:
+            if '@' in user_or_mail:
+                mail = user_or_mail
+                User.objects.get(email=mail).profile.reset_password()
+            else:
+                username = user_or_mail
+                User.objects.get(username=username).profile.reset_password()
+            m.add(request, 'success', 'Письмо с ссылкой на страницу восстановление пароля отправлено.')
+        except:
+            print('Нету такого пользователя')
+            raise Http404
+        return redirect('/', request)
+    else:
+        return render(request, 'reset_password_request.html')
+

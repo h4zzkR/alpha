@@ -125,13 +125,13 @@
 
                 {% else %}
                     <li class="nav-item">
-                        {% if pagename == 'Хаб' %}
+                        {% if pagename == 'Dashboard' %}
                             <a class=" nav-link active" href="/">
-                                <i class="ni ni-tv-2 text-primary"></i> Хаб
+                                <i class="ni ni-tv-2 text-primary"></i> Dashboard
                             </a>
                         {% else %}
                             <a class=" nav-link" href="/">
-                                <i class="ni ni-tv-2 text-blue"></i> Хаб
+                                <i class="ni ni-tv-2 text-blue"></i> Dashboard
                             </a>
                         {% endif %}
                         {% if pagename == 'Проекты' and user.profile.confirmed is True %}

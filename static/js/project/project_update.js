@@ -27,31 +27,32 @@ function update_messages(messages){
 
 };
 
-function create_post(id) {
-    // console.log($('#profile-form'));
-    var form =  $(id);
-    $.ajax({
-        type: form.attr('method'),
-        url: form.attr('action'),
-        data : form.serialize(),
+    function create_post(id) {
+        console.log(111);
+        var form =  $(id);
+        console.log(form.attr('action'));
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data : form.serialize(),
 
-        success:function(json){
-            // document.getElementById("profile-form").reset();
-            update_fields(json);
-            update_messages(json.messages);
-            ajaxAutoHideMessages(json.messages.length);
-            // console.log(json);
-            // updating fields
-        },
-        error : function(xhr,errmsg,err) {
-        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            success:function(json){
+                // document.getElementById("profile-form").reset();
+                update_fields(json);
+                update_messages(json.messages);
+                ajaxAutoHideMessages(json.messages.length);
+                // console.log(json);
+                // updating fields
+            },
+            error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+            }
+        })
     }
-    });
-};
 
-
-
-$('#profile-form').on('submit', function(event){
-    event.preventDefault();
-    create_post('#profile-form');
-});
+$( document ).ready(
+    ('#profile-form').on('submit', function(event) {
+        event.preventDefault();
+        create_post('#profile-form');
+    })
+);
