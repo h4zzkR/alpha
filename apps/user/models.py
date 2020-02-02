@@ -40,15 +40,26 @@ class UserProfile(models.Model):
     confirmed = models.BooleanField(default=False) # is account confirmed by email
     rating = models.IntegerField(default=0)
     active_projects_cnt = models.IntegerField(default=0)
+
     good_teamlead = models.IntegerField(default=0) # users sets this user as a good teamlead
     # phone = models.TextField(default="")
     status = models.TextField(default="")
-    github = models.URLField(default="", max_length=len('https://') + 30, blank=True) # or another vcs
+
     # trello = models.TextField(default="")
     vk = models.URLField(default="", max_length=len('https://vk.com/') + 20, blank=True)
     linked_in = models.URLField(default="", max_length=len('https://') + 20, blank=True)
     telegram = models.URLField(default="",  max_length=len('https://t.me/') + 20, blank=True)
     bio = models.TextField(default="", max_length=80)
+    location = models.CharField(default="", max_length=80)
+
+    github_account = models.CharField(default="", max_length=100)
+    github_projects_cnt = models.IntegerField(default=0)
+    github = models.URLField(default="", max_length=len('https://') + 30, blank=True)
+    github_id = models.IntegerField(blank=True, unique=True, null=True)
+    github_followers = models.IntegerField(default=0)
+    github_access_token = models.CharField(blank=True, null=True, max_length=40)
+    github_commits = models.IntegerField(default=0)
+    github_stars = models.IntegerField(default=0)
 
     skills = TaggableManager()
 
@@ -74,6 +85,9 @@ class UserProfile(models.Model):
                 return True
         else:
             return False
+
+    def avatar_url(self):
+        return self.avatar.url
 
     def email_user(self, subject, arguments, text_content=None, message=None):
         # arguments = { KEY : VALUE } for template

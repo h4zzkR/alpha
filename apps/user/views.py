@@ -14,6 +14,16 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 import json, pytz
 
+import requests
+
+from modules.helpers import pillow_update_avatar, update_avatar
+
+from github import Github
+
+
+from django.core.signals import request_finished
+from django.dispatch import receiver
+
 from .models import UserPasswordRecovery
 from django.http import Http404
 import datetime
@@ -103,11 +113,14 @@ def update_profile(request):
             user_form.save()
             obj = profile_form.save(commit=False)
             profile_form.save_m2m()
+            u.profile.github_stars = int(dict(request.POST)['github-stars'][0])
+            u.save()
             response_data.update(user_form.cleaned_data)
             response_data.update(profile_form.cleaned_data)
             m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
             response_data.update({'messages': ajax_messages(request)})
         else:
+            # print(profile_form.errors)
             m.add(request, 'error', 'Что-то пошло не так...')
             response_data.update({'messages': ajax_messages(request)})
         return JsonResponse(response_data)
@@ -188,4 +201,61 @@ def request_reset(request):
         return redirect('/', request)
     else:
         return render(request, 'reset_password_request.html')
+
+
+def github_api(access_token):
+    g = Github(access_token)
+    return g
+
+def get_json_response(url):
+    return json.loads(requests.get(url).content)
+
+def github_count_commits_stars(repos_url):
+    response = requests.get(repos_url)
+    repos = json.loads(response.content)
+    total_commits, total_stars = 0, 0
+    for r in repos:
+        stars = get_json_response(r['stargazers_url'])
+        commits = get_json_response(r['commits_url'])
+        total_commits += len(commits)
+        total_stars += len(stars)
+    return total_stars, total_commits
+
+def save_profile(backend, user, response, *args, **kwargs):
+    from io import BytesIO
+    from PIL import Image
+
+    if backend.name == 'github':
+        if user is None:
+            user = User(user_id=user.id)
+        user.profile.github_account = response.get('login')
+        user.email = response.get('email')
+        user.profile.bio = response.get('bio')
+        img = Image.open(BytesIO(requests.get(response.get('avatar_url')).content))
+        pillow_update_avatar(img, user)
+        print(response)
+        user.profile.github_projects_cnt = response.get('public_repos')
+        user.profile.github = response.get('html_url')
+        user.username = response.get('login')
+        user.github_id = response.get('id')
+
+        name = response.get('name')
+        if name is not None:
+            if len(name.split()) == 2:
+                user.profile.first_name = name.split()[0]
+                user.profile.last_name = name.split()[1]
+            else:
+                user.profile.first_name = name.split()[0]
+
+        user.profile.github_access_token = response.get('access_token')
+        user.profile.github_followers = response.get('followers')
+        location = response.get('location')
+        if location is not None:
+            user.profile.location = location
+        repos = response.get('repos_url')
+        # stars, commits = github_count_commits_stars(repos)
+        # print(stars, commits)
+        # user.profile.github_commits = commits
+        # user.profile.github_stars = stars
+        user.save()
 

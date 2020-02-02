@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
     <link rel="stylesheet" type="text/css" href="/static/css/typeagead-styles.css">
-{#    <script src="/static/js/profile_submit.js"></script>#}
 {% endblock %}
 
 {% block styles %}
@@ -82,7 +81,7 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="{{ user.profile.avatar.url }}" id='card-avatar-0' class="rounded-circle">
+                            <img src="{{ user.profile.avatar_url }}" id='card-avatar-0' class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -150,7 +149,7 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#avatar_menu">
-                                    <img src="{{ user.profile.avatar.url }}" id="card-avatar-1" class="rounded-circle"
+                                    <img src="{{ user.profile.avatar_url }}" id="card-avatar-1" class="rounded-circle"
                                          style="width: 135px; pointer-events: none;">
                                 </a>
                             </div>
@@ -176,15 +175,22 @@
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-0">
                                     <div>
-                      <span class="heading">{{ user.profile.projects_cnt }}
+                      <span class="heading" title="Репозитории">{{ user.profile.projects_cnt }}
                           <i class="ni ni-app" style="vertical-align: -3px;"></i>
+                          {{ user.profile.github_projects_cnt }}
                       </span>
                                     </div>
                                     <div>
-                      <span class="heading">{{ user.profile.stars_cnt }}
+                      <span class="heading" title="Количество звезд на github">
                           <i class="fa fa-star"></i>
+                          {{ user.profile.github_stars }}
                       </span>
                                     </div>
+                        <div>
+                      <span class="heading" title="Github followers">
+                          <i class="fa fa-users"></i>{{ user.profile.github_followers }}
+                      </span>
+                        </div>
                                     <div>
                       <span class="heading">{{ user.profile.rate }}
                           <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
@@ -255,6 +261,8 @@
                                             {{ form.email }}
                                         </div>
                                     </div>
+{#                                    var stars = githubStars("stretchr");#}
+                                <input id="github-stars" name="github-stars" type="hidden" value=0>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -281,7 +289,12 @@
                                         <div class="form-group">
                                             <label class="form-control-label" for="github">Ваш Github/Gitlab (ссылка на
                                                 профиль)</label>
+                                            {% if user.profile.github_account != ''%}
+                                                <input type="url" name="github" value="{{user.profile.github}}" placeholder="Ссылка на ваш профиль"
+                                                       id="github" class="form-control form-control-alternative" onchange="checkURL(this)" maxlength="50" readonly>
+                                            {% else %}
                                             {{ form2.github }}
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -425,6 +438,11 @@
         //insert data to input in load page
 
 
+    </script>
+    <script src="/static/js/counter.js"></script>
+    <script>
+        var stars = parseInt(githubStars("{{user.profile.github_account}}"));
+        $("#github-stars").val(stars);
     </script>
 
 {% endblock %}
