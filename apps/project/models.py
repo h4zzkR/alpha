@@ -31,6 +31,7 @@ class Project(models.Model):
 
     tags = models.ManyToManyField(Tag)
 
+
 class ProjectSkills(models.Model):
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
     skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
@@ -39,4 +40,5 @@ class ProjectSkills(models.Model):
 class ProjectInvitation(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    cancelled = models.IntegerField(default=0)  # 0 - unread, 1 - accepted, 2 - unaccepted
     message = models.TextField(default="Hey, join my project.")

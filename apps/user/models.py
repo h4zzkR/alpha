@@ -85,12 +85,7 @@ class UserProject(models.Model):
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
 
 
-class UserFriendInvitation(models.Model):
-    sender = models.ForeignKey(to=User, related_name="sender", on_delete=models.CASCADE)
-    receiver = models.ForeignKey(to=User, related_name="receiver", on_delete=models.CASCADE)
-    cancelled = models.BooleanField(default=False)
-
-
-class UserFriend(models.Model):
-    users = models.ForeignKey(to=User, related_name="user", on_delete=models.CASCADE)
-    follower = models.ForeignKey(to=User, related_name="follower", on_delete=models.CASCADE)
+class UserFollowRequest(models.Model):
+    project = models.ForeignKey(to=Project, related_name="project", on_delete=models.CASCADE)
+    receiver = models.ForeignKey(to=User, related_name="user", on_delete=models.CASCADE)
+    cancelled = models.IntegerField(default=0)  # 0 - unread, 1 - accepted, 2 - unaccepted
