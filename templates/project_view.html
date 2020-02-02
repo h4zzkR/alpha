@@ -72,7 +72,7 @@
                 </div>
 
             <div class="col-10 order-xl-1 scrolling mb-5">
-                    <form role="form" method="POST" id="project-form" action="/p/{{ user_id }}">
+                    <form role="form" method="POST" id="project-form" action="{% url 'project_view' user_id %}">
                         {% csrf_token %}
 
                     <div class="mt--4">
