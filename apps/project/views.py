@@ -83,7 +83,7 @@ class ProjectListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'pagename': 'Проекты',
+            'pagename': 'projects',
             'user' : self.request.user,
         })
         return context
@@ -93,16 +93,14 @@ class ProjectListView(ListView):
         new_context = Project.objects.filter(collaborators__member = self.request.user ).order_by("-created_at")
         return new_context
 
+def project_view(request, project):
+    print(request, project)
 
-def project_view(request, id):
+def project(request, id):
     try:
         project = Project.objects.get(id=id)
     except Project.DoesNotExist:
         return '404'
-
-    # project.add_member(role='aas', user=User.objects.get(username='root'), is_author=False,
-    #                  can_edit_project=True, is_teamlead=False)
-    # project.save()
 
     m = Messages()
     if request.method == 'POST':
@@ -110,7 +108,7 @@ def project_view(request, id):
         if request.user.is_authenticated and col.can_edit_project is True:
             response_data = {}
             project_form = ProjectForm(request.POST, instance=project)
-            print(project_form.data)
+            # print(project_form.data)
             if project_form.is_valid():
                 project = project_form.save(request.user)
                 # response_data.update(project_form.cleaned_data)
@@ -126,12 +124,18 @@ def project_view(request, id):
         else:
             raise Exception
     else:
+        try:
+            project.collaborators.get(member=request.user)
+            project.collaborators.get(member=User.objects.get(username='kek'))
+        except Collaborator.DoesNotExist:
+            response = project_view(request, project)
+            return render(request, 'project_view.html', response)
         project_form = ProjectForm()
         project = Project.objects.get(id=id)
         # print(project.description)
         # print(project_form)
 
-    return render(request, 'project_view.html', {
+    return render(request, 'project.html', {
         'form': project_form,
         'user_id' : project.id,
         'project' : project,

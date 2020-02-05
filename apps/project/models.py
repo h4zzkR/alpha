@@ -38,8 +38,9 @@ class Project(models.Model):
 
     technical_spec_url = models.URLField(default="", max_length=100)
     is_public = models.BooleanField(default=0)
+    is_recruting = models.BooleanField(default=0)
 
-    status = models.IntegerField(default=True)  # 0 - finding team; 1 - developing; 2 - refinding people; 3 - closed
+    status = models.IntegerField(default=0)  # 0 - finding team; 1 - developing; 2 - refinding people; 3 - closed
 
     trello = models.TextField(default="", blank=True)
     vcs = models.TextField(default="", blank=True)
@@ -51,6 +52,8 @@ class Project(models.Model):
     tags = TaggableManager()
 
     def get_status(self):
+        if self.is_recruting is True:
+            return 'Рекрутинг'
         if self.status == 0:
             return 'Набор в проект'
         elif self.status == 1:
@@ -88,6 +91,12 @@ class Project(models.Model):
         if is_author is not None:
             col.is_author = is_author
         col.save()
+
+    def card_color(self):
+        if self.is_recruting == True:
+            return 'background-color: #ffe0e6;'
+        else:
+            return 'background-color: white;'
 
 
 class ProjectInvitation(models.Model):

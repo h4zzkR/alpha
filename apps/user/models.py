@@ -37,7 +37,12 @@ class UserProfile(models.Model):
 
     last_seen = models.DateTimeField(auto_now_add=True, blank=True)
     avatar = models.ImageField(upload_to="profile/photos/", blank=True)  # TODO add default userpic
-    confirmed = models.BooleanField(default=False) # is account confirmed by email
+
+    if settings.AUTO_CONFIRM is True:
+        confirmed = models.BooleanField(default=True) # is account confirmed by email
+    else:
+        confirmed = models.BooleanField(default=False)  # is account confirmed by email
+
     rating = models.IntegerField(default=0)
     active_projects_cnt = models.IntegerField(default=0)
 
@@ -151,9 +156,3 @@ class UserFriend(models.Model):
     users = models.ForeignKey(to=User, related_name="user", on_delete=models.CASCADE)
     follower = models.ForeignKey(to=User, related_name="follower", on_delete=models.CASCADE)
 
-# class Skill(models.Model):
-#     name = models.CharField(max_length=30)
-#
-# class Skills(models.Model):
-#     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-#     skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)

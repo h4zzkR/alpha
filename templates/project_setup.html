@@ -85,14 +85,9 @@
                                    <div class="form-group">
                                         <label for="">Тип проекта</label>
                                         <select name="is_public" class="form-control form-control-alternative" id="type">
-                                        {% if project.is_public == 1 %}
                                           <option selected="selected" value="1">Открытый</option>
                                           <option value="0">Приватный</option>
-                                        {% else %}
-                                            <option value="1">Открытый</option>
-                                            <option selected="selected" value="0">Приватный</option>
-                                        {% endif %}
-
+                                          <option value="2">Рекрутинг</option>
                                         </select>
                                           </div>
                                 </div>
@@ -159,7 +154,11 @@
 
                 return "Загрузка...";
             },
-            placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
+            placeholder: "Что конкретно Вы ходите сделать? Кого-то найти? Если ваща цель - некоммерческая разработка и " +
+                "поиск единомышленников, подробно опишите идею и цели Вашего проекта." +
+                " Если же Вы занимаетесь рекрутингом, напишите здесь, кого вы ищете." +
+                " Постарайтесь также указать теги, по которым будет происходить ранижрование результатов поиска." +
+                " Вы сможете редактировать это поле в дальнейшем.",
         });
     </script>
     <script src="/static/js/bootstrap-tagsinput.js"></script>
