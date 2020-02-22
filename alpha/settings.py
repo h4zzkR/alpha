@@ -17,7 +17,7 @@ HOST = 'http://127.0.0.1:8000/'
 DOMAIN = 'concat.org'
 
 SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 ALLOWED_HOSTS = ["*"]
 
 
