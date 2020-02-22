@@ -53,7 +53,9 @@ def index(request):
                 'domain' : 'concat.org'}
 
         user = User.objects.get(username=request.user.username)
+        # github_login = user.social_auth.get(provider='github')
         # user.profile.reset_password()
+        print(user.profile.github_stars)
 
         return render(request, 'index.html', context)
     else:

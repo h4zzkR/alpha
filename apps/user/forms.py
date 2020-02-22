@@ -125,7 +125,7 @@ class ProfileEditForm(forms.ModelForm):
         model = UserProfile
         fields = ('github', 'telegram',
                   'linked_in', 'vk', 'bio',
-                  'skills')
+                  'skills',)
 
 
     github = forms.URLField(required=False, max_length=UserProfile._meta.get_field('github').max_length,
@@ -169,9 +169,17 @@ class ProfileEditForm(forms.ModelForm):
                                      'name': 'bio',
                                      'class': 'form-control form-control-alternative'}))
 
+
     skills = TagField(min_length=2, widget=forms.TextInput(
         attrs={
                'data-role' : 'tagsinput',
-               'name' : 'skills'},
+               'name' : 'skills',
+                'required' : False,},
 
     ))
+
+    # def clean(self):
+    #     # Then call the clean() method of the super  class
+    #     cleaned_data = super(ProfileEditForm, self).clean()
+    #     cleaned_data.update({'github_stars' : int(list(self.data.values())[4])})
+    #     return cleaned_data

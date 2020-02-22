@@ -2,6 +2,9 @@
 <html lang="en">
 {#{% load socialaccount %}#}
 {% load static %}
+{#{% load i18n %}#}
+{#{% load socialaccount %}#}
+{#{% load account socialaccount %}#}
 {#{% providers_media_js %}#}
 
 <head>
@@ -11,15 +14,15 @@
     concat
   </title>
   <!-- Favicon -->
-  <link href="/templates/static/img/brand/logo.png" rel="icon" type="image/png">
+  <link href="{{ STATIC_URL }}img/brand/logo.png" rel="icon" type="image/png">
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <!-- Icons -->
-  <link href="/templates/static/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
-  <link href="/templates/static/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link href="/templates/static/css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
-  <link href="/templates/static/css/other_styles.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}css/other_styles.css" rel="stylesheet" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
 
@@ -29,7 +32,7 @@
     <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
       <div class="container px-4">
         <a class="navbar-brand-img" href="/">
-          <img src="/templates/static/img/brand/logo.png" alt="..." width="110px" height="120px">
+          <img src="{{ STATIC_URL }}img/brand/logo.png" alt="..." width="110px" height="120px">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,12 +98,12 @@
               <div class="text-center">
 {#                  href="accounts/github/login/?process=login"#}
                 <a class="btn btn-neutral btn-icon mr-4">
-                  <span class="btn-inner--icon"><img src="/templates/static/img/icons/common/github.svg"></span>
+                  <span class="btn-inner--icon"><img src="{{ STATIC_URL }}img/icons/common/github.svg"></span>
                   <span class="btn-inner--text">GitHub</span>
                 </a>
 {#                  href="accounts/google/login/?process=login"#}
                 <a class="btn btn-neutral btn-icon mr-4">
-                  <span class="btn-inner--icon"><img src="/templates/static/img/icons/common/google.svg"></span>
+                  <span class="btn-inner--icon"><img src="{{ STATIC_URL }}img/icons/common/google.svg"></span>
                   <span class="btn-inner--text">Google</span>
                 </a>
               </div><br>
@@ -190,7 +193,7 @@
         <div class="col-xl-6">
           <div class="copyright text-center text-xl-left text-muted">
             &copy; 2019 <a href="" class="font-weight-bold ml-1" target="_blank">concat team</a>
-              <img src="/templates/static/img/brand/black-bg.png" width="20px" height="25px"/>
+              <img src="{{ STATIC_URL }}img/brand/black-bg.png" width="20px" height="25px"/>
           </div>
         </div>
         <div class="col-xl-6">
@@ -206,16 +209,16 @@
   </div>
 
   <!--   Core   -->
-    <script src="/templates/static/js/plugins/jquery/jquery.min.js"></script>
-    <script src="/templates/static/js/plugins/bootstrap/bootstrap.bundle.js"></script>
-    <script src="/templates/static/js/plugins/bootstrap/bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/jquery/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/bootstrap/bootstrap.bundle.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/bootstrap/bootstrap.js"></script>
 
 {#  github like identicons #}
-{#    <script src="/static/js/plugins/identicon.js/pnglib.js"></script>#}
-{#    <script src="/static/js/plugins/identicon.js/identicon.js"></script>#}
+{#    <script src="{{ STATIC_URL }}js/plugins/identicon.js/pnglib.js"></script>#}
+{#    <script src="{{ STATIC_URL }}js/plugins/identicon.js/identicon.js"></script>#}
 
-    <script src="/templates/static/js/plugins/ehtereum_identicon/blockies.js"></script>
-    <script src="/templates/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/hqx.js"></script>
 
 
     <script>

@@ -87,7 +87,7 @@ ellips {
             <div class="col-12 col-md-6 col-sm-12">
                 {% for c in pr.collaborators.all %}
                     <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
-                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}" src="{{ c.member.profile.avatar.url }}"></a>
+                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}" src="{{ c.member.profile.avatar_url }}"></a>
                     </span>
                 {% endfor %}
             </div>
