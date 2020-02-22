@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    concat
+{% endblock %}
+{% block content %}
+
+            {% for project in projects %}
+                <div class="card-body">
+                    <div class="card text-white border-0 mr--1" style="max-width: 40rem; max-height: 25rem;">
+                        <div class="card-header bg-primary text-black-50" style="display: inline;">
+                            <div class="row mx-auto" style="color: #fff; float: left">
+                                <b>Название проекта:</b> &nbsp  {{ project.name }}
+                            </div>
+                            <div class="card-avatar" style="float: right;">
+                                <a href="/account/user/{{ project.author.username }}"><img src="{{ MEDIA_URL }}{{ project.author.profile.avatar}}" calss="rounded-circle" style="pointer-events: none;" alt="Аватар"></a>
+                                <br>
+                                <a href="/account/user/{{ project.author.username }}" class="btn btn-default" style="color: #fff; text-align: center; margin-top: 10%"> Автор </a>
+                            </div>
+                        </div>
+                        <div class="text-body" style="margin-left: 3%; margin-top: 1%; font-size: larger">
+                            Описание: <br>
+                        </div>
+                        <div class="card-body mb-2 overflow-hidden" style="display: inline-block;">
+                            <p class="card-text text-default ">{{ project.description }}</p>
+                        </div>
+                        <div class="card-footer pb-2 pt-1">
+                            <div class="row justify-content-around" style="">
+                                <a href="projects/{{project.id}}" class="btn btn-default">Подробнее о проекте</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+{% endblock %}
+{% block footer %}
+    <footer class="footer_fixed" style="background: #301c4f;">
+        <div class="row align-items-center">
+          <div class="col-xl-4">
+            <div class="copyright text-center text-xl-right text-muted">
+              © 2020 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <ul class="nav nav-footer justify-content-center justify-content-xl-end">
+              <li class="nav-item">
+                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">MIT License</a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link" target="_blank">concat.support@gmail.com</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </footer>
+{% endblock %}
+
+
+
+
+
+
+{#        <div class="glossary__results mb-6">#}
+{#            <div class="glossary__results__row" data-term="#">#}
+{#                <h3 class="glossary__results__term title-style--three mb-3"></h3>#}
+{#                <div class="row">#}
+{#                    <div class="glossary__results__item col-md-3 col-sm-6" data-item="3G">#}
+{#                        <a class="card card__content" href="#">#}
+{#                        <h4 class="card__title">3G</h4>#}
+{#                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste vel, magnam incidunt obcaecati.</p></a>#}
+{#                    </div>#}
+{#                    <!--END Glossary Result item-->#}
+{#                    <div class="glossary__results__item col-md-3 col-sm-6" data-item="4G">#}
+{#                        <a class="card card__content" href="#">#}
+{#                        <h4 class="card__title">4G</h4>#}
+{#                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste vel, magnam incidunt obcaecati.</p></a>#}
+{#                    </div>#}
+{#                    <!--END Glossary Result item-->#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+
+

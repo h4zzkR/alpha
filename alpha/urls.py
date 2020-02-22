@@ -25,6 +25,8 @@ urlpatterns = [
     path('p/<int:id>', p.project, name='project_view'),
     path('list_skills/', apps.main.views.json_skills),
 
+    path('search/', apps.main.views.search_engine),
+
     path('oauth/', include('social_django.urls', namespace='social')),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \

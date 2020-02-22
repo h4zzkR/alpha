@@ -126,7 +126,7 @@ def project(request, id):
     else:
         try:
             project.collaborators.get(member=request.user)
-            project.collaborators.get(member=User.objects.get(username='kek'))
+            # project.collaborators.get(member=User.objects.get(username='kek'))
         except Collaborator.DoesNotExist:
             response = project_view(request, project)
             return render(request, 'project_view.html', response)
