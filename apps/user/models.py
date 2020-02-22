@@ -33,7 +33,7 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=100, blank=True)
 
     last_seen = models.DateTimeField(auto_now_add=True, blank=True)
-    avatar = models.ImageField(upload_to="profile/photos/", blank=True)  # TODO add default userpic
+    avatar = models.ImageField(upload_to="profile/photos/", blank=True)
     confirmed = models.BooleanField(default=False) # is account confirmed by email
     rating = models.IntegerField(default=0)
     active_projects_cnt = models.IntegerField(default=0)
