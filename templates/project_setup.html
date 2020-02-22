@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     {#    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />#}
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/typeagead-styles.css">
+    <link rel="stylesheet" type="text/css" href="/templates/static/css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="/templates/static/css/typeagead-styles.css">
 
 {% endblock %}
 
@@ -171,8 +171,8 @@
             placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
         });
     </script>
-    <script src="/static/js/bootstrap-tagsinput.js"></script>
-    <script src="/static/js/typeahead.js"></script>
+    <script src="/templates/static/js/bootstrap-tagsinput.js"></script>
+    <script src="/templates/static/js/typeahead.js"></script>
     <script>
         var data = '{{ tags }}'.replace(/&quot;/g, '"');
         var task = new Bloodhound({
