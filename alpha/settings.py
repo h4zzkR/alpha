@@ -149,6 +149,7 @@ if DEBUG:
                 'HOST': 'localhost',
                 'PORT': '5432',
                 'OPTIONS': {
+                    'init_command': "SET sql_mode='STRICT_ALL_TABLES'",
                     'charset': 'utf8mb4',
                 },
 
@@ -163,9 +164,6 @@ else:
                 'PASSWORD': '54bcc36ee3a7ddf3b3018eafd21eb52c7f67510cd460a978f317a06a053465ee',
                 'HOST': 'ec2-54-247-125-38.eu-west-1.compute.amazonaws.com',
                 'PORT': '5432',
-                'OPTIONS': {
-                    'charset': 'utf8mb4',
-                },
 
             }
         }
