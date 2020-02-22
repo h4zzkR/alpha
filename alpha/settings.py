@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import dj_database_url
 from django.contrib.messages import constants as messages
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = 'http://127.0.0.1:8000/'
@@ -141,15 +142,7 @@ CACHES = {
     }
 if DEBUG:
     DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': 'concat',
-                'USER': 'concat',
-                'PASSWORD': 's1XTPKlOjWo4',
-                'HOST': 'localhost',
-                'PORT': '5432',
-
-            }
+            'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
         }
 else:
     DATABASES = {
