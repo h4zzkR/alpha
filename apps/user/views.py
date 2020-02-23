@@ -68,7 +68,6 @@ class LoginFormView(FormView):
         msgs = m.parse_messages(form.error_messages)
         for level in msgs.keys():
             m.add(self.request, level, msgs[level])
-        # m.add(self.request, level, msgs[level])
         return self.render_to_response(
             self.get_context_data(request=self.request, form=form))
 
