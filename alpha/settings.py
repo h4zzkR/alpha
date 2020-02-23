@@ -1,15 +1,15 @@
 import os
 import dj_database_url
 from django.contrib.messages import constants as messages
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = 'http://127.0.0.1:8000/'
 DOMAIN = 'concat.org'
 AUTO_CONFIRM = True
 
 SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 ALLOWED_HOSTS = ["*"]
-
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -24,11 +24,9 @@ MESSAGE_TAGS = {
     40: 'alert-danger'
 }
 
-
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 MESSAGE_LEVEL = 25
-
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
@@ -47,7 +45,6 @@ INSTALLED_APPS = [
     'social_django',  # <--
 ]
 
-
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, "fixtures"),
 ]
@@ -60,12 +57,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',  # <--
 ]
 
 ROOT_URLCONF = 'alpha.urls'
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -82,7 +79,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
 
                 'social_django.context_processors.backends',  # <--
-                'social_django.context_processors.login_redirect', # <--
+                'social_django.context_processors.login_redirect',  # <--
             ],
         },
     },
@@ -96,8 +93,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.template.context_processors.static",
 )
 
-
-
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
@@ -105,7 +100,6 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_GITHUB_KEY = 'e87f58fb9971ac0bd0ae'
 SOCIAL_AUTH_GITHUB_SECRET = 'a57439a004cf205d0f131102ddb7a636fdb0f7b7'
-
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
@@ -127,12 +121,11 @@ LOGOUT_URL = 'account/logout/'
 LOGIN_REDIRECT_URL = '/'
 
 CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': '127.0.0.1:11211',
-        }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
-
+}
 
 if DEBUG:
     DATABASES = {
@@ -148,8 +141,8 @@ if DEBUG:
     }
 else:
     DATABASES = {
-            'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-        }
+        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -162,7 +155,6 @@ else:
         }
     }
 
-
 USER_ONLINE_TIMEOUT = 300
 
 # Number of seconds that we will keep track of inactive users for before
@@ -170,7 +162,6 @@ USER_ONLINE_TIMEOUT = 300
 USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
 
 WSGI_APPLICATION = 'alpha.wsgi.application'
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -207,6 +198,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'templates/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
