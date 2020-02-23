@@ -38,20 +38,20 @@
                         <h6 class="heading-small text-muted mb-2 mt--1">Постарайтесь заполнить все поля.</h6>
                         <hr class="my-4"/>
 
-                        <div class="col-lg-9 mt-0 ml--3 mb-2">
+                        <div class="col-lg-10 mt-0 ml--3 mb-2">
                             <div class="row justify-content-between" style="width: 100%;">
-                            <label class="form-control-label ml-3" for="input-description">Тэги быстрого поиска: </label>
-                             <label class="form-control-label right-10" for="{{ form.name.id }}" id="focus">Название проекта</label>
+                            <label class="form-control-label ml-3 " for="{{ form.name.id }}" id="focus">Название проекта</label>
+                            <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
                             </div>
                             <div class="row">
-                                <div class="col">
+                               <div class="form-group col-4">
+                                            {{ form.name }}
+                                </div>
+                                <div class="col-8">
                                 <div class="bootstrap-tagsinput">
                                     <input class="typeahead form-control" type="text" name="tags"
                                            data-role="tagsinput" id="tags-input" minlength="2" required="">
                                 </div>
-                                </div>
-                               <div class="form-group col-5">
-                                            {{ form.name }}
                                 </div>
                             </div>
                         </div>
