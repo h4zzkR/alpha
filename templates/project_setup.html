@@ -38,21 +38,26 @@
                         <h6 class="heading-small text-muted mb-2 mt--1">Постарайтесь заполнить все поля.</h6>
                         <hr class="my-4"/>
 
-                        <div class="col-lg-9 mt-0 ml--2">
-                            <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
-                            <div class="bootstrap-tagsinput">
-                                <input class="typeahead form-control" type="text" name="tags"
-                                       data-role="tagsinput" id="tags-input" minlength="2" required="">
+                        <div class="col-lg-9 mt-0 ml--3 mb-2">
+                            <div class="row justify-content-between" style="width: 100%;">
+                            <label class="form-control-label ml-3" for="input-description">Тэги быстрого поиска: </label>
+                             <label class="form-control-label right-10" for="{{ form.name.id }}" id="focus">Название проекта</label>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                <div class="bootstrap-tagsinput">
+                                    <input class="typeahead form-control" type="text" name="tags"
+                                           data-role="tagsinput" id="tags-input" minlength="2" required="">
+                                </div>
+                                </div>
+                               <div class="form-group col-5">
+                                            {{ form.name }}
+                                </div>
                             </div>
                         </div>
                         <div class="row ml-lg-2">
                             <div class="col-lg-3 column-left ml-lg--4" style="">
                                 <div class="col-lg-13">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="{{ form.name.id }}"
-                                               id="focus">Название проекта</label>
-                                        {{ form.name }}
-                                    </div>
                                     <div class="col-lg-15">
                                         <div class="form-group">
                                             <label class="form-control-label" for="{{ form.technical_spec_url.id }}">Ссылка
@@ -120,13 +125,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-header bg-white border-0">
                             <div class="row align-items-center">
                                 <div class="col-12 text-right">
                                     <button type="submit" class="btn btn-lg btn-primary">Сохранить</button>
                                 </div>
                             </div>
-                        </div>
                         <hr class="my-4"/>
 
                     </div>
@@ -168,7 +171,11 @@
 
                 return "Загрузка...";
             },
-            placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
+            placeholder: "Что конкретно Вы ходите сделать? Кого-то найти? Если ваща цель - некоммерческая разработка и " +
+                "поиск единомышленников, подробно опишите идею и цели Вашего проекта." +
+                " Если же Вы занимаетесь рекрутингом, напишите здесь, кого вы ищете." +
+                " Постарайтесь также указать теги, по которым будет происходить ранижрование результатов поиска." +
+                " Вы сможете редактировать это поле в дальнейшем.",
         });
     </script>
     <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>

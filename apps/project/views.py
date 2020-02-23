@@ -57,9 +57,6 @@ def ProjectCreate(request):
         context.update({
             'pagename': 'Новый проект',
         })
-        context['nav_projects'] = Project.objects.filter(collaborators__member=self.request.user).order_by(
-            "-created_at")
-        return context
 
     def form_valid(self, form):
         form.save(commit=False)
@@ -115,10 +112,6 @@ def project_view(request, id):
     except Project.DoesNotExist:
         return handler404(request)
 
-    # project.add_member(role='aas', user=User.objects.get(username='root'), is_author=False,
-    #                  can_edit_project=True, is_teamlead=False)
-    # project.save()
-
     m = Messages()
     if request.method == 'POST':
         response_data = {}
@@ -153,7 +146,7 @@ def project_view(request, id):
             project_form = ProjectForm()
             project = Project.objects.get(id=id)
 
-    return render(request, 'project_view.html', {
+    return render(request, 'project.html', {
         'form': project_form,
         'user_id': project.id,
         'project': project,
@@ -176,3 +169,23 @@ def kick_from_project(request, project_id, user_to_kick):
     m.add(request, 'success', f'Пользователь {user_to_kick.username} больше не в команде!')
     return JsonResponse(response_data)
     # email kicked user
+
+
+class ProjectListView(ListView):
+
+    model = Project
+    template_name = 'project_list.html'
+    # paginate_by = 100  # if pagination is desired
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'pagename': 'projects',
+            'user' : self.request.user,
+        })
+        return context
+
+    def get_queryset(self):
+        # new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
+        new_context = Project.objects.filter(collaborators__member = self.request.user ).order_by("-created_at")
+        return new_context

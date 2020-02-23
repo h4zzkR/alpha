@@ -4,6 +4,7 @@ from django.contrib.messages import constants as messages
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = 'http://127.0.0.1:8000/'
 DOMAIN = 'concat.org'
+AUTO_CONFIRM = True
 
 SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
 DEBUG = os.environ.get('DEBUG', True)

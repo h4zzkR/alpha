@@ -40,7 +40,7 @@ class Project(models.Model):
     technical_spec_url = models.URLField(default="", max_length=100)
     is_public = models.BooleanField(default=False)
 
-    status = models.IntegerField(default=True)  # 0 - finding team; 1 - developing; 2 - refinding people; 3 - closed
+    status = models.IntegerField(default=0)  # 0 - finding team; 1 - developing; 2 - refinding people; 3 - closed
 
     trello = models.TextField(default="", blank=True)
     vcs = models.TextField(default="", blank=True)

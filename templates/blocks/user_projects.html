@@ -5,7 +5,7 @@
     <hr class="my-1"/>
     <ul class="list-group list-group-mine">
         {% for project in nav_projects %}
-          <button type="button" class="list-group-item list-group-item-action"><a href="{% url 'project_view' project.id %}">{{ project.name }}</a></button>
+            <a href="{% url 'project_view' project.id %}" style="text-decoration: none; color:inherit;"><button type="button" class="list-group-item list-group-item-action">{{ project.name }}</button></a>
         {% endfor %}
     </ul>
 </div>

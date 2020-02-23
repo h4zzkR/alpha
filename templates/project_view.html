@@ -56,15 +56,12 @@
                 <div class="col-2 col-sm-2 mr--1">
                     <div class="mb-3">
 
-                        {#                         <li><button type="submit" class="btn btn-sm btn-primary float-right">Обновить</button></li>#}
-
-                        <div class="list-group" id="myTab" role="tablist">
-                            <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list"
-                               href="#about" role="tab" aria-controls="about">Описание</a>
-                            <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list"
-                               href="#team" role="tab" aria-controls="team">Команда</a>
-                            {#                          <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Чат и файлы</a>#}
-
+                      <div class="list-group" id="myTab" role="tablist">
+                          <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list" href="#about" role="tab" aria-controls="about">Описание</a>
+                          <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list" href="#team" role="tab" aria-controls="team">Команда</a>
+                          <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="extra" href="#extra" role="tab" aria-controls="extra">Настройки</a>
+{#                          <a class="list-group-item list-group-item-action"></a>#}
+                        <button type="submit" form="project-form" class="btn btn-sm btn-primary mt-2">Сохранить</button>
                         </div>
 
                     </div>
@@ -191,7 +188,33 @@
                                                     </div>
                                                 </div>
 
+<<<<<<< HEAD
                                                 <hr class="my-4"/>
+=======
+                                                   <div class="col-lg-15">
+                                                   <div class="form-group">
+                                                        <label for="">Тип проекта</label>
+                                                        <select name="is_public" class="form-control form-control-alternative" id="type">
+                                                        {% if project.is_recruting == 1 %}
+                                                          <option selected="selected" value="2">Рекрутинг</option>
+                                                          <option value="0">Приватный</option>
+                                                          <option value="1">Открытй</option>
+                                                        {% else %}
+                                                        {% if project.is_public == 1 %}
+                                                          <option selected="selected" value="1">Открытый</option>
+                                                          <option value="0">Приватный</option>
+                                                          <option value="2">Рекрутинг</option>
+                                                        {% else %}
+                                                            <option value="1">Открытый</option>
+                                                            <option selected="selected" value="0">Приватный</option>
+                                                            <option value="2">Рекрутинг</option>
+                                                        {% endif %}
+                                                        {% endif %}
+
+                                                        </select>
+                                                          </div>
+                                                </div>
+>>>>>>> main_page_search
 
                                             <button type="submit" form="project-form" class="btn btn-sm btn-primary mt-2 float-xl-right">Сохранить</button>
 
@@ -231,8 +254,16 @@
                 enabled: false,
                 unique_id: "input-description",
             },
+<<<<<<< HEAD
             spellChecker: false,
             placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
+=======
+            placeholder: "Что конкретно Вы ходите сделать? Кого-то найти? Если ваща цель - некоммерческая разработка и " +
+                "поиск единомышленников, подробно опишите идею и цели Вашего проекта." +
+                " Если же Вы занимаетесь рекрутингом, напишите здесь, кого вы ищете." +
+                " Постарайтесь также указать теги, по которым будет происходить ранижрование результатов поиска." +
+                " Вы сможете редактировать это поле в дальнейшем.",
+>>>>>>> main_page_search
         });
     </script>
     <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>
