@@ -17,8 +17,8 @@ def get_context(request, pagename):
         'pagename': pagename,
     }
     context.update({'user': request.user})
-    context['nav_projects'] = Project.objects.filter(collaborators__member=request.user).order_by(
-        "-created_at")
+    if request.user.is_authenticated:
+        context.update({'nav_projects' : Project.objects.filter(collaborators__member=request.user).order_by("-created_at")})
     # TEMP FIX OF MISSING MEDIA_URL AND STATIC_URL
     # context.update({'BASE_DIR': settings.BASE_DIR})
     return context
@@ -66,7 +66,7 @@ def index(request):
         context.update({'type' : 'projects'})
         context.update({'sort' : '-created_at'})
 
-        print(projects)
+        # print(projects)
 
 
         return render(request, 'index.html', context)
