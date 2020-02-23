@@ -150,8 +150,6 @@ def project_view(request, id):
         'form': project_form,
         'user_id': project.id,
         'project': project,
-        'nav_projects': Project.objects.filter(collaborators__member=request.user).order_by(
-            "-created_at"),
         'tags': json_skills(Project.tags.all())
     })
 

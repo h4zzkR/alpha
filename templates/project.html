@@ -6,43 +6,44 @@
 
 {% block extra_links %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <link href="{{STATIC_URL}}css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}css/bootstrap-tagsinput.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-tagsinput.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/typeagead-styles.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/typeagead-styles.css">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.10/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.10/dist/css/bootstrap-select.min.css">
 
     <!-- (Optional) Latest compiled and minified JavaScript translation files -->
 {% endblock %}
 
 {% block styles %}
     .CodeMirror, .CodeMirror-scroll {
-        min-height: 575px;
+    min-height: 575px;
     }
 
     #id_name {
-        max-width: 80%;
-        font-size: 20px;
-        color: black;
+    max-width: 80%;
+    font-size: 20px;
+    color: black;
     }
 
     first {
-      z-index: 1000;
+    z-index: 1000;
     }
 
     .autocomplete {
-	position: relative;
-	display: inline-block;
-}
-.autocomplete-items {
-	position: absolute;
-	z-index: 99;
-	top: 100%;
-	left: 0;
-	right: 0;
-}
+    position: relative;
+    display: inline-block;
+    }
+    .autocomplete-items {
+    position: absolute;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    }
 
 {% endblock %}
 
@@ -50,150 +51,169 @@
     <div class="main-content pb-10 ml-4">
 
         <div class="ml-4">
-                <div class="row" style="width: 100%;">
+            <div class="row" style="width: 100%;">
 
                 <div class="col-2 col-sm-2 mr--1">
-                  <div class="mb-3">
+                    <div class="mb-3">
 
-    {#                         <li><button type="submit" class="btn btn-sm btn-primary float-right">Обновить</button></li>#}
+                        {#                         <li><button type="submit" class="btn btn-sm btn-primary float-right">Обновить</button></li>#}
 
-                      <div class="list-group" id="myTab" role="tablist">
-                          <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list" href="#about" role="tab" aria-controls="about">Описание</a>
-                          <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list" href="#team" role="tab" aria-controls="team">Команда</a>
-                          <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="extra" href="#extra" role="tab" aria-controls="extra">Настройки</a>
-{#                          <a class="list-group-item list-group-item-action"></a>#}
-                        <button type="submit" form="project-form" class="btn btn-sm btn-primary mt-2">Сохранить</button>
+                        <div class="list-group" id="myTab" role="tablist">
+                            <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list"
+                               href="#about" role="tab" aria-controls="about">Описание</a>
+                            <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list"
+                               href="#team" role="tab" aria-controls="team">Команда</a>
+                            {#                          <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Чат и файлы</a>#}
+
                         </div>
 
-                </div>
-                <div class="card bg-secondary" style="height: 500px;">
-                </div>
+                    </div>
+
                 </div>
 
-            <div class="col-10 order-xl-1 scrolling mb-5">
-                    <form role="form" method="POST" id="project-form" action="/p/{{ user_id }}">
+                <div class="col-10 order-xl-1 scrolling mb-5">
+                    <form role="form" method="POST" id="project-form" action="{% url 'project_view' user_id %}">
                         {% csrf_token %}
 
-                    <div class="mt--4">
-                        <div class="card-body">
+                        <div class="mt--4">
+                            <div class="card-body">
 
-                            <div class="tab-content" id="myTabContent" style="width: 100%;">
-                              <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+                                <div class="tab-content" id="myTabContent" style="width: 100%;">
+                                    <div class="tab-pane fade show active" id="about" role="tabpanel"
+                                         aria-labelledby="about-tab">
 
-                                  <div class="card bg-secondary shadow">
-                                        <div class="card-header bg-white border-0">
+                                        <div class="card bg-secondary shadow">
+                                            <div class="card-header bg-white border-0">
                                                 <div class="row align-items-center">
-                                                <div class="col-8">
-                                                    <h3 class="mb-0">
-                                                        <input type="text" name="name" class="form-control" value="{{ project.name }}" placeholder="Название" label="name" required="" id="id_name">
-                                                    </h3>
+                                                    <div class="col-8">
+                                                        <h3 class="mb-0">
+                                                            <input type="text" name="name" class="form-control"
+                                                                   value="{{ project.name }}" placeholder="Название"
+                                                                   label="name" required="" id="id_name">
+                                                        </h3>
+                                                    </div>
                                                 </div>
+                                            </div>
+
+                                                <div class="col-lg-9 mt-0 ml-lg-2">
+                                                    <label class="form-control-label" for="input-description">Тэги
+                                                        быстрого поиска: </label>
+                                                    <div class="bootstrap-tagsinput">
+                                                        <input class="typeahead form-control" type="text" name="tags"
+                                                               data-role="tagsinput" id="tags-input"
+                                                               value="{{ project.list_tags }}" minlength="2"
+                                                               required="">
+                                                    </div>
+                                                </div>
+                                            <div class="card-body">
+
+                                                <div class="row ml-lg-2">
+                                                    <div class="col-lg-3 column-left ml-lg--4" style="">
+                                                        <div class="col-lg-13">
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label"
+                                                                           for="{{ form.technical_spec_url.id }}">Ссылка
+                                                                        на тех-задание (google docs)</label>
+                                                                    {{ form.technical_spec_url }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label"
+                                                                           for="{{ form.vcs_url.id }}">Ссылка на систему
+                                                                        контроля версий</label>
+                                                                    {{ form.vcs }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label"
+                                                                           for="{{ form.max_people.id }}">Размер команды
+                                                                        (0 - не задан)</label>
+                                                                    {{ form.max_people }}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label"
+                                                                           for="{{ form.trello.id }}">Kanban
+                                                                        Board</label>
+                                                                    {{ form.trello }}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label"
+                                                                           for="{{ form.callback.id }}">Кооперация</label>
+                                                                    {{ form.callback }}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label for="">Тип проекта</label>
+                                                                    <select name="is_public"
+                                                                            class="form-control form-control-alternative"
+                                                                            id="type">
+                                                                        {% if project.is_public == 1 %}
+                                                                            <option selected="selected" value="1">
+                                                                                Открытый
+                                                                            </option>
+                                                                            <option value="0">Приватный</option>
+                                                                        {% else %}
+                                                                            <option value="1">Открытый</option>
+                                                                            <option selected="selected" value="0">
+                                                                                Приватный
+                                                                            </option>
+                                                                        {% endif %}
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="ml-lg-4 col-lg-9 mt-0">
+                                                        <label class="form-control-label" for="input-description">Расширенное
+                                                            описание</label>
+                                                        <div class="form-group">
+                                                             <textarea name="description" type="text" cols="40" rows="4"
+                                                                       placeholder=""
+                                                                       id="input-description" minlength="300"
+                                                                       maxlength="5000"
+                                                                       class="form-control form-control-alternative">{{ project.description }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-4"/>
+
+                                            <button type="submit" form="project-form" class="btn btn-sm btn-primary mt-2 float-xl-right">Сохранить</button>
+
                                             </div>
                                         </div>
 
-                                        <div class="card-body">
-
-                                            <div class="row ml-lg-2">
-                                            <div class="col-lg-3 column-left ml-lg--4" style="">
-                                                <div class="col-lg-13">
-                                                <div class="col-lg-15">
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="{{ form.technical_spec_url.id }}">Ссылка на тех-задание (google docs)</label>
-                                                        {{ form.technical_spec_url }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-15">
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="{{ form.vcs_url.id }}">Ссылка на систему контроля версий</label>
-                                                            {{ form.vcs }}
-                                                        </div>
-                                                </div>
-                                                <div class="col-lg-15">
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="{{ form.max_people.id }}">Размер команды (0 - не задан)</label>
-                                                            {{ form.max_people }}
-                                                        </div>
-                                                </div>
-
-                                                <div class="col-lg-15">
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="{{ form.trello.id }}">Kanban Board</label>
-                                                            {{ form.trello }}
-                                                        </div>
-                                                </div>
-
-                                                <div class="col-lg-15">
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="{{ form.callback.id }}">Кооперация</label>
-                                                            {{ form.callback }}
-                                                        </div>
-                                                </div>
-
-                                                   <div class="col-lg-15">
-                                                   <div class="form-group">
-                                                        <label for="">Тип проекта</label>
-                                                        <select name="is_public" class="form-control form-control-alternative" id="type">
-                                                        {% if project.is_recruting == 1 %}
-                                                          <option selected="selected" value="2">Рекрутинг</option>
-                                                          <option value="0">Приватный</option>
-                                                          <option value="1">Открытй</option>
-                                                        {% else %}
-                                                        {% if project.is_public == 1 %}
-                                                          <option selected="selected" value="1">Открытый</option>
-                                                          <option value="0">Приватный</option>
-                                                          <option value="2">Рекрутинг</option>
-                                                        {% else %}
-                                                            <option value="1">Открытый</option>
-                                                            <option selected="selected" value="0">Приватный</option>
-                                                            <option value="2">Рекрутинг</option>
-                                                        {% endif %}
-                                                        {% endif %}
-
-                                                        </select>
-                                                          </div>
-                                                </div>
+                                    </div>
 
 
-                                                </div>
-                                            </div>
-
-                                             <div class="ml-lg-4 col-lg-9 mt-0">
-                                                        <label class="form-control-label" for="input-description">Расширенное описание</label>
-                                                        <div class="form-group">
-                                                             <textarea name="description" type="text" cols="40" rows="4" placeholder=""
-                                                                       id="input-description" minlength="300" maxlength="5000"
-                                                                       class="form-control form-control-alternative">{{ project.description }}</textarea>
-                                                    </div>
-                                            </div>
+                                    <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+                                        {% include "blocks/project_view_command.html" %}
+                                    </div>
+                                    <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">
+                                        ...
+                                    </div>
                                 </div>
-
-                                <hr class="my-4"/>
-
-                                <div class="col-lg-9 mt-0 ml--2">
-                                    <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>
-                                <div class="bootstrap-tagsinput">
-                                    <input class="typeahead form-control" type="text" name="tags"
-                                           data-role="tagsinput" id="tags-input" value="{{ project.list_tags }}" minlength="2" required="">
-                                </div>
-                                </div>
-
                             </div>
                         </div>
-
-                              </div>
-
-
-                              <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
-                                  {% include "blocks/project_view_command.html" %}
-                              </div>
-                              <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">...</div>
-                            </div>
-                      </div>
-                    </div>
                     </form>
+                </div>
             </div>
-            </div>
-    </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -210,44 +230,33 @@
             autosave: {
                 enabled: false,
                 unique_id: "input-description",
-		    },
-            spellChecker: false,
-            previewRender: function(plainText, preview) { // Async method
-                setTimeout(function(){
-                    preview.innerHTML = customMarkdownParser(plainText);
-                }, 250);
-
-                return "Загрузка...";
             },
-            placeholder: "Что конкретно Вы ходите сделать? Кого-то найти? Если ваща цель - некоммерческая разработка и " +
-                "поиск единомышленников, подробно опишите идею и цели Вашего проекта." +
-                " Если же Вы занимаетесь рекрутингом, напишите здесь, кого вы ищете." +
-                " Постарайтесь также указать теги, по которым будет происходить ранижрование результатов поиска." +
-                " Вы сможете редактировать это поле в дальнейшем.",
+            spellChecker: false,
+            placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
         });
     </script>
-    <script src="/static/js/bootstrap-tagsinput.js"></script>
-    <script src="/static/js/ajax_search_user.js"></script>
-{#    <script src="/static/js/select_with_input.js"></script>#}
-    <script src="/static/js/typeahead.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>
+    <script src="{{ STATIC_URL }}js/ajax_search_user.js"></script>
+    {#    <script src="{{ STATIC_URL }}js/select_with_input.js"></script>#}
+    <script src="{{ STATIC_URL }}js/typeahead.js"></script>
     <script>
-        var data = '{{ tags }}'.replace(/&quot;/g,'"');
+        var data = '{{ tags }}'.replace(/&quot;/g, '"');
         var task = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          local: jQuery.parseJSON(data) //your can use json type
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: jQuery.parseJSON(data) //your can use json type
         });
 
         task.initialize();
 
         $('#tags-input').tagsinput({
-          {#itemValue: "value",#}
-          {#itemText: "text",#}
-          typeaheadjs: {
-            name: "task",
-            displayKey: "text",
-            source: task.ttAdapter()
-          }
+            {#itemValue: "value",#}
+            {#itemText: "text",#}
+            typeaheadjs: {
+                name: "task",
+                displayKey: "text",
+                source: task.ttAdapter()
+            }
         });
 
         //insert data to input in load page
@@ -255,12 +264,12 @@
 
     </script>
     <script>
-        $('#project-form').on('keyup keypress', function(e) {
-          var keyCode = e.keyCode || e.which;
-          if (keyCode === 13) {
-            e.preventDefault();
-            return false;
-          }
+        $('#project-form').on('keyup keypress', function (e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
         });
     </script>
 {% endblock %}
