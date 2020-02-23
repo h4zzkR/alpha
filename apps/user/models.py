@@ -2,14 +2,27 @@ import pytz
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from apps.project.models import Skill, Project
+from apps.project.models import Project
 from django.core.cache import cache
+import os
+from django.core.mail import EmailMultiAlternatives
+
 from django.conf import settings
 
-from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from django.db.models.signals import post_save
+from taggit.managers import TaggableManager
+
+import hashlib
+from modules.helpers import random_string
+
+
+class UserPasswordRecovery(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    key1 = models.TextField(max_length=64)
+    expires = models.DateTimeField(default=datetime.datetime.now(
+        pytz.utc) + datetime.timedelta(hours=24))
 
 
 class UserProfile(models.Model):
@@ -20,26 +33,44 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=100, blank=True)
 
     last_seen = models.DateTimeField(auto_now_add=True, blank=True)
-    avatar = models.ImageField(upload_to="profile/photos/", blank=True)  # TODO add default userpic
+    avatar = models.ImageField(upload_to="profile/photos/", blank=True)
     confirmed = models.BooleanField(default=False) # is account confirmed by email
     rating = models.IntegerField(default=0)
     active_projects_cnt = models.IntegerField(default=0)
+
     good_teamlead = models.IntegerField(default=0) # users sets this user as a good teamlead
     # phone = models.TextField(default="")
     status = models.TextField(default="")
-    github = models.URLField(default="", max_length=len('https://') + 30, blank=True) # or another vcs
+
     # trello = models.TextField(default="")
     vk = models.URLField(default="", max_length=len('https://vk.com/') + 20, blank=True)
     linked_in = models.URLField(default="", max_length=len('https://') + 20, blank=True)
     telegram = models.URLField(default="",  max_length=len('https://t.me/') + 20, blank=True)
     bio = models.TextField(default="", max_length=80)
-    skills = models.ManyToOneRel
+    location = models.CharField(default="", max_length=80)
+
+    github_account = models.CharField(default="", max_length=100)
+    github_projects_cnt = models.IntegerField(default=0)
+    github = models.URLField(default="", max_length=len('https://') + 30, blank=True)
+    github_id = models.IntegerField(blank=True, unique=True, null=True)
+    github_followers = models.IntegerField(default=0)
+    github_access_token = models.CharField(blank=True, null=True, max_length=40)
+    github_commits = models.IntegerField(default=0)
+    github_stars = models.IntegerField(default=0)
+
+    skills = TaggableManager()
 
     def __str__(self):
         return self.user.username
 
+    def link(self):
+        return 'http://127.0.0.1:8000/u/' + self.user.username
+
     def last_seen(self):
         return cache.get('seen_%s' % self.user.username)
+
+    def list_skills(self):
+        return ','.join([t.name for t in self.skills.all()])
 
     def online(self):
         if self.last_seen():
@@ -52,6 +83,45 @@ class UserProfile(models.Model):
         else:
             return False
 
+    def avatar_url(self):
+        return self.avatar.url
+
+    def email_user(self, subject, arguments, text_content=None, message=None):
+        # arguments = { KEY : VALUE } for template
+        # {{ link }}
+        template_name = os.path.join(settings.BASE_DIR, 'templates/mail/' + arguments['template_name'])
+        del arguments['template_name']
+
+        text_content = f'Привет, { self.user.username }!'
+
+        with open(template_name, "r", encoding='utf-8') as f:
+            html_content = f.read()
+            for var in arguments.keys():
+                html_content = html_content.replace('{{ ' + var + ' }}', arguments[var])
+
+
+            msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [self.user.email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+    def reset_password(self):
+        hash = str(hashlib.md5(self.user.username.encode('utf-8')).hexdigest()) + random_string(10)
+        hash = hashlib.md5(hash.encode('utf-8')).hexdigest()
+
+        # http://127.0.0.1:8000/
+
+        arguments = arguments = {'template_name' : 'concat_reset.html',
+                'link' : settings.HOST + 'reset_password/' + hash,
+                'unsub' : os.path.join(settings.HOST, 'unsub_email'),
+                'domain' : settings.DOMAIN
+                                 }
+
+        reset_object = UserPasswordRecovery(user=self.user, key1=hash)
+        reset_object.save()
+
+        self.email_user('Восстановление пароля', arguments)
+
+
 
 @receiver(post_save, sender=User)
 def update_profile_signal(sender, instance, created, **kwargs):
@@ -60,30 +130,12 @@ def update_profile_signal(sender, instance, created, **kwargs):
     instance.profile.save()
 
 
-class UserPasswordRecovery(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    key1 = models.TextField(max_length=64)
-    key2 = models.TextField(max_length=64)
-    expires = models.DateTimeField(default=datetime.datetime.now(
-        pytz.utc) + datetime.timedelta(hours=24))
-
-
 class UserEmailConfirmation(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     key1 = models.TextField(max_length=64)
     key2 = models.TextField(max_length=64)
     expires = models.DateTimeField(default=datetime.datetime.now(
         pytz.utc) + datetime.timedelta(hours=24))
-
-
-class UserSkill(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
-
-
-class UserProject(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
 
 
 class UserFriendInvitation(models.Model):
@@ -96,9 +148,9 @@ class UserFriend(models.Model):
     users = models.ForeignKey(to=User, related_name="user", on_delete=models.CASCADE)
     follower = models.ForeignKey(to=User, related_name="follower", on_delete=models.CASCADE)
 
-class Skill(models.Model):
-    name = models.CharField(max_length=30)
-
-class Skills(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)
+# class Skill(models.Model):
+#     name = models.CharField(max_length=30)
+#
+# class Skills(models.Model):
+#     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+#     skill = models.ForeignKey(to=Skill, on_delete=models.CASCADE)

@@ -6,7 +6,7 @@ function update_fields(json) {
         $('#' + key).value = json[key];
     }
     // paste here whatever you want update from json response
-    $('input[name=username]').val(json.username);
+    // $('input[name=username]').val(json.username);
 
     $("h3[id=user_full_name]").text(json.first_name + "\x20" + json.last_name);
     $("h1[id=username]").text("Привет, " + json.username + "!");
@@ -22,19 +22,16 @@ function update_messages(messages){
                     "<span aria-hidden=\"true\">&times;</span></button>" + m.message + "</div>";
             $("#div_messages").append(msg);
             i++;
-        })
-        setTimeout(function(){
-            location = ''
-        },3000)
+        });
 };
 
-function create_post() {
+function create_post(id) {
     // console.log($('#profile-form'));
-    var $form =  $('#profile-form');
+    var form =  $(id);
     $.ajax({
-        type: $form.attr('method'),
-        url: $form.attr('action'),
-        data : $form.serialize(),
+        type: form.attr('method'),
+        url: form.attr('action'),
+        data : form.serialize(),
 
         success:function(json){
             // document.getElementById("profile-form").reset();
@@ -54,5 +51,5 @@ function create_post() {
 
 $('#profile-form').on('submit', function(event){
     event.preventDefault();
-    create_post();
+    create_post('#profile-form');
 });

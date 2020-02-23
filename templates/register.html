@@ -2,7 +2,11 @@
 <html lang="en">
 {#{% load socialaccount %}#}
 {% load static %}
+{#{% load i18n %}#}
+{#{% load socialaccount %}#}
+{#{% load account socialaccount %}#}
 {#{% providers_media_js %}#}
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,15 +14,15 @@
     concat
   </title>
   <!-- Favicon -->
-  <link href="/static/img/brand/logo.png" rel="icon" type="image/png">
+  <link href="{{ STATIC_URL }}img/brand/logo.png" rel="icon" type="image/png">
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <!-- Icons -->
-  <link href="/static/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
-  <link href="/static/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link href="/static/css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
-  <link href="/static/css/other_styles.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}css/other_styles.css" rel="stylesheet" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
 
@@ -28,7 +32,7 @@
     <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
       <div class="container px-4">
         <a class="navbar-brand-img" href="/">
-          <img src="/static/img/brand/logo.png" width="120px" height="125px"/>
+          <img src="{{ STATIC_URL }}img/brand/logo.png" alt="..." width="110px" height="120px">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,12 +81,6 @@
           </div>
         </div>
       </div>
-     {% if error %}
-     <div class="alert alert-warning" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <strong>Error!</strong> {{ error }}
-     </div>
-     {% endif %}
       <div class="separator separator-bottom separator-skew zindex-100">
         <svg class="login-hover" x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <polygon class="fill-default" points="2560 0 2560 100 0 100" style="fill: #212529;"></polygon>
@@ -100,12 +98,12 @@
               <div class="text-center">
 {#                  href="accounts/github/login/?process=login"#}
                 <a class="btn btn-neutral btn-icon mr-4">
-                  <span class="btn-inner--icon"><img src="/static/img/icons/common/github.svg"></span>
+                  <span class="btn-inner--icon"><img src="{{ STATIC_URL }}img/icons/common/github.svg"></span>
                   <span class="btn-inner--text">GitHub</span>
                 </a>
 {#                  href="accounts/google/login/?process=login"#}
                 <a class="btn btn-neutral btn-icon mr-4">
-                  <span class="btn-inner--icon"><img src="/static/img/icons/common/google.svg"></span>
+                  <span class="btn-inner--icon"><img src="{{ STATIC_URL }}img/icons/common/google.svg"></span>
                   <span class="btn-inner--text">Google</span>
                 </a>
               </div><br>
@@ -130,7 +128,7 @@
             {% endif %}<br>
 
 
-              <form role="form" action="" method="POST" name="register_form" id="register_form">
+              <form role="form" action="{% url 'user_register' %}" method="POST" name="register_form" id="register_form">
                 {% csrf_token %}
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
@@ -171,7 +169,7 @@
                     <div class="custom-control custom-control-alternative custom-checkbox">
                       {{ form.agreed }}
                       <label class="custom-control-label" for="customCheckRegister">
-                        <span class="text-muted">Я согласен с <a href="#!">Политикой конфиденциальности</a></span>
+                        <span class="text-muted">Я согласен с <a href="">Политикой конфиденциальности</a></span>
                       </label>
                     </div>
                   </div>
@@ -195,7 +193,7 @@
         <div class="col-xl-6">
           <div class="copyright text-center text-xl-left text-muted">
             &copy; 2019 <a href="" class="font-weight-bold ml-1" target="_blank">concat team</a>
-              <img src="/static/img/brand/black-bg.png" width="20px" height="25px"/>
+              <img src="{{ STATIC_URL }}img/brand/black-bg.png" width="20px" height="25px"/>
           </div>
         </div>
         <div class="col-xl-6">
@@ -211,16 +209,16 @@
   </div>
 
   <!--   Core   -->
-    <script src="/static/js/plugins/jquery/jquery.min.js"></script>
-    <script src="/static/js/plugins/bootstrap/bootstrap.bundle.js"></script>
-    <script src="/static/js/plugins/bootstrap/bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/jquery/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/bootstrap/bootstrap.bundle.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/bootstrap/bootstrap.js"></script>
 
 {#  github like identicons #}
-{#    <script src="/static/js/plugins/identicon.js/pnglib.js"></script>#}
-{#    <script src="/static/js/plugins/identicon.js/identicon.js"></script>#}
+{#    <script src="{{ STATIC_URL }}js/plugins/identicon.js/pnglib.js"></script>#}
+{#    <script src="{{ STATIC_URL }}js/plugins/identicon.js/identicon.js"></script>#}
 
-    <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
-    <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/hqx.js"></script>
 
 
     <script>
@@ -247,13 +245,6 @@
             return true;
         });
     </script>
-<script>
-    window.setTimeout(function() {
-    $(".alert").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove();
-    });
-}, 2000);
-</script>
 </body>
 
 </html>

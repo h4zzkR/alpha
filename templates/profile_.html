@@ -1,4 +1,4 @@
-{#Profile to template#}
+
 {% extends 'base.html' %}
 
 {% block title %}
@@ -14,7 +14,8 @@
     <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
     <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-{#    <script src="/static/js/profile_submit.js"></script>#}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/typeagead-styles.css">
 {% endblock %}
 
 {% block styles %}
@@ -49,7 +50,7 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white" id="username_logo">Привет, {{ user.username }}!</h1>
+                    <h1 class="display-2 text-white" id="username">Привет, {{ user.username }}!</h1>
                     <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
                         информацию о себе.</p>
 
@@ -80,7 +81,7 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="{{ user.profile.avatar.url }}" id='card-avatar-0' class="rounded-circle">
+                            <img src="/media/{{ user.profile.avatar_url }}" id='card-avatar-0' class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -109,13 +110,22 @@
                     <div class="h5 font-weight-300">
                         <i class="ni location_pin mr-2"></i>
                     </div>
-                    <form method="post" action="../update_avatar/">
+                    <form method="post" action="/update_avatar/">
                         {% csrf_token %}
-                        <div class="file-upload">
-                          <label for="custom-file-upload" class="filupp">
-                            <span class="filupp-file-name js-value">Выберите файл</span>
-                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">
-                          </label>
+{#                        <div class="file-upload">#}
+{#                          <label for="custom-file-upload" class="filupp">#}
+{#                            <span class="filupp-file-name js-value">Выберите файл</span>#}
+{#                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">#}
+{#                          </label>#}
+{#                        </div>#}
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Upload</span>
+                          </div>
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="attachment-file" id="inputGroupFile01">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                          </div>
                         </div>
                         <input type="submit"  value="Загрузить" class="btn btn-outline-danger">
                     </form>
@@ -128,6 +138,7 @@
     <!--  END OF ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
 
 
+
     <div class="container-fluid mt--7">
         <div class="row"></div>
             <div class="col-xl-4 float-lg-right">
@@ -137,9 +148,9 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
-                                <a href="#">
-                                    <img src="{{ user.profile.avatar.url }}" id="card-avatar-1" class="rounded-circle"
-                                         style="width: 135px;">
+                                <a href="#avatar_menu">
+                                    <img src="{{ user.profile.avatar_url }}" id="card-avatar-1" class="rounded-circle"
+                                         style="width: 135px; pointer-events: none;">
                                 </a>
                             </div>
                         </div>
@@ -164,15 +175,22 @@
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-0">
                                     <div>
-                      <span class="heading">{{ user.profile.projects_cnt }}
+                      <span class="heading" title="Репозитории">{{ user.profile.projects_cnt }}
                           <i class="ni ni-app" style="vertical-align: -3px;"></i>
+                          {{ user.profile.github_projects_cnt }}
                       </span>
                                     </div>
                                     <div>
-                      <span class="heading">{{ user.profile.stars_cnt }}
+                      <span class="heading" title="Количество звезд на github">
                           <i class="fa fa-star"></i>
+                          {{ user.profile.github_stars }}
                       </span>
                                     </div>
+                        <div>
+                      <span class="heading" title="Github followers">
+                          <i class="fa fa-users"></i>{{ user.profile.github_followers }}
+                      </span>
+                        </div>
                                     <div>
                       <span class="heading">{{ user.profile.rate }}
                           <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
@@ -196,26 +214,14 @@
                 <!-- ИНФО РЕЙТИНГ -->
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
-                        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                            Выберите интересующие Вас сферы:
+                        <div class="card-header text-center border-0 pt-8 pt-md-4">
+                            Расскажите, в чем Вы хороши:
                         </div>
                         <div class="card-body pt-0 pt-md-4">
-                                <ul class="ks-cboxtags">
-                                {% for skill in skills %}
-                                    <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" checked="checked" multiple name="skills[]">
-                                        <label for="toggle-{{skill.id}}">{{skill.name}}</label>
-                                    </li>
-                                {% endfor %}
-                                    {% for skill in all_skills %}
-                                        {% if skill.name not in skills %}
-                                            <li><input type="checkbox" id="toggle-{{skill.id}}" value="{{skill.name}}" multiple name="skills[]">
-                                                <label for="toggle-{{skill.id}}">{{skill.name}}</label>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                                <div class="col-4 text-right">
-                                        <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                                 <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
+                                    <input class="typeahead form-control" form="profile-form" autocomplete="off"
+                                           type="text" id="skills-input"
+                                           name="skills"  value="{{ user.profile.list_skills }}" data-role="tagsinput">
                                 </div>
                         </div>
                     </div>
@@ -255,6 +261,8 @@
                                             {{ form.email }}
                                         </div>
                                     </div>
+{#                                    var stars = githubStars("stretchr");#}
+                                <input id="github-stars" name="github-stars" type="hidden" value=0>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -281,7 +289,12 @@
                                         <div class="form-group">
                                             <label class="form-control-label" for="github">Ваш Github/Gitlab (ссылка на
                                                 профиль)</label>
+                                            {% if user.profile.github_account != ''%}
+                                                <input type="url" name="github" value="{{user.profile.github}}" placeholder="Ссылка на ваш профиль"
+                                                       id="github" class="form-control form-control-alternative" onchange="checkURL(this)" maxlength="50" readonly>
+                                            {% else %}
                                             {{ form2.github }}
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -292,6 +305,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -333,10 +347,13 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="/static/js/profile/ajax_profile_submit.js"></script>
-    <script src="/static/js/gen_avatar.js"></script>
-    <script src="/static/js/plugins/ehtereum_identicon/blockies.js"></script>
-    <script src="/static/js/plugins/ehtereum_identicon/hqx.js"></script>
+    <script src="{{ STATIC_URL }}js/profile/ajax_profile_submit.js"></script>
+    <script src="{{ STATIC_URL }}js/gen_avatar.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/hqx.js"></script>
+
+    <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>
+    <script src="{{ STATIC_URL }}js/typeahead.js"></script>
 
     <script>
     $(document).ready(function() {
@@ -390,11 +407,43 @@
     }
     </script>
 
-{#    <script>#}
-{#        function checkURL(o) {#}
-{#            if (!/^https?:\/\//i.test(o.value) && o.value != "") {#}
-{#                o.value = "https://" + o.value;#}
-{#            }#}
-{#        }#}
-{#    </script>#}
+    <script>
+        function checkURL(o) {
+            if (!/^https?:\/\//i.test(o.value) && o.value != "") {
+                o.value = "https://" + o.value;
+            }
+        }
+    </script>
+
+    <script>
+        var data = '{{ skills }}'.replace(/&quot;/g, '\"');
+        var task = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          local: jQuery.parseJSON(data) //your can use json type
+        });
+
+        task.initialize();
+
+        $('#skills-input').tagsinput({
+          {#itemValue: "value",#}
+          {#itemText: "text",#}
+          typeaheadjs: {
+            name: "task",
+            displayKey: "text",
+            source: task.ttAdapter()
+          }
+        });
+
+        //insert data to input in load page
+
+
+    </script>
+    <script src="{{ STATIC_URL }}js/counter.js"></script>
+    <script>
+        var stars = parseInt(githubStars("{{user.profile.github_account}}"));
+        $("#github-stars").val(stars);
+    </script>
+
+>>>>>>> beta
 {% endblock %}

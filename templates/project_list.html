@@ -21,83 +21,89 @@ ellips {
 {% endblock %}
 
 {% block content %}
-{#    <h1>Articles</h1>#}
-{#    <ul>#}
-{#    <p>{{ object_list }}</p>#}
-{#    {% for project in object_list %}#}
-{#        <li>{{ project.name }} </li>#}
-{#    {% empty %}#}
-{#        <li>No articles yet.</li>#}
-{#    {% endfor %}#}
-{#    </ul>#}
 
-     <div class="main-content ml-5 mr-5">
-        <div class="card-deck">
-            {% for pr in object_list %}
-{#                <div class="col-sm-6 mb-4">#}
-                    <div class="card text-white border-0 mr--1" style="max-width: 40rem; max-height: 25rem;">
-                      <div class="card-header bg-primary text-black-50">
-                          <div class="row mx-auto">
-                          {{ pr.name }}
-                          <div class="float-right">
-                            <a href="#" class="btn btn-default fa fa-edit"></a>
-                          </div>
-                          </div>
-                      </div>
-                      <div class="card-body mb-2 overflow-hidden">
-{#                        <h5 class="card-title">Primary card title</h5>#}
-                        <p class="card-text text-default ">{{ pr.description }}</p>
-                      </div>
-                        <div class="card-footer pb-2 pt-1">
-{#                          <small class="text-muted">Last updated 3 mins ago</small>#}
-                            <div class="row justify-content-around">
-{#                                <a href="#" class="btn btn-default">Подробнее о проекте</a>#}
-                            </div>
+
+<div class="main-content ml-5 mr-5">
+<div class="card-columns">
+    {% for pr in projects %}
+      <div class="card" >
+        <div class="card-body" style="max-height: 40rem;">
+            <div class="row">
+                <div class="col-12 col-md-6 col-sm-12">
+                <h4 class="card-title" style="width: 100%;">
+                  <span>{{pr.name.title}}</span>
+                </h4>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="btn-toolbar float-right" role="group">
+                        {% if pr.is_public == 1 %}
+                         <div class="btn-group mr-2 top--2 right--4" role="group" aria-label="First group">
+                          <button class='btn btn-outline-light p-1' style="font-size: 20px; margin-right: 5px;">
+                             <i class="fa fa-unlock" style=""></i>
+                            </button>
+                         </div>
+                        {% else %}
+                             <div class="btn-group mr-2 top--2 right--4" role="group" aria-label="First group">
+                          <button class='btn btn-light p-1' style="font-size: 20px; margin-right: 5px;">
+                             <i class="fa fa-lock" style=""></i>
+                            </button>
+                         </div>
+                        {% endif %}
+                        <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
+                            {% if user in pr.members_with_edit_rights%}
+                            <a href="{% url 'project_view' pr.id %}">
+                              <button class='btn btn-danger float-right' style="" href="{% url 'project_view' pr.id %}">
+                                   <i class="fa fa-edit" style=""></i>
+                                  </button>
+                            </a>
+                            {% else %}
+                                <button class='btn btn-primary float-right' style="" >
+                           <i class="fa fa-book-open" style=""></i>
+                          </button>
+                            {% endif %}
                         </div>
                     </div>
-{#                </div>#}
-            {% empty %}
-                <p>No</p>
-            {% endfor %}
+            </div>
+            </div>
 
+{#        <p class="card-text" style="max-height: 350px; overflow: hidden;">{{ pr.description.title }}</p>#}
+            {% if pr.author.username == user.username %}
+                <footer class="blockquote-footer">Создатель: <cite title="Source Title">Вы</cite></footer>
+            {% else %}
+                <footer class="blockquote-footer">Создатель: <cite title="Source Title">{{ pr.author.username }}</cite></footer>
+            {% endif %}
+            <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
 
+        </div>
+        <div class="card-footer bg-secondary">
+             <div style="display:flex">
+                {% for tag in pr.tags.all %}
+                    <a class="mr-1 badge badge-info">#{{ tag }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer bg-secondary text-muted">
+            <div class="row">
+            <div class="col-12 col-md-6 col-sm-12">
+                {% for c in pr.collaborators.all %}
+                    <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
+                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}" src="{{ c.member.profile.avatar_url }}"></a>
+                    </span>
+                {% endfor %}
+            </div>
+            <div class="col-12 col-md-6 col-sm-12">
+                <h5  class="float-right">
+                {{ pr.get_status }}
+                </h5 >
+                <br>
+            </div>
+            </div>
+        </div>
+      </div>
+    {% endfor %}
 
+</div>
+</div>
 
-
-
-
-
-
-{#          <div class="col-sm-6">#}
-{#            <div class="card">#}
-{#              <div class="card-body">#}
-{#                <h5 class="card-title">Special title treatment</h5>#}
-{#                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
-{#                <a href="#" class="btn btn-primary">Go somewhere</a>#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{##}
-{#          <div class="col-sm-6 mb-4">#}
-{#            <div class="card">#}
-{#              <div class="card-body">#}
-{#                <h5 class="card-title">Special title treatment</h5>#}
-{#                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
-{#                <a href="#" class="btn btn-primary">Go somewhere</a>#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{##}
-{#            <div class="col-sm-6">#}
-{#            <div class="card">#}
-{#              <div class="card-body">#}
-{#                <h5 class="card-title">Special title treatment</h5>#}
-{#                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
-{#                <a href="#" class="btn btn-primary">Go somewhere</a>#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{#        </div>#}
-{#     </div>#}
-
+</div>
 {% endblock %}

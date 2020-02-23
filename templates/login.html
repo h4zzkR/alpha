@@ -2,6 +2,9 @@
 <html lang="en">
 {#{% load socialaccount %}#}
 {% load static %}
+{#{% load i18n %}#}
+{#{% load socialaccount %}#}
+{#{% load account socialaccount %}#}
 {#{% providers_media_js %}#}
 
 <head>
@@ -11,15 +14,15 @@
     concat
   </title>
   <!-- Favicon -->
-  <link href="/static/img/brand/logo.png" rel="icon" type="image/png">
+  <link href="{{ STATIC_URL }}img/brand/logo.png" rel="icon" type="image/png">
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <!-- Icons -->
-  <link href="/static/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
-  <link href="/static/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link href="/static/css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
-  <link href="/static/css/other_styles.css" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
+  <link href="{{ STATIC_URL }}css/other_styles.css" rel="stylesheet" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
 
@@ -29,7 +32,7 @@
     <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
       <div class="container px-4">
         <a class="" href="/">
-          <img src="/static/img/brand/logo.png" alt="..." width="110px" height="120px">
+          <img src="{{ STATIC_URL }}img/brand/logo.png" alt="..." width="110px" height="120px">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
         data-target="#navbar-collapse-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +44,7 @@
             <div class="row">
               <div class="col-6 collapse-brand">
                 <a href="/">
-                  <img src="/static/img/brand/black-bg.png">
+                  <img src="{{ STATIC_URL }}img/brand/black-bg.png">
                 </a>
               </div>
               <div class="col-6 collapse-close">
@@ -92,14 +95,14 @@
             <div class="card-header bg-transparent pb-5">
               <div class="text-muted text-center mt-2 mb-3"><small>Быстрый старт</small></div>
               <div class="btn-wrapper text-center">
-                <a class="btn btn-neutral btn-icon">
+                <a class="btn btn-neutral btn-icon " href="{% url 'social:begin' 'github' %}">
 {#                <a href="{% provider_login_url "github" process="login" method="js_sdk" %}" class="btn btn-neutral btn-icon">#}
-                  <span class="btn-inner--icon"><img src="/static/img/icons/common/github.svg"></span>
+                  <span class="btn-inner--icon"><img src="{{ STATIC_URL }}img/icons/common/github.svg"></span>
                   <span class="btn-inner--text">Github</span>
                 </a>
                 <a class="btn btn-neutral btn-icon">
 {#                  <a href="{% provider_login_url "google" process="login" method="js_sdk" %}" class="btn btn-neutral btn-icon">#}
-                  <span class="btn-inner--icon"><img src="/static/img/icons/common/google.svg"></span>
+                  <span class="btn-inner--icon"><img src="{{ STATIC_URL }}img/icons/common/google.svg"></span>
                   <span class="btn-inner--text">Google</span>
                 </a></div><br>
                 <div class="btn-wrapper text-center">
@@ -111,17 +114,6 @@
               <div class="text-center text-muted mb-4">
                 <small>Обычная аутентификация</small>
               </div>
-
-{#            {% if messages %}#}
-{#                {% for message in messages %}#}
-{#                    <div class="alert {{ message.tags }} alert-dismissible" role="alert">#}
-{#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
-{#                      <span aria-hidden="true">&times;</span>#}
-{#                    </button>#}
-{#                    {{ message }}#}
-{#                  </div>#}
-{#                {% endfor %}#}
-{#            {% endif %}#}
 
 
             {% if messages %}
@@ -175,7 +167,7 @@
           </div>
           <div class="row mt-3">
             <div class="col-6">
-              <a href="#" class="text-light"><small>Забыли пароль?</small></a>
+              <a href="/account/reset/" class="text-light"><small>Забыли пароль?</small></a>
             </div>
             <div class="col-6 text-right">
               <a href="{% url 'user_register' %}" class="text-light"><small>Создать новый аккаунт</small></a>
@@ -207,9 +199,9 @@
     </footer>
   </div>
   <!--   Core   -->
-  <script src="/static/js/plugins/jquery/jquery.min.js"></script>
-  <script src="/static/js/plugins/bootstrap/bootstrap.bundle.js"></script>
-  <script src="/static/js/plugins/bootstrap/bootstrap.js"></script>
+  <script src="{{ STATIC_URL }}js/plugins/jquery/jquery.min.js"></script>
+  <script src="{{ STATIC_URL }}js/plugins/bootstrap/bootstrap.bundle.js"></script>
+  <script src="{{ STATIC_URL }}js/plugins/bootstrap/bootstrap.js"></script>
   {% if messages %}
     <script>
     //add delay
