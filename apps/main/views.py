@@ -2,7 +2,7 @@ import json
 
 from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from apps.project.models import Project
@@ -43,9 +43,11 @@ def json_skills(tags = UserProfile.skills.all()):
 
 def index(request):
     if request.user.is_authenticated:
-        context = get_context(request, 'Dashboard')
+        context = get_context(request, 'Все Проекты')
         # print(request.user.profile)
-        context.update({'projects': Project.objects.all()})
+        context['nav_projects'] = Project.objects.filter(collaborators__member=request.user).order_by(
+            "-created_at")
+        context.update({'projects': Project.objects.filter(is_public=True)})
 
         arguments = {'template_name' : 'concat_reset.html',
                 'link' : 'http://127.0.0.1:8000/',
@@ -59,8 +61,7 @@ def index(request):
 
         return render(request, 'index.html', context)
     else:
-        context = get_context(request, 'greetings')
-        return render(request, 'greetings.html', context)
+        return redirect('/account/login/')
 
 
 class Messages():

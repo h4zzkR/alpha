@@ -20,7 +20,6 @@ from modules.helpers import pillow_update_avatar, update_avatar
 
 from github import Github
 
-
 from django.core.signals import request_finished
 from django.dispatch import receiver
 
@@ -131,7 +130,7 @@ def update_profile(request):
     return render(request, 'profile_.html', {
         'form': user_form,
         'form2': profile_form,
-        'user' : u,
+        'user': u,
         'skills': json_skills()
     })
 
@@ -167,9 +166,7 @@ def reset_password(request, reset_obj):
             print(err)
             raise Http404
     else:
-        return render(request, 'reset_password.html', {'reset_obj' : reset_obj.key1, 'user' : reset_obj.user.username})
-
-
+        return render(request, 'reset_password.html', {'reset_obj': reset_obj.key1, 'user': reset_obj.user.username})
 
 
 def reset_password_check_hash(request, hash):
@@ -182,6 +179,7 @@ def reset_password_check_hash(request, hash):
 
     else:
         raise Http404
+
 
 def request_reset(request):
     if request.method == 'POST':
@@ -207,8 +205,10 @@ def github_api(access_token):
     g = Github(access_token)
     return g
 
+
 def get_json_response(url):
     return json.loads(requests.get(url).content)
+
 
 def github_count_commits_stars(repos_url):
     response = requests.get(repos_url)
@@ -220,6 +220,7 @@ def github_count_commits_stars(repos_url):
         total_commits += len(commits)
         total_stars += len(stars)
     return total_stars, total_commits
+
 
 def save_profile(backend, user, response, *args, **kwargs):
     from io import BytesIO
@@ -258,4 +259,3 @@ def save_profile(backend, user, response, *args, **kwargs):
         # user.profile.github_commits = commits
         # user.profile.github_stars = stars
         user.save()
-

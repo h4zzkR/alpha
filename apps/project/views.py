@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from django.core.exceptions import ObjectDoesNotExist
@@ -42,7 +42,7 @@ def handler500(request):
     return render(request, "505.html", status=500)
 
 
-class ProjectCreate(FormView):
+def ProjectCreate(request):
     template_name = 'project_setup.html'
     form_class = ProjectForm
     success_url = '/'  # change
@@ -54,10 +54,11 @@ class ProjectCreate(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context.update({
             'pagename': 'Новый проект',
         })
+        context['nav_projects'] = Project.objects.filter(collaborators__member=self.request.user).order_by(
+            "-created_at")
         return context
 
     def form_valid(self, form):
@@ -70,6 +71,20 @@ class ProjectCreate(FormView):
         # print(form.error_messages)
         # messages.success(self.request, 'An error occured while processing the payment')
         # return self.render_to_response(self.get_context_data(form=form))
+
+
+def projects_list(request):
+    if request.user.is_authenticated:
+        template_name = 'project_list.html'
+        context = {}
+        # paginate_by = 100  # if pagination is desired
+        context.update({'pagename': 'Мои Проекты'},)
+        context['nav_projects'] = Project.objects.filter(collaborators__member=request.user).order_by(
+            "-created_at")
+        context['projects'] = Project.objects.filter(collaborators__member=request.user).order_by("-created_at")
+        return render(request, template_name, context)
+    else:
+        return redirect('/account/login/')
 
 
 def project_create(request):
@@ -87,28 +102,10 @@ def project_create(request):
     return render(request, 'project_setup.html', {
         'form': form,
         'pagename': 'Новый проект',
+        'nav_projects': Project.objects.filter(collaborators__member=request.user).order_by(
+            "-created_at"),
         'tags': json_skills(Project.tags.all())
     })
-
-
-class ProjectListView(ListView):
-    model = Project
-    template_name = 'project_list.html'
-
-    # paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'pagename': 'Проекты',
-            'user': self.request.user,
-        })
-        return context
-
-    def get_queryset(self):
-        # new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
-        new_context = Project.objects.filter(collaborators__member=self.request.user).order_by("-created_at")
-        return new_context
 
 
 def project_view(request, id):
@@ -130,7 +127,6 @@ def project_view(request, id):
             return handler403(request)
         if request.user.is_authenticated and col.can_edit_project is True:
             project_form = ProjectForm(request.POST, instance=project)
-            print(project_form.data)
             if project_form.is_valid():
                 project = project_form.save(request.user)
                 # response_data.update(project_form.cleaned_data)
@@ -146,15 +142,22 @@ def project_view(request, id):
         else:
             return handler403(request)
     else:
-        project_form = ProjectForm()
-        project = Project.objects.get(id=id)
-        # print(project.description)
-        # print(project_form)
+        try:
+            col = project.collaborators.get(member=request.user)
+        except ObjectDoesNotExist:
+            return handler403(request)
+        if not request.user.is_authenticated or col.can_edit_project is False:
+            return handler403(request)
+        else:
+            project_form = ProjectForm()
+            project = Project.objects.get(id=id)
 
     return render(request, 'project_view.html', {
         'form': project_form,
         'user_id': project.id,
         'project': project,
+        'nav_projects': Project.objects.filter(collaborators__member=request.user).order_by(
+            "-created_at"),
         'tags': json_skills(Project.tags.all())
     })
 
