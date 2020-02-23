@@ -86,12 +86,17 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = (
             "name", "description", "max_people", "technical_spec_url",
-            "trello", "vcs", "callback", 'tags', 'is_public',
+            "trello", "vcs", "callback", 'tags'
         )
 
     def save(self, user):
         project = super(ProjectForm, self).save(commit=False)
-        project.is_public = int(self.cleaned_data['is_public'])
+        is_public = int(self.data['is_public'])
+        if is_public == 2:
+            project.is_recruting = True
+            project.is_public = True
+        else:
+            project.is_public = is_public
 
         if project.author is None:
             project.author = user

@@ -68,7 +68,6 @@ class LoginFormView(FormView):
         msgs = m.parse_messages(form.error_messages)
         for level in msgs.keys():
             m.add(self.request, level, msgs[level])
-        # m.add(self.request, level, msgs[level])
         return self.render_to_response(
             self.get_context_data(request=self.request, form=form))
 
@@ -127,12 +126,14 @@ def update_profile(request):
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
 
-    return render(request, 'profile_.html', {
-        'form': user_form,
-        'form2': profile_form,
-        'user': u,
-        'skills': json_skills()
-    })
+    context = get_context(request, 'Профиль')
+    context.update({'form': user_form})
+    context.update({'form2': profile_form})
+    context.update({'user': u})
+    context.update({'skills': json_skills()})
+
+
+    return render(request, 'profile_.html', context)
 
 
 @login_required
