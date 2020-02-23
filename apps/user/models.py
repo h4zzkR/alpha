@@ -46,7 +46,7 @@ class UserProfile(models.Model):
     vk = models.URLField(default="", max_length=len('https://vk.com/') + 20, blank=True)
     linked_in = models.URLField(default="", max_length=len('https://') + 20, blank=True)
     telegram = models.URLField(default="",  max_length=len('https://t.me/') + 20, blank=True)
-    bio = models.TextField(default="", max_length=80)
+    bio = models.TextField(default="", max_length=3000)
     location = models.CharField(default="", max_length=80)
 
     github_account = models.CharField(default="", max_length=100)

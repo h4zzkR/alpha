@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'apps.main.apps.MainConfig',
     'taggit',
     'django.contrib.sites',
+
+    'social_django',  # <--
 ]
 
 
@@ -58,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',  # <--
 ]
 
 ROOT_URLCONF = 'alpha.urls'
