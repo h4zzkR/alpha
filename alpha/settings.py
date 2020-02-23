@@ -7,7 +7,7 @@ DOMAIN = 'concat.org'
 AUTO_CONFIRM = True
 
 SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 ALLOWED_HOSTS = ["*"]
 
 
