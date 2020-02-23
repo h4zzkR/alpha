@@ -76,9 +76,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
-                #
-                # 'social_django.context_processors.backends',  # <--
-                # 'social_django.context_processors.login_redirect', # <--
+
+                'social_django.context_processors.backends',  # <--
+                'social_django.context_processors.login_redirect', # <--
             ],
         },
     },
@@ -95,32 +95,32 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 
 AUTHENTICATION_BACKENDS = (
-    # 'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-LOGIN_URL = 'account/login/'
-LOGOUT_URL = 'account/logout/'
-LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_GITHUB_KEY = 'e87f58fb9971ac0bd0ae'
 SOCIAL_AUTH_GITHUB_SECRET = 'a57439a004cf205d0f131102ddb7a636fdb0f7b7'
 
 
-# SOCIAL_AUTH_PIPELINE = (
-#     'social.pipeline.social_auth.social_details',
-#     'social.pipeline.social_auth.social_uid',
-#     'social.pipeline.social_auth.auth_allowed',
-#     'social.pipeline.social_auth.social_user',
-#     'social.pipeline.mail.mail_validation',
-#     'social.pipeline.social_auth.associate_by_email',
-#     'social.pipeline.user.get_username',
-#     'social.pipeline.user.create_user',
-#     'social.pipeline.social_auth.associate_user',
-#     'social.pipeline.social_auth.load_extra_data',
-#     'social.pipeline.user.user_details',
-#     'apps.user.views.save_profile',
-# )
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.mail.mail_validation',
+    'social.pipeline.social_auth.associate_by_email',
+    'social.pipeline.user.get_username',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+    'apps.user.views.save_profile',
+)
+
+LOGIN_URL = 'account/login/'
+LOGOUT_URL = 'account/logout/'
+LOGIN_REDIRECT_URL = '/'
 
 CACHES = {
         'default': {
@@ -128,6 +128,8 @@ CACHES = {
             'LOCATION': '127.0.0.1:11211',
         }
     }
+
+
 if DEBUG:
     DATABASES = {
         'default': {
