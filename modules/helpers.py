@@ -9,11 +9,13 @@ from string import ascii_lowercase
 
 from django.core.files.base import ContentFile
 
+
 def decode_image(base64_image):
     format, imgstr = base64_image.split(';base64,')
     ext = format.split('/')[-1]
     data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
     return data
+
 
 def pillow_update_avatar(pil_obj, user_obj, format='png'):
     try:
@@ -22,11 +24,11 @@ def pillow_update_avatar(pil_obj, user_obj, format='png'):
         from io import BytesIO
     new_avatar = BytesIO()
     try:
-        #update_avatar
+        # update_avatar
         pil_obj.save(new_avatar, format=format)
         s = new_avatar.getvalue()
         user_obj.profile.avatar.save(user_obj.profile.avatar,
-                              ContentFile(s))
+                                     ContentFile(s))
         user_obj.save()
     except TypeError:
         # if user_obj has no avatar
@@ -34,15 +36,17 @@ def pillow_update_avatar(pil_obj, user_obj, format='png'):
     finally:
         new_avatar.close()
 
+
 def update_avatar(base64_image, user_obj, format='png'):
     avatar = decode_image(base64_image)
     try:
-        #update avatar
+        # update avatar
         user_obj.profile.avatar.save(user_obj.profile.avatar, avatar)
         user_obj.save()
     except TypeError:
         # if user_obj has no avatar
         user_obj.profile.avatar.save(f'{str(user_obj.id)}.{format}', avatar)
+
 
 def random_string(length):
     return ''.join([choice(ascii_lowercase) for _ in range(length)])
