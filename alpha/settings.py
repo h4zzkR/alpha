@@ -92,6 +92,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 
+
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
@@ -130,10 +131,10 @@ if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd50q8kdahcod8s',
-            'USER': 'xrbqkztyuxhpne',
-            'PASSWORD': '54bcc36ee3a7ddf3b3018eafd21eb52c7f67510cd460a978f317a06a053465ee',
-            'HOST': 'ec2-54-247-125-38.eu-west-1.compute.amazonaws.com',
+            'NAME': 'concat',
+            'USER': 'concat',
+            'PASSWORD': 's1XTPKlOjWo4',
+            'HOST': 'localhost',
             'PORT': '5432',
 
         }
@@ -142,7 +143,17 @@ else:
     DATABASES = {
             'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
         }
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'd50q8kdahcod8s',
+            'USER': 'xrbqkztyuxhpne',
+            'PASSWORD': '54bcc36ee3a7ddf3b3018eafd21eb52c7f67510cd460a978f317a06a053465ee',
+            'HOST': 'ec2-54-247-125-38.eu-west-1.compute.amazonaws.com',
+            'PORT': '5432',
 
+        }
+    }
 
 
 USER_ONLINE_TIMEOUT = 300
