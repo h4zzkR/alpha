@@ -97,7 +97,7 @@ def search_engine(request):
     if type == 'projects':
         for i in data:
             s = Project.objects.filter(Q(name__icontains=i) | Q(tags__name=i) & Q(is_public=True)).order_by(sort)
-            p |= s
+            projects_list |= s
 
     page = request.GET.get('page', 1)
     paginator = Paginator(projects_list, 1000)
