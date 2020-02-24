@@ -1,3 +1,21 @@
+
+{% if pagename != 'Dashboard' %}
+<form action="/search/?" class="navbar-search form-inline mr-3 d-none d-md-flex ml-lg-auto" id="main_search" method="get">
+  <div class="form-group mb-0">
+    <div class="input-group input-group-alternative">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+      </div>
+      <input class="form-control" id="searchInput" placeholder="Поиск по сервису" type="search">
+        <input type="hidden" name="q" id="form-q" value="">
+        <input type="hidden" name="type" id="form-type" value="projects">
+        <input type="hidden" name="sort" id="form-sort" value="-created_at">
+    </div>
+  </div>
+</form>
+
+{% else %}
+
 <form class="navbar-search form-inline mr-3 d-none d-md-flex ml-lg-auto">
   <div class="form-group mb-0">
     <div class="input-group input-group-alternative">
@@ -5,6 +23,10 @@
         <span class="input-group-text"><i class="fas fa-search"></i></span>
       </div>
       <input class="form-control" placeholder="Поиск по сервису" type="text">
+        <input type="hidden" name="q" id="form2-q" value="">
+        <input type="hidden" name="type" id="form2-type" value="projects">
+        <input type="hidden" name="sort" id="form2-sort" value="-created_at">
     </div>
   </div>
 </form>
+{% endif %}

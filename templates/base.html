@@ -123,6 +123,43 @@ $(document).ready(function() {
 });
 </script>
 
+<script>
+    $(function() {
+
+    $('#main_search').each(function() {
+        $(this).find('input').keypress(function(e) {
+            // Enter pressed?
+
+            {#url.searchParams.append('x', 42);#}
+
+            {#url.searchParams.set('x', 42);#}
+            if(e.which == 10 || e.which == 13) {
+
+                var url = new URL(this.form.action);
+                console.log(url);
+                var params = document.getElementById("searchInput").value.split(' ').join('+');
+
+                var sort = 'Новое';
+                if (sort == 'Новое'){
+                    sort = '-created_at';
+                }
+                else {
+                    sort = 'created_at';
+                }
+
+
+                document.getElementById("form-q").value = params;
+                document.getElementById("form-sort").value = sort;
+
+                this.form.submit();
+            }
+        });
+
+        $(this).find('input[type=submit]').hide();
+    });
+    });
+</script>
+
 <!--   Optional JS   -->
 {% block scripts %}
 {% endblock %}

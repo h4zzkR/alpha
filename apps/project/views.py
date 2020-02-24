@@ -75,7 +75,7 @@ def projects_list(request):
         template_name = 'project_list.html'
         context = {}
         # paginate_by = 100  # if pagination is desired
-        context = get_context(request, 'Мои Проекты')
+        context = get_context(request, 'MyProjects')
         context['projects'] = Project.objects.filter(collaborators__member=request.user).order_by("-created_at")
         return render(request, template_name, context)
     else:

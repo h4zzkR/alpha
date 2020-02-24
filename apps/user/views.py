@@ -240,6 +240,8 @@ def save_profile(backend, user, response, *args, **kwargs):
         user.profile.github = response.get('html_url')
         user.username = response.get('login')
         user.github_id = response.get('id')
+        if user.profile.confirmed is False:
+            user.profile.confirmed = True
 
         name = response.get('name')
         if name is not None:

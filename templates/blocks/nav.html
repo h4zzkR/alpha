@@ -127,14 +127,14 @@
                     <li class="nav-item">
                         {% if pagename == 'Dashboard' %}
                             <a class=" nav-link active" href="/">
-                                <i class="ni ni-tv-2 text-primary"></i> Все Проекты
+                                <i class="ni ni-tv-2 text-primary"></i> Лента проектов
                             </a>
                         {% else %}
                             <a class=" nav-link" href="/">
-                                <i class="ni ni-tv-2 text-blue"></i> Все Проекты
+                                <i class="ni ni-tv-2 text-blue"></i> Лента проектов
                             </a>
                         {% endif %}
-                        {% if pagename == 'projects' and user.profile.confirmed is True %}
+                        {% if pagename == 'MyProjects' and user.profile.confirmed is True %}
                             <a class=" nav-link active" href="{% url 'projects_list' %}"> {# TODO: Link #}
                                 <i class="ni ni-collection text-primary"></i> Мои Проекты
                             </a>
@@ -206,12 +206,12 @@
      <i class="fab fa-vk" style="font-size: 20px;"></i>
     </span>
             </a>
-            <a href="#" class="social-buttons__button social-button social-button--facebook" aria-label="Telegram">
+            <a href="https://t.me/alpha_dev_gr" class="social-buttons__button social-button social-button--facebook" aria-label="Telegram">
     <span class="social-button__inner">
      <i class="fab fa-telegram-plane" style="font-size: 20px;"></i>
   </span>
             </a>
-            <a href="#" class="social-buttons__button social-button social-button--github" aria-label="GitHub">
+            <a href="https://github.com/alphafinder" class="social-buttons__button social-button social-button--github" aria-label="GitHub">
     <span class="social-button__inner">
      <i class="fab fa-github" style="font-size: 20px;"></i>
     </span>
