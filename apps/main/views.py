@@ -11,6 +11,8 @@ from apps.user.models import UserProfile
 
 from django.db.models import Q
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def get_context(request, pagename):
     context = {
@@ -45,7 +47,7 @@ def json_skills(tags = UserProfile.skills.all()):
     return json.dumps(tag_list, ensure_ascii=False).replace('\"','"')
 
 
-def index(request):
+def index(request, projects_list=None, type='projects', sort='-created_at'):
     if request.user.is_authenticated:
         context = get_context(request, 'Dashboard')
         # print(request.user.profile)
@@ -60,13 +62,21 @@ def index(request):
         # github_login = user.social_auth.get(provider='github')
         # user.profile.reset_password()
         # print(user.profile.github_stars)
+        if projects_list is None:
+            projects_list = Project.objects.all().order_by("-created_at")
 
-        projects = Project.objects.all().order_by("-created_at")
+        page = request.GET.get('page', 1)
+        paginator = Paginator(projects_list, 20)
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            projects = paginator.page(1)
+        except EmptyPage:
+            projects = paginator.page(paginator.num_pages)
+
         context.update({'object_list' : projects})
-        context.update({'type' : 'projects'})
-        context.update({'sort' : '-created_at'})
-
-        # print(projects)
+        context.update({'type' : type})
+        context.update({'sort' : sort})
 
 
         return render(request, 'index.html', context)
@@ -77,31 +87,34 @@ def index(request):
 
 
 def search_engine(request):
+
     data = request.GET['q'].split('+')
     type = request.GET['type']
     sort = request.GET['sort']
+    #TODO
 
-    # new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
-    # new_context = Project.objects.filter(collaborators__member=self.request.user).order_by("-created_at")
-
-    # q = Entry.objects.filter(headline__startswith="What")
-    # q = q.filter(pub_date__lte=datetime.date.today())
-    # q = q.exclude(body_text__icontains="food")
-    # print(q)
-
-    p = Project.objects.none()
+    projects_list = Project.objects.none()
     if type == 'projects':
         for i in data:
             s = Project.objects.filter(Q(name__icontains=i) | Q(tags__name=i)).order_by(sort)
-            p |= s
+            projects_list |= s
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(projects_list, 1000)
+    try:
+        projects = paginator.page(page)
+    except PageNotAnInteger:
+        projects = paginator.page(1)
+    except EmptyPage:
+        projects = paginator.page(paginator.num_pages)
 
     context = get_context(request, 'Dashboard')
-    context.update({'object_list' : p})
+    context.update({'object_list' : projects})
     context.update({'type' : type})
     context.update({'value' : ' '.join(data)})
     context.update({'sort': sort})
 
-    return render(request, 'index.html', context)
+    return render(request, 'search.html', context)
 
 
 
