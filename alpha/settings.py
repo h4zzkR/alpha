@@ -127,23 +127,7 @@ CACHES = {
     }
 }
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'concat',
-            'USER': 'concat',
-            'PASSWORD': 's1XTPKlOjWo4',
-            'HOST': 'localhost',
-            'PORT': '5432',
-
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-    }
-    DATABASES = {
+DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'd50q8kdahcod8s',
