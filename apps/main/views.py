@@ -2,7 +2,7 @@ import json
 
 from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from apps.project.models import Project
@@ -72,7 +72,7 @@ def index(request):
         return render(request, 'index.html', context)
     else:
         context = get_context(request, 'greetings')
-        return render(request, 'login.html', context)
+        return redirect('account/login')
 
 
 

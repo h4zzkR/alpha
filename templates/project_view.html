@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Редактирование
+    {{ project.name.title }}
 {% endblock %}
 
 {% block extra_links %}
@@ -56,12 +56,12 @@
                 <div class="col-2 col-sm-2 mr--1">
                     <div class="mb-3">
 
-                      <div class="list-group" id="myTab" role="tablist">
-                          <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list" href="#about" role="tab" aria-controls="about">Описание</a>
-                          <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list" href="#team" role="tab" aria-controls="team">Команда</a>
-                          <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="extra" href="#extra" role="tab" aria-controls="extra">Настройки</a>
-{#                          <a class="list-group-item list-group-item-action"></a>#}
-                        <button type="submit" form="project-form" class="btn btn-sm btn-primary mt-2">Сохранить</button>
+                        <div class="list-group" id="myTab" role="tablist">
+                            <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list"
+                               href="#about" role="tab" aria-controls="about">Описание</a>
+                            <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list"
+                               href="#team" role="tab" aria-controls="team">Команда</a>
+
                         </div>
 
                     </div>
@@ -69,8 +69,7 @@
                 </div>
 
                 <div class="col-10 order-xl-1 scrolling mb-5">
-                    <form role="form" method="POST" id="project-form" action="{% url 'project_view' user_id %}">
-                        {% csrf_token %}
+                    <form role="form" id="project-form" action="">
 
                         <div class="mt--4">
                             <div class="card-body">
@@ -85,22 +84,22 @@
                                                     <div class="col-8">
                                                         <h3 class="mb-0">
                                                             <input type="text" name="name" class="form-control"
-                                                                   value="{{ project.name }}" placeholder="Название"
-                                                                   label="name" required="" id="id_name">
+                                                                   value="{{ project.name.title }}" placeholder="Название"
+                                                                   label="name" required="" id="id_name" readonly>
                                                         </h3>
                                                     </div>
+
+                                                <div class="">
+                                                     <div style="display:flex">
+                                                        {% for tag in project.tags.all %}
+                                                            <a class="mr-1 badge badge-info badge-lg">#{{ tag }}</a>
+                                                        {% endfor %}
+                                                        </div>
+                                                </div>
                                                 </div>
                                             </div>
 
                                                 <div class="col-lg-9 mt-0 ml-lg-2">
-                                                    <label class="form-control-label" for="input-description">Тэги
-                                                        быстрого поиска: </label>
-                                                    <div class="bootstrap-tagsinput">
-                                                        <input class="typeahead form-control" type="text" name="tags"
-                                                               data-role="tagsinput" id="tags-input"
-                                                               value="{{ project.list_tags }}" minlength="2"
-                                                               required="">
-                                                    </div>
                                                 </div>
                                             <div class="card-body">
 
@@ -109,65 +108,42 @@
                                                         <div class="col-lg-13">
                                                             <div class="col-lg-15">
                                                                 <div class="form-group">
-                                                                    <label class="form-control-label"
-                                                                           for="{{ form.technical_spec_url.id }}">Ссылка
-                                                                        на тех-задание (google docs)</label>
-                                                                    {{ form.technical_spec_url }}
+                                                                    <label class="form-control-label">Техзадание:</label>
+                                                                    <input type="url" value="{% if project.vcs == '' %}Не задано{% else %}{{ project.technical_spec_url}}{% endif %}" class="form-control form-control-alternative" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-15">
                                                                 <div class="form-group">
-                                                                    <label class="form-control-label"
-                                                                           for="{{ form.vcs_url.id }}">Ссылка на систему
-                                                                        контроля версий</label>
-                                                                    {{ form.vcs }}
+                                                                    <label class="form-control-label">VCS</label>
+                                                                    <input type="url" value="{% if project.vcs == '' %}Не задано{% else %}{{ project.vcs }}{% endif %}" class="form-control form-control-alternative" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-15">
                                                                 <div class="form-group">
-                                                                    <label class="form-control-label"
-                                                                           for="{{ form.max_people.id }}">Размер команды
-                                                                        (0 - не задан)</label>
-                                                                    {{ form.max_people }}
+                                                                    <label class="form-control-label">Размер команды</label>
+                                                                    <input type="url" value="{% if project.max_people == 0 %}Без ограничений{% else %}{{ project.max_people }}{% endif %}" class="form-control form-control-alternative" readonly>
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-lg-15">
                                                                 <div class="form-group">
-                                                                    <label class="form-control-label"
-                                                                           for="{{ form.trello.id }}">Kanban
+                                                                    <label class="form-control-label">Kanban
                                                                         Board</label>
-                                                                    {{ form.trello }}
+                                                                    <input type="url" value="{% if project.trello == '' %}Не задано{% else %}{{ project.trello }}{% endif %}" class="form-control form-control-alternative" readonly>
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-lg-15">
                                                                 <div class="form-group">
-                                                                    <label class="form-control-label"
-                                                                           for="{{ form.callback.id }}">Кооперация</label>
-                                                                    {{ form.callback }}
+                                                                    <label class="form-control-label">Связь с тимлидом</label>
+                                                                    <input type="url" value="{% if project.callback == '' %}Не указано{% else %}{{ project.callback}}{% endif %}" class="form-control form-control-alternative" readonly>
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-lg-15">
                                                                 <div class="form-group">
                                                                     <label for="">Тип проекта</label>
-                                                                    <select name="is_public"
-                                                                            class="form-control form-control-alternative"
-                                                                            id="type">
-                                                                        {% if project.is_public == 1 %}
-                                                                            <option selected="selected" value="1">
-                                                                                Открытый
-                                                                            </option>
-                                                                            <option value="0">Приватный</option>
-                                                                        {% else %}
-                                                                            <option value="1">Открытый</option>
-                                                                            <option selected="selected" value="0">
-                                                                                Приватный
-                                                                            </option>
-                                                                        {% endif %}
-
-                                                                    </select>
+                                                                    <input type="url" value="{% if project.is_public == 1 %}Открытый{% else %}Закрытый{% endif %}" class="form-control form-control-alternative" readonly>
                                                                 </div>
                                                             </div>
 
@@ -176,47 +152,18 @@
                                                     </div>
 
                                                     <div class="ml-lg-4 col-lg-9 mt-0">
-                                                        <label class="form-control-label" for="input-description">Расширенное
-                                                            описание</label>
+                                                        <label class="form-control-label" for="input-description">О проекте:</label>
                                                         <div class="form-group">
                                                              <textarea name="description" type="text" cols="40" rows="4"
                                                                        placeholder=""
                                                                        id="input-description" minlength="300"
                                                                        maxlength="5000"
-                                                                       class="form-control form-control-alternative">{{ project.description }}</textarea>
+                                                                       class="form-control form-control-alternative">{% if project.description == '' %}К сожалению, создатель проекта не описал идею. В ближайшее время мы удалим этот проект.{% else %}{{ project.description }}{% endif %}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
 
-<<<<<<< HEAD
-                                                <hr class="my-4"/>
-=======
-                                                   <div class="col-lg-15">
-                                                   <div class="form-group">
-                                                        <label for="">Тип проекта</label>
-                                                        <select name="is_public" class="form-control form-control-alternative" id="type">
-                                                        {% if project.is_recruting == 1 %}
-                                                          <option selected="selected" value="2">Рекрутинг</option>
-                                                          <option value="0">Приватный</option>
-                                                          <option value="1">Открытй</option>
-                                                        {% else %}
-                                                        {% if project.is_public == 1 %}
-                                                          <option selected="selected" value="1">Открытый</option>
-                                                          <option value="0">Приватный</option>
-                                                          <option value="2">Рекрутинг</option>
-                                                        {% else %}
-                                                            <option value="1">Открытый</option>
-                                                            <option selected="selected" value="0">Приватный</option>
-                                                            <option value="2">Рекрутинг</option>
-                                                        {% endif %}
-                                                        {% endif %}
-
-                                                        </select>
-                                                          </div>
-                                                </div>
->>>>>>> main_page_search
-
-                                            <button type="submit" form="project-form" class="btn btn-sm btn-primary mt-2 float-xl-right">Сохранить</button>
+                                                <hr class="my-4 mt--3"/>
 
                                             </div>
                                         </div>
@@ -225,7 +172,7 @@
 
 
                                     <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
-                                        {% include "blocks/project_view_command.html" %}
+                                        {% include "blocks/project_view_command_.html" %}
                                     </div>
                                     <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">
                                         ...
@@ -254,16 +201,8 @@
                 enabled: false,
                 unique_id: "input-description",
             },
-<<<<<<< HEAD
+            toolbar: false,
             spellChecker: false,
-            placeholder: "Что конкретно Вы ходите сделать? Подробно опишите идею и цели Вашего проекта. Вы сможете редактировать это поле в дальнейшем.",
-=======
-            placeholder: "Что конкретно Вы ходите сделать? Кого-то найти? Если ваща цель - некоммерческая разработка и " +
-                "поиск единомышленников, подробно опишите идею и цели Вашего проекта." +
-                " Если же Вы занимаетесь рекрутингом, напишите здесь, кого вы ищете." +
-                " Постарайтесь также указать теги, по которым будет происходить ранижрование результатов поиска." +
-                " Вы сможете редактировать это поле в дальнейшем.",
->>>>>>> main_page_search
         });
     </script>
     <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>

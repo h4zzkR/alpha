@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .forms import ProjectForm
 # from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from .models import Project
-from ..main.views import ajax_messages, json_skills, Messages
+from ..main.views import ajax_messages, json_skills, Messages, get_context
 
 
 def handler404(request):
@@ -75,9 +75,7 @@ def projects_list(request):
         template_name = 'project_list.html'
         context = {}
         # paginate_by = 100  # if pagination is desired
-        context.update({'pagename': 'Мои Проекты'},)
-        context['nav_projects'] = Project.objects.filter(collaborators__member=request.user).order_by(
-            "-created_at")
+        context = get_context(request, 'Мои Проекты')
         context['projects'] = Project.objects.filter(collaborators__member=request.user).order_by("-created_at")
         return render(request, template_name, context)
     else:
@@ -97,16 +95,24 @@ def project_create(request):
     else:
         form = ProjectForm()
 
-    return render(request, 'project_setup.html', {
+    context = get_context(request, 'Новый проект')
+    context.update({
         'form': form,
         'pagename': 'Новый проект',
-        'nav_projects': Project.objects.filter(collaborators__member=request.user).order_by(
-            "-created_at"),
         'tags': json_skills(Project.tags.all())
     })
 
+    return render(request, 'project_setup.html', context)
+
 
 def project_view(request, id):
+    project = Project.objects.get(id=id)
+    context = get_context(request, 'Проект')
+    context.update({'project' : project})
+    return render(request, 'project_view.html', context)
+
+
+def project_view_or_edit(request, id):
     try:
         project = Project.objects.get(id=id)
     except Project.DoesNotExist:
@@ -118,7 +124,8 @@ def project_view(request, id):
         try:
             col = project.collaborators.get(member=request.user)
         except ObjectDoesNotExist:
-            return handler403(request)
+            # just view project
+            return redirect(f'project/v/{id}', request)
         if request.user.is_authenticated and col.can_edit_project is True:
             project_form = ProjectForm(request.POST, instance=project)
             if project_form.is_valid():
@@ -134,7 +141,8 @@ def project_view(request, id):
                 response_data.update({'messages': ajax_messages(request)})
             # return JsonResponse(response_data)
         else:
-            return handler403(request)
+            # just view project
+            return redirect(f'project/v/{id}', request)
     else:
         try:
             col = project.collaborators.get(member=request.user)
@@ -146,12 +154,14 @@ def project_view(request, id):
             project_form = ProjectForm()
             project = Project.objects.get(id=id)
 
-    return render(request, 'project.html', {
+    context = get_context(request, 'Проект')
+    context.update({
         'form': project_form,
         'user_id': project.id,
         'project': project,
         'tags': json_skills(Project.tags.all())
     })
+    return render(request, 'project_edit.html', context)
 
 
 def kick_from_project(request, project_id, user_to_kick):

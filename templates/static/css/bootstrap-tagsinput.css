@@ -42,7 +42,8 @@
 }
 .bootstrap-tagsinput .tag {
   margin-right: 2px;
-  background-color: rebeccapurple;
+  /*background-color: rebeccapurple;*/
+  background-color: #5E72E4;
   border-radius: 5px;
   padding: 5px;
   color: white;
