@@ -163,14 +163,6 @@
                 enabled: true,
                 unique_id: "input-description",
             },
-            spellChecker: false,
-            previewRender: function (plainText, preview) { // Async method
-                setTimeout(function () {
-                    preview.innerHTML = customMarkdownParser(plainText);
-                }, 250);
-
-                return "Загрузка...";
-            },
             placeholder: "Что конкретно Вы ходите сделать? Кого-то найти? Если ваща цель - некоммерческая разработка и " +
                 "поиск единомышленников, подробно опишите идею и цели Вашего проекта." +
                 " Если же Вы занимаетесь рекрутингом, напишите здесь, кого вы ищете." +
