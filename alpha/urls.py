@@ -22,8 +22,8 @@ urlpatterns = [
     path('projects/new', p.project_create, name="project_create"),
     path('projects/', p.projects_list, name='projects_list'),
 
-    path('project/<int:id>', p.project_view, name='project'),
-    path('project/view/<int:id>', p.project_view_or_edit, name='project_view'),
+    path('project/v/<int:id>', p.project_view, name='project_view'),
+    path('project/e/<int:id>', p.project_view_or_edit, name='project_edit'),
     path('list_skills/', apps.main.views.json_skills),
     path('search/', apps.main.views.search_engine),
     path('oauth/', include('social_django.urls', namespace='social')),

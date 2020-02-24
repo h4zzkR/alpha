@@ -137,14 +137,14 @@ ellips {
                                                 {% endif %}
                                                 <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
                                                     {% if user in pr.members_with_edit_rights%}
-                                                    <a href="/project/view/{{ pr.id }}">
+                                                    <a href="/project/e/{{ pr.id }}">
                                                       <button class='btn btn-danger float-right' style="">
                                                            <i class="fa fa-edit" style=""></i>
                                                           </button>
                                                     </a>
                                                     {% else %}
-                                                    <a href="/project/{{ pr.id }}">
-                                                    <button class='btn btn-primary float-right' style="" href="/project/{{ pr.id }}">
+                                                    <a href="/project/v/{{ pr.id }}">
+                                                    <button class='btn btn-primary float-right' style="">
                                                        <i class="fa fa-book-open" style=""></i>
                                                     </button></a>
                                                     {% endif %}

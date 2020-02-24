@@ -125,7 +125,7 @@ def project_view_or_edit(request, id):
             col = project.collaborators.get(member=request.user)
         except ObjectDoesNotExist:
             # just view project
-            return redirect(f'project/{id}', request)
+            return redirect(f'project/v/{id}', request)
         if request.user.is_authenticated and col.can_edit_project is True:
             project_form = ProjectForm(request.POST, instance=project)
             if project_form.is_valid():
@@ -142,7 +142,7 @@ def project_view_or_edit(request, id):
             # return JsonResponse(response_data)
         else:
             # just view project
-            return redirect(f'project/{id}', request)
+            return redirect(f'project/v/{id}', request)
     else:
         try:
             col = project.collaborators.get(member=request.user)
@@ -161,7 +161,7 @@ def project_view_or_edit(request, id):
         'project': project,
         'tags': json_skills(Project.tags.all())
     })
-    return render(request, 'project.html', context)
+    return render(request, 'project_edit.html', context)
 
 
 def kick_from_project(request, project_id, user_to_kick):

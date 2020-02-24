@@ -51,8 +51,8 @@ ellips {
                         {% endif %}
                         <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
                             {% if user in pr.members_with_edit_rights%}
-                            <a href="{% url 'project_view' pr.id %}">
-                              <button class='btn btn-danger float-right' style="" href="{% url 'project_view' pr.id %}">
+                            <a href="{% url 'project_edit' pr.id %}">
+                              <button class='btn btn-danger float-right' style="" href="{% url 'project_edit' pr.id %}">
                                    <i class="fa fa-edit" style=""></i>
                                   </button>
                             </a>
