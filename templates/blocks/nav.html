@@ -134,7 +134,7 @@
                                 <i class="ni ni-tv-2 text-blue"></i> Лента проектов
                             </a>
                         {% endif %}
-                        {% if pagename == 'MyProjects' and user.profile.confirmed is True %}
+                        {% if pagename == 'MyProjects' %}
                             <a class=" nav-link active" href="{% url 'projects_list' %}"> {# TODO: Link #}
                                 <i class="ni ni-collection text-primary"></i> Мои Проекты
                             </a>
@@ -143,7 +143,7 @@
                                 <i class="ni ni-collection text-teal"></i> Мои Проекты
                             </a>
                         {% endif %}
-                        {% if pagename == 'Новый проект' and user.profile.confirmed is True %}
+                        {% if pagename == 'Новый проект' %}
                             <a class=" nav-link active" href="{% url 'project_create' %}"> {# TODO: Link #}
                                 <i class="ni ni-app text-primary"></i> Новый Проект
                             </a>
