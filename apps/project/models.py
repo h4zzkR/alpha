@@ -38,7 +38,7 @@ class Project(models.Model):
     collaborators = models.ManyToManyField(Collaborator, related_name='collabs')
 
     technical_spec_url = models.URLField(default="", max_length=100)
-    is_public = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=True)
 
     status = models.IntegerField(default=0)  # 0 - finding team; 1 - developing; 2 - refinding people; 3 - closed
 
