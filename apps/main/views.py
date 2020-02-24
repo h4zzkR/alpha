@@ -61,7 +61,7 @@ def index(request):
         # user.profile.reset_password()
         # print(user.profile.github_stars)
 
-        projects = Project.objects.all().order_by("-created_at")
+        projects = Project.objects.filter(is_public=True).order_by("-created_at")
         context.update({'object_list' : projects})
         context.update({'type' : 'projects'})
         context.update({'sort' : '-created_at'})
@@ -92,7 +92,7 @@ def search_engine(request):
     p = Project.objects.none()
     if type == 'projects':
         for i in data:
-            s = Project.objects.filter(Q(name__icontains=i) | Q(tags__name=i)).order_by(sort)
+            s = Project.objects.filter(Q(name__icontains=i) | Q(tags__name=i) & Q(is_public=True)).order_by(sort)
             p |= s
 
     context = get_context(request, 'Dashboard')
