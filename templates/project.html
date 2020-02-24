@@ -56,15 +56,11 @@
                 <div class="col-2 col-sm-2 mr--1">
                     <div class="mb-3">
 
-                        {#                         <li><button type="submit" class="btn btn-sm btn-primary float-right">Обновить</button></li>#}
-
                         <div class="list-group" id="myTab" role="tablist">
                             <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list"
                                href="#about" role="tab" aria-controls="about">Описание</a>
                             <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list"
                                href="#team" role="tab" aria-controls="team">Команда</a>
-                            {#                          <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Чат и файлы</a>#}
-
                         </div>
 
                     </div>
@@ -101,8 +97,7 @@
                                                     <div class="bootstrap-tagsinput">
                                                         <input class="typeahead form-control" type="text" name="tags"
                                                                data-role="tagsinput" id="tags-input"
-                                                               value="{{ project.list_tags }}" minlength="2"
-                                                               required="">
+                                                               value="{{ project.list_tags }}" minlength="2">
                                                     </div>
                                                 </div>
                                             <div class="card-body">
