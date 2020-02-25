@@ -71,6 +71,7 @@ ellips {
         <!--END Glossary Nav-->
         <div class="glossary__search mb-3">
             <div class="row justify-content-between">
+
             <form action="/search/?"  class="glossary__search__form col-9" id="main_search" method="get">
 
                   <div class="form-group has-search">
@@ -82,7 +83,6 @@ ellips {
                     <input type="hidden" name="type" id="form-type" value="projects">
                     <input type="hidden" name="sort" id="form-sort" value="-created_at">
             </form>
-
             <select class=" mr-3 mt-1 sort-btn" id="sort_btn" data-style="btn-white" style="height: 80%;">
                 {% if sort == '-created_at' %}
                 <option selected data-tokens="Новое" id="-created_at">Новое</option>
@@ -102,10 +102,10 @@ ellips {
 
         <h3 class="glossary__results__term title-style--three" style="width: 100%;"></h3>
         <div class="glossary__results mb-6 card-columns" style="width: 100%;">
-            <div class="glossary__results__row infinite-container" data-term="#">
+            <div class="glossary__results__row" data-term="#">
 {#                <div class="row">#}
                 {% for pr in object_list %}
-                    <div class="glossary__results__item mb--1 infinite-item" data-item="{{pr.name.title}}">
+                    <div class="glossary__results__item mb--1" data-item="{{pr.name.title}}">
                         <div class="card" href="#" style="{{ pr.card_color }}">
 
                             <div class="card-body" style="max-height: 40rem;">
@@ -170,7 +170,7 @@ ellips {
                                     {% endfor %}
                                 </div>
                             </div>
-                        
+
                             <div class="card-footer bg-secondary text-muted">
                                 <div class="row">
                                 <div class="col-12 col-md-6 col-sm-12">
@@ -194,9 +194,6 @@ ellips {
                     <!--END Glossary Result item-->
                 {% endfor %}
             </div>
-              {% if object_list.has_next %}
-                <a class="infinite-more-link" href="?page={{ object_list.next_page_number }}"></a>
-              {% endif %}
         </div>
     </div>
 
@@ -205,13 +202,6 @@ ellips {
 
 {% block scripts %}
 {#    <script src="/static/js/index_search.js"></script>#}
-
-<script>
-    var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0]
-    });
-</script>
-
 <script type="text/javascript">
 // Using jQuery.
 
