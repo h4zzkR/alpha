@@ -22,7 +22,9 @@ function update_messages(messages){
                     "<span aria-hidden=\"true\">&times;</span></button>" + m.message + "</div>";
             $("#div_messages").append(msg);
             i++;
+
         });
+
 };
 
 function create_post(id) {
