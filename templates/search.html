@@ -163,8 +163,8 @@ ellips {
                                 <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
                             </div>
 
-                            <div class="card-footer bg-secondary">
-                                 <div style="display: inline-table;">
+                            <div class="card-footer container bg-secondary">
+                                <div class="row" style="display:flex">
                                     {% for tag in pr.tags.all %}
                                         <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
                                     {% endfor %}
