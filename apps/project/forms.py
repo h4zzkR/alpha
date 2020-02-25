@@ -13,90 +13,89 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.forms import *
 
 
+
+
+
 class ProjectForm(forms.ModelForm):
     name = forms.CharField(required=True, max_length=Project._meta.get_field('name').max_length,
-                           widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Название',
-                                                   'label': 'name', 'name': 'name'}))
+                            widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Название',
+                                                       'label': 'name', 'name': 'name'}))
 
     description = forms.CharField(required=False, max_length=Project._meta.get_field('description').max_length,
-                                  widget=forms.Textarea(
-                                      attrs={'placeholder': "Подробно опишите идею Вашего проекта",
-                                             "rows": "4",
-                                             'id': 'description',
-                                             "maxlength": Project._meta.get_field('description').max_length,
-                                             'name': 'description',
-                                             'class': 'form-control form-control-alternative'}))
+                          widget=forms.Textarea(
+                              attrs={'placeholder': "Подробно опишите идею Вашего проекта",
+                                     "rows": "4",
+                                     'id': 'description',
+                                     "maxlength": Project._meta.get_field('description').max_length,
+                                     'name': 'description',
+                                     'class': 'form-control form-control-alternative'}))
 
     max_people = forms.IntegerField(required=False, max_value=10,
                                     widget=forms.NumberInput(
-                                        attrs={'class': 'form-control',
-                                               'placeholder': 'Максимальное количество участников',
-                                               'label': 'max_people', 'min': 0, 'max': 10, 'name': 'max_people',
-                                               'value': 0, }))
+                                        attrs={'class': 'form-control', 'placeholder': 'Максимальное количество участников',
+                                                            'label': 'max_people', 'min' : 0, 'max' : 10, 'name': 'max_people', 'value' : 0,}))
 
-    technical_spec_url = forms.URLField(required=False,
-                                        max_length=Project._meta.get_field('technical_spec_url').max_length,
-                                        widget=URLInput(attrs={'placeholder': "Ссылка на ТЗ (если есть)",
-                                                               'id': 'technical_spec_url',
-                                                               'name': 'technical_spec_url',
-                                                               'class': 'form-control form-control-alternative',
-                                                               }))
+    technical_spec_url = forms.URLField(required=False, max_length=Project._meta.get_field('technical_spec_url').max_length,
+                        widget=URLInput(attrs={'placeholder': "Ссылка на ТЗ (если есть)",
+                                               'id': 'technical_spec_url',
+                                               'name': 'technical_spec_url',
+                                               'class': 'form-control form-control-alternative',
+                                               }))
 
     is_public = forms.CharField(label='Тип проекта',
-                                widget=forms.Select(attrs={'class': 'selectpicker',
-                                                           'id': 'type',
-                                                           'name': 'type'
-                                                           },
+                           widget=forms.Select(attrs={'class' : 'selectpicker',
+                                                      'id': 'type',
+                                                      'name': 'type'
+                                                      },
                                                     choices=
-                                                    [(1, 'Открытый'),
-                                                     (0, 'Приватный')])
-                                )
+                                                        [(1, 'Открытый'),
+                                                         (0, 'Приватный')])
+                           )
 
     trello = forms.URLField(required=False, max_length=Project._meta.get_field('trello').max_length,
-                            widget=URLInput(attrs={'placeholder': "Ссылка на Kanban (Trello)",
-                                                   'id': 'trello',
-                                                   'name': 'trello',
-                                                   'class': 'form-control form-control-alternative',
-                                                   }))
+                        widget=URLInput(attrs={'placeholder': "Ссылка на Kanban (Trello)",
+                                               'id': 'trello',
+                                               'name': 'trello',
+                                               'class': 'form-control form-control-alternative',
+                                               }))
 
     vcs = forms.URLField(required=False, max_length=Project._meta.get_field('vcs').max_length,
-                         widget=URLInput(attrs={'placeholder': "Ссылка на VCS",
-                                                'id': 'vcs',
-                                                'name': 'vcs',
-                                                'class': 'form-control form-control-alternative',
-                                                }))
+                        widget=URLInput(attrs={'placeholder': "Ссылка на VCS",
+                                               'id': 'vcs',
+                                               'name': 'vcs',
+                                               'class': 'form-control form-control-alternative',
+                                               }))
 
     callback = forms.URLField(required=False, max_length=Project._meta.get_field('callback').max_length,
-                              widget=URLInput(attrs={'placeholder': "Связь и общение (Telegram, Discord, Slack)",
-                                                     'id': 'callback',
-                                                     'name': 'callback',
-                                                     'class': 'form-control form-control-alternative',
-                                                     }))
+                        widget=URLInput(attrs={'placeholder': "Связь и общение (Telegram, Discord, Slack)",
+                                               'id': 'callback',
+                                               'name': 'callback',
+                                               'class': 'form-control form-control-alternative',
+                                               }))
 
-    tags = TagField(min_length=2, required=False,
-                    widget=forms.TextInput(
-                        attrs={
-                            'data-role': 'tagsinput',
-                            'name': 'tags',
-                            'id': 'tags-input'},
+    tags = TagField(min_length=2, widget=forms.TextInput(
+        attrs={
+               'data-role' : 'tagsinput',
+               'name' : 'tags',
+               'id' : 'tags-input'},
 
-                    ))
+    ))
 
     class Meta:
         model = Project
         fields = (
             "name", "description", "max_people", "technical_spec_url",
-            "trello", "vcs", "callback", 'tags'
+            "trello", "vcs", "callback", 'tags', 'is_public',
         )
 
     def save(self, user):
         project = super(ProjectForm, self).save(commit=False)
         is_public = int(self.data['is_public'])
-        if is_public == 2:
-            project.is_recruting = True
+        print(is_public)
+        if is_public == 1:
             project.is_public = True
         else:
-            project.is_public = is_public
+            project.is_public = 0
 
         if project.author is None:
             project.author = user

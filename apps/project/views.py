@@ -137,6 +137,7 @@ def project_view_or_edit(request, id):
                 project_form.save_m2m()
                 response_data.update({'messages': ajax_messages(request)})
             else:
+                print(project_form.errors)
                 m.add(request, 'error', 'Что-то пошло не так...')
                 response_data.update({'messages': ajax_messages(request)})
             # return JsonResponse(response_data)
