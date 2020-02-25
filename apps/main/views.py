@@ -79,6 +79,8 @@ def index(request, projects_list=None, type='projects', sort='-created_at'):
         context.update({'type': type})
         context.update({'sort': sort})
 
+        skills = ["'" + n.name + "'" for n in request.user.profile.skills.all()]
+        context.update({'skills': ", ".join(skills) })
         return render(request, 'index.html', context)
     else:
         context = get_context(request, 'greetings')
