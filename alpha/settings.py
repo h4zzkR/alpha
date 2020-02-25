@@ -98,8 +98,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GITHUB_KEY = '35f32302bec64a5dfe5e'
-SOCIAL_AUTH_GITHUB_SECRET = 'b357aa5662f6cd887fcbeb97900ce2172102f2bb'
+SOCIAL_AUTH_GITHUB_KEY = 'e87f58fb9971ac0bd0ae'
+SOCIAL_AUTH_GITHUB_SECRET = 'a57439a004cf205d0f131102ddb7a636fdb0f7b7'
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
