@@ -111,7 +111,6 @@ def update_profile(request):
             user_form.save()
             obj = profile_form.save(commit=False)
             profile_form.save_m2m()
-            u.profile.github_stars = int(dict(request.POST)['github-stars'][0])
             u.save()
             response_data.update(user_form.cleaned_data)
             response_data.update(profile_form.cleaned_data)
