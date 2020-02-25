@@ -72,7 +72,17 @@ ellips {
         <div class="glossary__search mb-3">
             <div class="row justify-content-between">
            
+<form action="/search/?"  class="glossary__search__form col-9" id="main_search" method="get">
 
+                  <div class="form-group has-search">
+                    <span class="fa fa-search form-control-feedback mt-1"></span>
+                    <input class="form-control" id="searchInput" value="{{ value }}" placeholder="Поиск среди проектов: теги через пробел, имя пользователя и т.п." type="search">
+                  </div>
+
+                    <input type="hidden" name="q" id="form-q" value="">
+                    <input type="hidden" name="type" id="form-type" value="projects">
+                    <input type="hidden" name="sort" id="form-sort" value="-created_at">
+            </form>
             <select class=" mr-3 mt-1 sort-btn" id="sort_btn" data-style="btn-white" style="height: 80%;">
                 {% if sort == '-created_at' %}
                 <option selected data-tokens="Новое" id="-created_at">Новое</option>
