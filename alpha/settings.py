@@ -4,12 +4,12 @@ from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = 'http://127.0.0.1:8000/'
-DOMAIN = 'concat.org'
 AUTO_CONFIRM = True
 
+SITE_ID = 1 
 SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
 DEBUG = os.environ.get('DEBUG', True)
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["217.182.75.251", "localhost"]
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -98,8 +98,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GITHUB_KEY = '9c3677f2a7a6b701b346'
-SOCIAL_AUTH_GITHUB_SECRET = 'c309904ac9f35de316c0a6fa12f1db8f6bcabe5d'
+SOCIAL_AUTH_GITHUB_KEY = '35f32302bec64a5dfe5e'
+SOCIAL_AUTH_GITHUB_SECRET = 'b357aa5662f6cd887fcbeb97900ce2172102f2bb'
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
@@ -116,8 +116,8 @@ SOCIAL_AUTH_PIPELINE = (
     'apps.user.views.save_profile',
 )
 
-LOGIN_URL = 'account/login/'
-LOGOUT_URL = 'account/logout/'
+LOGIN_URL = '/account/login/'
+LOGOUT_URL = '/account/logout/'
 LOGIN_REDIRECT_URL = '/'
 
 CACHES = {
@@ -128,16 +128,26 @@ CACHES = {
 }
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd50q8kdahcod8s',
-            'USER': 'xrbqkztyuxhpne',
-            'PASSWORD': '54bcc36ee3a7ddf3b3018eafd21eb52c7f67510cd460a978f317a06a053465ee',
-            'HOST': 'ec2-54-247-125-38.eu-west-1.compute.amazonaws.com',
-            'PORT': '5432',
 
-        }
+    'default': {
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'concat',
+
+        'USER': 'concat',
+
+        'PASSWORD': 's1XTPKlOjWo4',
+
+        'HOST': 'localhost',
+
+        'PORT': '5432',
+
+
+
     }
+
+}
 
 USER_ONLINE_TIMEOUT = 300
 
