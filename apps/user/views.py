@@ -195,8 +195,8 @@ def request_reset(request):
                 User.objects.get(username=username).profile.reset_password()
             m.add(request, 'success', 'Письмо с ссылкой на страницу восстановление пароля отправлено.')
         except:
-            print('Нету такого пользователя')
-            raise Http404
+            m.add(request, 'error', 'Такого пользователя не существует. Проверьте введенные данные.')
+            return redirect('/account/reset/', request)
         return redirect('/', request)
     else:
         return render(request, 'reset_password_request.html')
