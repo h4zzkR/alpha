@@ -20,7 +20,8 @@ def get_context(request, pagename):
     }
     context.update({'user': request.user})
     if request.user.is_authenticated:
-        context.update({'nav_projects' : Project.objects.filter(collaborators__member=request.user).order_by("-created_at")})
+        context.update(
+            {'nav_projects': Project.objects.filter(collaborators__member=request.user).order_by("-created_at")})
     # TEMP FIX OF MISSING MEDIA_URL AND STATIC_URL
     # context.update({'BASE_DIR': settings.BASE_DIR})
     return context
@@ -39,12 +40,12 @@ def ajax_messages(request):
     return django_messages
 
 
-def json_skills(tags = UserProfile.skills.all()):
+def json_skills(tags=UserProfile.skills.all()):
     tag_list = []
     for i in range(len(tags)):
         tag = tags[i].name
-        tag_list.append({ "value" : str(i), "text" : tag })
-    return json.dumps(tag_list, ensure_ascii=False).replace('\"','"')
+        tag_list.append({"value": str(i), "text": tag})
+    return json.dumps(tag_list, ensure_ascii=False).replace('\"', '"')
 
 
 def index(request, projects_list=None, type='projects', sort='-created_at'):
@@ -74,10 +75,9 @@ def index(request, projects_list=None, type='projects', sort='-created_at'):
         except EmptyPage:
             projects = paginator.page(paginator.num_pages)
 
-        context.update({'object_list' : projects})
-        context.update({'type' : type})
-        context.update({'sort' : sort})
-
+        context.update({'object_list': projects})
+        context.update({'type': type})
+        context.update({'sort': sort})
 
         return render(request, 'index.html', context)
     else:
@@ -85,18 +85,18 @@ def index(request, projects_list=None, type='projects', sort='-created_at'):
         return redirect('account/login')
 
 
-
 def search_engine(request):
-
     data = request.GET['q'].split('+')
     type = request.GET['type']
     sort = request.GET['sort']
-    #TODO
+    # TODO
 
     projects_list = Project.objects.none()
     if type == 'projects':
         for i in data:
-            s = Project.objects.filter(Q(name__icontains=i) | Q(tags__name=i) & Q(is_public=True)).order_by(sort)
+            s = Project.objects.filter(
+                (Q(name__icontains=i) | Q(tags__name=i) | Q(collaborators__member__username__contains=i)) & Q(
+                    is_public=True)).order_by(sort)
             projects_list |= s
 
     page = request.GET.get('page', 1)
@@ -109,19 +109,12 @@ def search_engine(request):
         projects = paginator.page(paginator.num_pages)
 
     context = get_context(request, 'Dashboard')
-    context.update({'object_list' : projects})
-    context.update({'type' : type})
-    context.update({'value' : ' '.join(data)})
+    context.update({'object_list': projects})
+    context.update({'type': type})
+    context.update({'value': ' '.join(data)})
     context.update({'sort': sort})
 
     return render(request, 'search.html', context)
-
-
-
-
-
-
-
 
 
 class Messages():

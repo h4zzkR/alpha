@@ -164,13 +164,13 @@ ellips {
                             </div>
 
                             <div class="card-footer bg-secondary">
-                                 <div style="display:flex">
+                                 <div style="display: inline-table;">
                                     {% for tag in pr.tags.all %}
-                                        <a class="mr-1 badge badge-info">#{{ tag }}</a>
+                                        <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
                                     {% endfor %}
-                                    </div>
+                                </div>
                             </div>
-
+                        
                             <div class="card-footer bg-secondary text-muted">
                                 <div class="row">
                                 <div class="col-12 col-md-6 col-sm-12">
