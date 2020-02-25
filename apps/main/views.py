@@ -92,24 +92,20 @@ def search_engine(request):
     # TODO
 
     projects_list = Project.objects.none()
+    print(data)
     if type == 'projects':
         for i in data:
             s = Project.objects.filter(
-                (Q(name__icontains=i) | Q(tags__name=i) | Q(collaborators__member__username__contains=i)) & Q(
-                    is_public=True)).order_by(sort)
+                (Q(name__icontains=i) | Q(collaborators__member__username__contains=i)) & Q(
+                    is_public=True))
             projects_list |= s
+            projects_list = projects_list.union(Project.objects.filter(tags__name=i).distinct())
+
+
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(projects_list, 1000)
-    try:
-        projects = paginator.page(page)
-    except PageNotAnInteger:
-        projects = paginator.page(1)
-    except EmptyPage:
-        projects = paginator.page(paginator.num_pages)
-
     context = get_context(request, 'Dashboard')
-    context.update({'object_list': projects})
+    context.update({'object_list': projects_list})
     context.update({'type': type})
     context.update({'value': ' '.join(data)})
     context.update({'sort': sort})
