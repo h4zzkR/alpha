@@ -109,6 +109,7 @@ def project_view(request, id):
     project = Project.objects.get(id=id)
     context = get_context(request, 'Проект')
     context.update({'project' : project})
+    context.update({"user": request.user})
     return render(request, 'project_view.html', context)
 
 
