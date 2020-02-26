@@ -48,9 +48,7 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white" id="username">{{ user.username }}!</h1>
-                    <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
-                        информацию о себе.</p>
+                    <h1 class="display-2 text-white" id="username">{{ user.username }}</h1>
 
 {#                    <table>#}
 {#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
@@ -58,7 +56,6 @@
 {#                     </table>#}
 
                     <div class="btn-group">
-                        <button onclick="FocusOnUsername();" class="btn btn-outline-info btn-xs">Редактировать</button>
                         <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user.username }}
                         </button>
                         <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
@@ -71,9 +68,7 @@
     <!--  ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
     <div class="overlay" id="avatar_menu">
         <div class="col-xl-3 order-xl-2 mb-5 mb-xl-0 popup">
-            <div class="row justify-content-center mb-5">
-                <h3 class="mb-2" style="z-index: 700;">Обновление аватара</h3>
-            </div>
+
             <div class="row justify-content-center mt-2">
                 <a class="close" id="close-popup" href="#">&times;</a>
                 <div class="col-lg-3 order-lg-2">
@@ -89,48 +84,11 @@
                     <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
                         <i class="fab fa-telegrams fa-3x tg-icon"></i>
                     </a>
-                    <a href="#avatar_menu" class="btn-icon float-lg-right mr-4" style="transition: all 0.3s ease-out;">
-                    <span class="fa-stack dfa-lg" style="font-size: 26px;">
-                      <i class="fa fa-circles fa-stack-2x"></i>
-                      <i class="fa fa-cameras fa-stack-1x" style="color: white; font-size: 23px;"></i>
-                    </span>
-                    </a>
+a
                 </div>
             </div>
 
-            <div class="card-body pt-0 pt-md-4">
-                <div class="text-center">
-{#                    <a href='/gencon'>#}
-                <span class="btn btn-outline-danger" id="gen_new_avatar" onclick="avatar()">
-                  Сгенерировать Identicon
-                <span class="font-weight-light"></span>
-                </span>
-                    <div class="h5 font-weight-300">
-                        <i class="ni location_pin mr-2"></i>
-                    </div>
-                    <form method="post" action="/update_avatar/">
-                        {% csrf_token %}
-{#                        <div class="file-upload">#}
-{#                          <label for="custom-file-upload" class="filupp">#}
-{#                            <span class="filupp-file-name js-value">Выберите файл</span>#}
-{#                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">#}
-{#                          </label>#}
-{#                        </div>#}
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">Upload</span>
-                          </div>
-                          <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="attachment-file" id="inputGroupFile01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                          </div>
-                        </div>
-                        <input type="submit"  value="Загрузить" class="btn btn-outline-danger">
-                    </form>
-                    <hr class="my-4"/>
-                    <a href="#"></a>
-                </div>
-            </div>
+
         </div>
     </div>
     <!--  END OF ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
@@ -158,12 +116,6 @@
                             <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
                                 <i class="fab fa-telegram fa-3x tg-icon"></i>
                             </a>
-                            <a href="#avatar_menu" class="btn-icon float-lg-right mr-4"
-                               style="transition: all 0.3s ease-out;">
-                    <span class="fa-stack fa-lg" style="font-size: 26px;">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-camera fa-stack-1x" style="color: white; font-size: 23px;"></i>
-                    </span>
                             </a>
                         </div>
                     </div>
@@ -213,7 +165,7 @@
                 <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
                     <div class="card card-profile shadow">
                         <div class="card-header text-center border-0 pt-8 pt-md-4">
-                            Расскажите, в чем Вы хороши:
+                            Умения:
                         </div>
                         <div class="card-body pt-0 pt-md-4">
                                  <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
@@ -279,16 +231,16 @@
                             </div>
                             <hr class="my-4"/>
                             <!-- Address -->
-                            <h6 class="heading-small text-muted mb-4">Контактная информация (по желанию)</h6>
+                            <h6 class="heading-small text-muted mb-4">Контактная информация</h6>
 
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="github">Ваш Github/Gitlab (ссылка на
+                                            <label class="form-control-label" for="github">Github/Gitlab (ссылка на
                                                 профиль)</label>
                                             {% if user.profile.github_account != ''%}
-                                                <input type="url" name="github" value="{{user.profile.github}}" placeholder="Ссылка на ваш профиль"
+                                                <input type="url" name="github" value="{{user.profile.github}}" placeholder="Ссылка на Профиль"
                                                        id="github" class="form-control form-control-alternative" onchange="checkURL(this)" maxlength="50" readonly>
                                             {% else %}
                                             {{ form2.github }}
