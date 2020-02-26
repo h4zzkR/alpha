@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="col-10 order-xl-1 scrolling mb-5">
-                    <form role="form" method="POST" id="project-form" action="/project/e/{{ project.id }}">
+                    <form role="form" method="POST" id="project-form" action="/project/e/{{ project.id }}/">
                         {% csrf_token %}
 
                         <div class="mt--4">
@@ -88,13 +88,15 @@
                                                                    label="name" required="" id="id_name">
                                                         </h3>
                                                     </div>
+                                                <div class="col" title="Посмотреть на проект">
                                                     {% if user in project.members_with_edit_rights %}
                                                         <a href="{% url 'project_view' project.id %}">
                                                             <button class='btn btn-primary float-right' type="button" style="">
-                                                                <i class="fa fa-book-open" style=""></i>
+                                                                <i class="fa fa-book-open" ></i>
                                                             </button>
                                                         </a>
                                                     {% endif %}
+                                                </div>
                                                 </div>
                                             </div>
 
