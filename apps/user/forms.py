@@ -178,6 +178,7 @@ class ProfileEditForm(forms.ModelForm):
 
     ))
 
+
     # def clean(self):
     #     # Then call the clean() method of the super  class
     #     cleaned_data = super(ProfileEditForm, self).clean()

@@ -29,6 +29,7 @@ import datetime
 
 # To profile fields : user.profile.profile_field
 from ..main.views import get_context, ajax_messages, json_skills, Messages
+from ..project.views import handler404
 
 
 class RegisterFormView(FormView):
@@ -86,10 +87,21 @@ def profile_resolver(request, username):
     else:
         # client tries to look smb profile
         try:
-            User.objects.get(username=username)
-            return HttpResponse('Good but 404')
-        except ObjectDoesNotExist:
-            return HttpResponseNotFound
+            u = User.objects.get(username=username)
+            user_form = UserEditForm(instance=u)
+            for field_name in user_form.fields:
+                user_form.fields[field_name].disabled = True
+            profile_form = ProfileEditForm(instance=u.profile)
+            for field_name in profile_form.fields:
+                profile_form.fields[field_name].disabled = True
+            context = get_context(request, 'Профиль')
+            context.update({'form': user_form})
+            context.update({'form2': profile_form})
+            context.update({'user': u})
+            context.update({'skills': json_skills()})
+            return render(request, 'profile_view.html', context)
+        except User.DoesNotExist:
+            return handler404(request)
 
 
 def render_to_json(request, data):
@@ -193,7 +205,7 @@ def request_reset(request):
                 username = user_or_mail
                 User.objects.get(username=username).profile.reset_password()
             m.add(request, 'success', 'Письмо с ссылкой на страницу восстановление пароля отправлено.')
-        except:
+        except User.DoesNotExist:
             m.add(request, 'error', 'Такого пользователя не существует. Проверьте введенные данные.')
             return redirect('/account/reset/', request)
         return redirect('/', request)
