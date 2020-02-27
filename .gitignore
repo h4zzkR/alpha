@@ -125,6 +125,6 @@ dmypy.json
 .pyre/
 
 # Media folder
-!media/profile/photos/
 media/profile/photos/*.png
 media/profile/photos/*.svg
+!media/profile/photos/default.png
