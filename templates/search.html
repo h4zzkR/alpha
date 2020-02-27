@@ -104,6 +104,7 @@ ellips {
 
         <h3 class="glossary__results__term title-style--three" style="width: 100%;"></h3>
 
+        {% if type == 'projects' %}
         <div class="glossary__results mb-6 card-columns" style="width: 100%;">
             <div class="glossary__results__row infinite-container" data-term="#">
 {#                <div class="row">#}
@@ -197,6 +198,9 @@ ellips {
                     <!--END Glossary Result item-->
                 {% endfor %}
             </div>
+        {% else %}
+                    {% include 'blocks/search_users.html' %}
+        {% endif %}
 
 
 

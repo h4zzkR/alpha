@@ -1,0 +1,25 @@
+<div class="glossary__results mb-6" style="width: 100%;">
+<div class="glossary__results__row infinite-container" data-term="#">
+
+<ul class="list-group">
+{% for u in object_list %}
+    <div class="glossary__results__item mb-4 infinite-item" data-item="{{u.user.username}}">
+{#        <p>{{ u.user.username }}</p>#}
+    <li class="list-group-item">
+        <div class="row ml-2">
+        <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
+           <a href="{{ u.link }}"><img alt="{{ u.user.username }}" src="{{ u.avatar_url }}"></a>
+        </span>
+        {% if u.user.first_name and u.user.last_name%}
+        <a class="col-2" href="{{ u.link }}">{{u.user.first_name }} {{u.user.last_name }}</a>
+        {% elif u.user.first_name or u.user.last_name %}
+            <a class="col-2 pr--3" href="{{ u.link }}">{% if u.user.first_name %}{{u.user.first_name }}{% endif %}{% if u.user.last_name %}{{u.user.last_name }}{% endif %}</a>
+        {% endif %}
+            <p>{{u.user.username}}</p>
+        </div>
+    </li>
+    </div>
+    <!--END Glossary Result item-->
+{% endfor %}
+</ul>
+</div></div>

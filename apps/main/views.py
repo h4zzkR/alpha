@@ -93,26 +93,30 @@ def search_engine(request):
     sort = request.GET['sort']
     # TODO
 
-    projects_list = Project.objects.none()
     if type == 'projects':
+        object_list = Project.objects.none()
         for i in data:
             s = Project.objects.filter(
                 (Q(name__icontains=i) | Q(collaborators__member__username__contains=i)) & Q(
                     is_public=True))
-            projects_list |= s
-            projects_list = projects_list.union(Project.objects.filter(tags__name=i).distinct())
+            object_list |= s
+            object_list = object_list.union(Project.objects.filter(tags__name=i).distinct())
+            object_list.order_by(sort)
     elif type == 'users':
-        for i in data:
-            s = User.objects.filter((Q(username=i)))
-            projects_list |= s
-            print(UserProfile.objects.filter(skills__name=i))
-            # projects_list = projects_list.union(UserProfile.objects.filter(skills__name=i).distinct())
+        object_list = UserProfile.objects.none()
+        if len(data) != 1 and data[0] != '':
+            for i in data:
+                s = UserProfile.objects.filter((Q(user__username=i)))
+                object_list |= s
+                object_list = object_list.union(UserProfile.objects.filter(skills__name=i).distinct())
+        else:
+            object_list |= UserProfile.objects.all()
 
 
 
     page = request.GET.get('page', 1)
     context = get_context(request, 'Dashboard')
-    context.update({'object_list': projects_list.order_by(sort)})
+    context.update({'object_list': object_list})
     context.update({'type': type})
     context.update({'value': ' '.join(data)})
     context.update({'sort': sort})
