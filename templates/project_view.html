@@ -188,8 +188,7 @@
                                                                        placeholder=""
                                                                        id="input-description" minlength="300"
                                                                        maxlength="5000"
-                                                                       class="form-control form-control-alternative">{% if project.description == '' %}К сожалению, создатель проекта не описал идею. В ближайшее время мы удалим этот проект.{% else %}
-                                                                 {{ project.description }}{% endif %}</textarea>
+                                                                       class="form-control form-control-alternative">{% if project.description == '' %}К сожалению, создатель проекта не описал идею. В ближайшее время мы удалим этот проект.{% else %}{{ project.description }}{% endif %}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
