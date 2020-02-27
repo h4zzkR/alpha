@@ -252,7 +252,8 @@
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-username"
                                                    id="focus">Никнейм</label>
-                                            {{ form.username }}
+                                            <input type="text" name="username" value="{{user.username}}" class="form-control" placeholder="Новый никнейм" label="username"
+                                                   {% if user.github_ud is not None %} readonly {% endif %}id="username" maxlength="150">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">

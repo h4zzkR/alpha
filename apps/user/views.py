@@ -129,7 +129,7 @@ def update_profile(request):
             m.add(request, 'success', 'Ваш профиль был успешно обновлен!')
             response_data.update({'messages': ajax_messages(request)})
         else:
-            # print(profile_form.errors)
+            print(profile_form.errors)
             m.add(request, 'error', 'Что-то пошло не так...')
             response_data.update({'messages': ajax_messages(request)})
         return JsonResponse(response_data)
