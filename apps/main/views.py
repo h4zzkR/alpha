@@ -94,7 +94,6 @@ def search_engine(request):
     # TODO
 
     projects_list = Project.objects.none()
-    print(data)
     if type == 'projects':
         for i in data:
             s = Project.objects.filter(
@@ -102,12 +101,18 @@ def search_engine(request):
                     is_public=True))
             projects_list |= s
             projects_list = projects_list.union(Project.objects.filter(tags__name=i).distinct())
+    elif type == 'users':
+        for i in data:
+            s = User.objects.filter((Q(username=i)))
+            projects_list |= s
+            print(UserProfile.objects.filter(skills__name=i))
+            # projects_list = projects_list.union(UserProfile.objects.filter(skills__name=i).distinct())
 
 
 
     page = request.GET.get('page', 1)
     context = get_context(request, 'Dashboard')
-    context.update({'object_list': projects_list})
+    context.update({'object_list': projects_list.order_by(sort)})
     context.update({'type': type})
     context.update({'value': ' '.join(data)})
     context.update({'sort': sort})

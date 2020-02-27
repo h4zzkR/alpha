@@ -53,9 +53,9 @@ ellips {
     <div class="col-2 col-sm-2 mr--9 mt-4">
         <div class="mb-3">
         <div class="list-group" id="myTab" role="tablist">
-                            <a class="list-group-item list-group-item-action {% if type == 'projects' %}active{% endif %}" id="about-tab" data-toggle="list"
+                            <a class="list-group-item list-group-item-action projects {% if type == 'projects' %}active{% endif %}" id="{% if type == 'projects' %}active-tab{% endif %}" data-toggle="list"
                                href="#about" role="tab" aria-controls="about" onclick="change_type_projects()">Проекты</a>
-                            <a class="list-group-item list-group-item-action {% if type == 'users' %}active{% endif %}" id="team-tab" data-toggle="list"
+                            <a class="list-group-item list-group-item-action users {% if type == 'users' %}active{% endif %}" id="{% if type == 'users' %}active-tab{% endif %}" data-toggle="list"
                                href="#team" role="tab" aria-controls="team" onclick="change_type_users();">Пользователи</a>
         </div>
     </div></div>
@@ -74,7 +74,7 @@ ellips {
                       </div>
 
                         <input type="hidden" name="q" id="form-q" value="">
-                        <input type="hidden" name="type" id="form-type" value="projects">
+                        <input type="hidden" name="type" id="form-type" value="{{ type }}">
                         <input type="hidden" name="sort" id="form-sort" value="-created_at">
                         </form>
                      </div>
@@ -213,12 +213,6 @@ ellips {
 {% block scripts %}
 {#    <script src="/static/js/index_search.js"></script>#}
 
-<script>
-    var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0]
-    });
-</script>
-
 <script type="text/javascript">
 // Using jQuery.
 
@@ -226,15 +220,9 @@ $(function() {
 
     $('#main_search').each(function() {
         $(this).find('input').keypress(function(e) {
-            // Enter pressed?
-
-            {#url.searchParams.append('x', 42);#}
-
-            {#url.searchParams.set('x', 42);#}
             if(e.which == 10 || e.which == 13) {
 
                 var url = new URL(this.form.action);
-                console.log(url);
                 var params = document.getElementById("searchInput").value.split(' ').join('+');
 
                 var sel = document.getElementById("sort_btn");
@@ -246,10 +234,24 @@ $(function() {
                 else {
                     sort = 'created_at';
                 }
+                console.log('dfdf');
+
+                console.log(document.getElementById("active-tab"));
+                var type = '';
+                if (document.getElementById("active-tab").className.includes('users')) {
+                    type = 'users';
+                }
+                else {
+                    type = 'projects';
+                }
+
+                console.log(type);
 
 
                 document.getElementById("form-q").value = params;
                 document.getElementById("form-sort").value = sort;
+                document.getElementById("form-type").value = type;
+
 
                 this.form.submit();
             }
@@ -266,6 +268,7 @@ $(function() {
 
         var sel = document.getElementById("sort_btn");
         var sort = sel.options[sel.selectedIndex].value;
+        console.log(sort);
 
         if (sort == 'Новое'){
             sort = '-created_at';
