@@ -21,5 +21,5 @@ class Command(BaseCommand):
                                                  password='root',
                                                  )
         user.save(); user.refresh_from_db()
-        pillow_update_avatar(Image.open("media/profile/photos/default.png"), user)
+        pillow_update_avatar(Image.open("media/profile/photos/admin.png"), user)
         print('Superuser [root@gmail.com:root] created.')

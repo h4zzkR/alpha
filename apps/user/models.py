@@ -87,6 +87,8 @@ class UserProfile(models.Model):
     def avatar_url(self):
         if self.avatar and hasattr(self.avatar, 'url'):
             return self.avatar.url
+        else:
+            return 'media/profile/photos/default.png'
 
     def email_user(self, subject, arguments, text_content=None, message=None):
         # arguments = { KEY : VALUE } for template
