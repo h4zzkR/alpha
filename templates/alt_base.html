@@ -1,69 +1,171 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="en" style="">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>
-      concat
-  </title>
-  <!-- Favicon -->
-  <link href="{{STATIC_URL}}img/brand/logo.png" rel="icon" type="image/png">
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
-  <!-- Icons -->
-  <link href="{{STATIC_URL}}js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
-  <link href="{{STATIC_URL}}js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
-  <!-- CSS Files -->
-  <link href="{{STATIC_URL}}css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="{{STATIC_URL}}css/other_styles.css" rel="stylesheet" />
-  <style>
-      @media screen and (max-width: 720px) {
-      .footer {
-          left: 0px;
-      }
-    }
-  </style>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        {% block title %}
+        {{ pagename }}
+        {% endblock %}
+    </title>
+    <!-- Favicon -->
+    <link href="{% static "img/brand/logo.png" %}" rel="icon" type="image/png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Icons -->
+    <link href="{% static "js/plugins/nucleo/css/nucleo.css"%}"  rel="stylesheet" />
+{#    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js" integrity="sha256-MAgcygDRahs+F/Nk5Vz387whB4kSK9NXlDN3w58LLq0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.10/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" integrity="sha256-jDnOKIOq2KNsQZTcBTEnsp76FnfMEttF6AV2DF2fFNE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.min.js" integrity="sha256-Qp8DnNDYDDwTWO5OCw8HFoCJOqO1l4OmcIlIZNfi6tI=" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link href="{% static "css/other_styles.css" %}" rel="stylesheet"/>
+    <link href="{% static "css/argon-dashboard.css" %}" rel="stylesheet"/>
+
+    <!-- extra CSS Files -->
+    {% block extra_links %}
+    {% endblock %}
+
+    <style>
+        @media screen and (max-width: 720px) {
+            .footer {
+                left: 0px;
+            }
+        }
+    </style>
 </head>
 
+<body style="background: #35274E;">
 
-<body class="">
-  {% include "blocks/nav.html" %}
+{% block nav %}
+{% include "blocks/nav.html" %}
+{% endblock %}
 
-  <div class="main-content ">
-    <img src="{{ STATIC_URL }}img/brand/background2_.png" class="bg">
+
+{% block main_content_class %}
+<div class="main-content">
+{% endblock %}
+    <span class="user-background">
+        <img src="{{ STATIC_URL }}img/brand/dark_back.png" class="bg" style="pointer-events: none; user-select: none;">
+    </span>
+    {% block header %}
     {% include "blocks/header.html" %}
 
+    <style>
+        {% block styles %}
+        {% endblock %}
+    </style>
+
     <div class="header bg-transparent pb-3 pt-5 pt-md-6">
-      <div class="container-fluid">
-        <div class="header-body">
-          <div class="row">
-          </div>
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row">
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-        {% block content %}
-        {% endblock %}
+    {% endblock %}
 
-        {% block footer %}
-        {% endblock %}
-  </div>
-  <!--   Core   -->
-  <script src="/templates/static/js/plugins/jquery/jquery.min.js"></script>
-  <script src="/templates/static/js/plugins/bootstrap/bootstrap.bundle.js"></script>
-  <!--   Optional JS   -->
-  <script src="/templates/static/js/plugins/chart.js/dist/Chart.min.js"></script>
-  <script src="/templates/static/js/plugins/chart.js/dist/Chart.extension.js"></script>
-  <script src="/templates/static/js/save.js"></script>
+    {% block content %}
+    {% endblock %}
 
-  <script>
-      window.setTimeout(function() {
-    $(".alert").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove();
+    {% include "blocks/messages.html" %}
+{#    {% block footer %}#}
+{#    {% endblock %}#}
+</div>
+
+<!--   Core   -->
+{#<script src="{{ STATIC_URL }}js/plugins/jquery/jquery.min.js"></script>#}
+<script src="{{ STATIC_URL }}js/plugins/bootstrap/bootstrap.js"></script>
+<script>
+    $("#message").fadeTo(1000, 500).slideUp(500, function(){
+        $("#message").alert('close');
     });
-}, 4000);</script>
+</script>
+
+{% if messages %}
+    <script> // django alerts auto hide
+    //add delay
+     $(document).ready(function() {
+        for (var i = 0; i < parseInt({{ messages|length }}); i++) {
+            var x = "#message" + i.toString();
+           // console.log(x);
+            $(x).fadeTo(2000, 500).slideUp(500, function () {
+                $(x).slideUp(500);
+            });
+        }
+    });
+    </script>
+
+{% endif %}
+
+<script>
+    function ajaxAutoHideMessages(arrayLength) {
+    // TODO ADD HIDING IN ORDER WITH DELAY
+        for (var i = 0; i < parseInt(arrayLength); i++) {
+            var x = "#message" + i.toString();
+           // console.log(x);
+            $(x).fadeTo(2000, 500).slideUp(500, function () {
+                $(x).slideUp(500);
+            });
+        }
+};
+</script>
+
+<script>
+$(document).ready(function() {
+    $('.selectpicker').selectpicker({
+      size: 4
+     });
+});
+</script>
+
+<script>
+    $(function() {
+
+    $('#main_search').each(function() {
+        $(this).find('input').keypress(function(e) {
+            // Enter pressed?
+
+            {#url.searchParams.append('x', 42);#}
+
+            {#url.searchParams.set('x', 42);#}
+            if(e.which == 10 || e.which == 13) {
+
+                var url = new URL(this.form.action);
+                console.log(url);
+                var params = document.getElementById("searchInput").value.split(' ').join('+');
+
+                var sort = 'Новое';
+                if (sort == 'Новое'){
+                    sort = '-created_at';
+                }
+                else {
+                    sort = 'created_at';
+                }
+
+
+                document.getElementById("form-q").value = params;
+                document.getElementById("form-sort").value = sort;
+
+                this.form.submit();
+            }
+        });
+
+        $(this).find('input[type=submit]').hide();
+    });
+    });
+</script>
+
+<!--   Optional JS   -->
+{% block scripts %}
+{% endblock %}
 </body>
 
 </html>
