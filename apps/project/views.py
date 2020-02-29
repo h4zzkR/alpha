@@ -1,9 +1,10 @@
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ProjectForm
+from .forms import ProjectForm, ProjectAddForm
 # from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
 from .models import Project
 from ..main.views import ajax_messages, json_skills, Messages, get_context
@@ -106,11 +107,17 @@ def project_create(request):
 
 
 def project_view(request, id):
-    project = Project.objects.get(id=id)
-    context = get_context(request, 'Проект')
-    context.update({'project' : project})
-    context.update({"user": request.user})
-    return render(request, 'project_view.html', context)
+    try:
+        project = Project.objects.get(id=id)
+    except Project.DoesNotExist:
+        return handler404(request)
+    if project.is_public:
+        context = get_context(request, 'Проект')
+        context.update({'project' : project})
+        context.update({"user": request.user})
+        return render(request, 'project_view.html', context)
+    else:
+        return handler403(request)
 
 
 def project_view_or_edit(request, id):
@@ -144,14 +151,16 @@ def project_view_or_edit(request, id):
             # return JsonResponse(response_data)
         else:
             # just view project
-            return redirect(f'project/v/{id}', request)
+            return redirect(f'/project/v/{id}', request)
     else:
+        if not request.user.is_authenticated:
+            return redirect(f'/project/v/{id}', request)
         try:
             col = project.collaborators.get(member=request.user)
         except ObjectDoesNotExist:
-            return handler403(request)
-        if not request.user.is_authenticated or col.can_edit_project is False:
-            return handler403(request)
+            return redirect(f'/project/v/{id}', request)
+        if col.can_edit_project is False:
+            return redirect(f'/project/v/{id}', request)
         else:
             project_form = ProjectForm()
             project = Project.objects.get(id=id)
@@ -166,36 +175,87 @@ def project_view_or_edit(request, id):
     return render(request, 'project_edit.html', context)
 
 
+def project_team_view(request, id):
+    try:
+        project = Project.objects.get(id=id)
+    except Project.DoesNotExist:
+        return handler404(request)
+    if project.is_public:
+        context = get_context(request, 'Проект')
+        context.update({'project': project})
+        context.update({"user": request.user})
+        return render(request, 'project_team_view.html', context)
+    else:
+        return handler403(request)
+
+
+def project_team_edit(request, id):
+    try:
+        project = Project.objects.get(id=id)
+    except Project.DoesNotExist:
+        return handler404(request)
+
+    m = Messages()
+    if request.method == 'POST':
+        response_data = {}
+        try:
+            col = project.collaborators.get(member=request.user)
+        except ObjectDoesNotExist:
+            # just view project
+            return redirect(f'project/v/{id}', request)
+        if request.user.is_authenticated and col.can_edit_project is True:
+            project_form = ProjectAddForm(request.POST)
+            if project_form.is_valid():
+                project = project_form.save()
+                # response_data.update(project_form.cleaned_data)
+                # response_data.update(project_form.cleaned_data)
+                # m.add(request, 'success', 'Успешно')
+                project.save()
+                project_form.save_m2m()
+                response_data.update({'messages': ajax_messages(request)})
+            else:
+                print(project_form.errors)
+                m.add(request, 'error', 'Что-то пошло не так...')
+                response_data.update({'messages': ajax_messages(request)})
+            # return JsonResponse(response_data)
+        else:
+            # just view project
+            return redirect(f'/project/v/{id}/team/', request)
+    else:
+        if not request.user.is_authenticated:
+            return redirect(f'/project/v/{id}/team/', request)
+        try:
+            col = project.collaborators.get(member=request.user)
+        except ObjectDoesNotExist:
+            return redirect(f'/project/v/{id}/team/', request)
+        if col.can_edit_project is False:
+            return redirect(f'/project/v/{id}/team/', request)
+        else:
+            project_form = ProjectAddForm()
+            project = Project.objects.get(id=id)
+
+    context = get_context(request, 'Команда')
+    context.update({
+        'form': project_form,
+        'user_id': project.id,
+        'project': project,
+        'tags': json_skills(Project.tags.all())
+    })
+    return render(request, 'project_team_edit.html', context)
+
+
 def kick_from_project(request, project_id, user_to_kick):
+    user_to_kick = User.objects.get(username=user_to_kick)
     project = Project.objects.get(id=project_id)
     m = Messages()
     response_data = {}
     if request.user in project.members_with_edit_rights():
         project.kick_member(user_to_kick)
     else:
-        raise handler404(request)
+        return handler404(request)
     response_data.update({'messages': ajax_messages(request)})
     response_data.update(project.collaborators.all())
     m.add(request, 'success', f'Пользователь {user_to_kick.username} больше не в команде!')
     return JsonResponse(response_data)
     # email kicked user
 
-
-class ProjectListView(ListView):
-
-    model = Project
-    template_name = 'project_list.html'
-    # paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'pagename': 'projects',
-            'user' : self.request.user,
-        })
-        return context
-
-    def get_queryset(self):
-        # new_context = Project.objects.filter(collaborators__in=[self.request.user]).order_by("-created_at")
-        new_context = Project.objects.filter(collaborators__member = self.request.user ).order_by("-created_at")
-        return new_context
