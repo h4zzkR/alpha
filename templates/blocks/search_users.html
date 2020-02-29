@@ -6,17 +6,22 @@
     <div class="glossary__results__item mb-4 infinite-item" data-item="{{u.user.username}}">
 {#        <p>{{ u.user.username }}</p>#}
     <li class="list-group-item">
-        <div class="row ml-2">
-        <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
-           <a href="{{ u.link }}"><img alt="{{ u.user.username }}" src="{{ u.avatar_url }}"></a>
-        </span>
-        {% if u.user.first_name and u.user.last_name%}
-        <a class="col-2" href="{{ u.link }}">{{u.user.first_name }} {{u.user.last_name }}</a>
-        {% elif u.user.first_name or u.user.last_name %}
-            <a class="col-2 pr--3" href="{{ u.link }}">{% if u.user.first_name %}{{u.user.first_name }}{% endif %}{% if u.user.last_name %}{{u.user.last_name }}{% endif %}</a>
-        {% endif %}
-            <p>{{u.user.username}}</p>
+    <div class="btn-group">
+        <div class="row ml-2 align-items-center">
+            <span class="avatar rounded-circle mr-2" style="width: 40px; height: 40px;">
+               <a href="{{ u.link }}"><img alt="{{ u.user.username }}" src="{{ u.avatar_url }}"></a>
+            </span>
+            {% if u.user.first_name and u.user.last_name%}
+            <a class="" href="{{ u.link }}">{{u.user.first_name }} {{u.user.last_name }}</a>
+            {% elif u.user.first_name or u.user.last_name %}
+                <a class="" href="{{ u.link }}">{% if u.user.first_name %}{{u.user.first_name }}{% endif %}{% if u.user.last_name %}{{u.user.last_name }}{% endif %}</a>
+            {% endif %}
+                <a class="ml-2" href="{{ u.link }}" style="color: black; font-weight: normal;">{{u.user.username}}</a>
         </div>
+    </div>
+        <button class='btn btn-icon-only float-right btn-neutral' type="button">
+        <img src="{{ STATIC_URL }}/img/icons/common/github-alt.svg" style="width: 30px; height: 30px;">
+        </button>
     </li>
     </div>
     <!--END Glossary Result item-->
