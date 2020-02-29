@@ -80,9 +80,17 @@ def projects_list(request):
         context = {}
         # paginate_by = 100  # if pagination is desired
         context = get_context(request, 'MyProjects')
-        context['projects'] = Project.objects.filter(collaborators__member=request.user).order_by("-created_at")
-        pending_projects = [i.project for i in ProjectRequest.objects.filter(user=request.user, status=1)]
-        context.update({'pending_projects' : pending_projects})
+
+        user_projects = Project.objects.filter(collaborators__member=request.user).order_by("-created_at")
+        context['projects'] = user_projects
+
+        out_pending_projects = [i.project for i in ProjectRequest.objects.filter(user=request.user, status=1)]
+        context.update({'out_pending_projects' : out_pending_projects})
+
+        in_pending_projects = ProjectRequest.objects.filter(project__in=user_projects, status=1)
+        context.update({'in_pending_projects' : in_pending_projects})
+
+        print(in_pending_projects)
         return render(request, template_name, context)
     else:
         return redirect('/account/login/')
@@ -275,7 +283,9 @@ def project_request(request, id):
         project.request_project(request.user)
         #TODO
         args = {'template_name' : 'concat_request_project.html',
+                'username' : request.user.username,
                 'user' : request.user.username,
+                'link' : settings.HOST + 'projects/',
                 'unsub' : os.path.join(settings.HOST, 'unsub_email'),
                 'domain' : settings.DOMAIN
                                  }
@@ -291,6 +301,52 @@ def projects_undo_request(request, id):
         i.delete()
     return redirect('/projects/')
 
+def projects_accept_request(request):
+    username, pr_id = request.GET['user'], request.GET['project']
+    m = Messages()
+    project = Project.objects.get(id=pr_id)
+    user = User.objects.get(username=username)
+    proj_request = ProjectRequest.objects.get(project=project, user=user)
+    print(project.author)
+    if request.user == project.author:
+        project.add_member(user, role='')
+        project.save()
+        m.add(request, 'success', f'{username} был добавлен в Вашу команду!')
+        args = {'template_name' : 'concat_request_accept.html',
+                'project' : project.name,
+                'username': username,
+                'unsub' : os.path.join(settings.HOST, 'unsub_email'),
+                'domain' : settings.DOMAIN,
+                'link': settings.HOST + 'project/v/' + pr_id,
+                                 }
+        user.profile.email_user('Вы были добавлены в команду.', args)
+        proj_request.delete()
+    else:
+        return handler404(request)
+    return redirect('/projects', request)
+
+
+def projects_decline_request(request):
+    username, pr_id = request.GET['user'], request.GET['project']
+    m = Messages()
+    project = Project.objects.get(id=pr_id)
+    user = User.objects.get(username=username)
+    proj_request = ProjectRequest.objects.get(project=project, user=user)
+    print(project.author)
+    if request.user == project.author:
+        m.add(request, 'success', f'Запрос пользователя {username} был отклонен.')
+        args = {'template_name': 'concat_request_decline.html',
+                'project': ' ' + project.name,
+                'username': username,
+                'unsub': os.path.join(settings.HOST, 'unsub_email'),
+                'domain': settings.DOMAIN,
+                'link': settings.HOST + 'project/v/' + pr_id,
+                }
+        user.profile.email_user('Запрос на вступление в команду отклонен.', args)
+        proj_request.delete()
+    else:
+        return handler404(request)
+    return redirect('/projects', request)
 
 
 

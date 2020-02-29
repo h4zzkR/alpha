@@ -84,14 +84,14 @@
                                                     {% for c in project.collaborators.all %}
                                                         <li class="list-group-item d-flex flex-row justify-content-between align-items-center">
                                                             <div class="d-flex flex-row" style="width: 100%;">
-                                                                <div class="row align-self-center">
+                                                                <div class="row align-self-center align-items-center">
                                                                     <div class="col-4 ml-2">
                                         <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
                                            <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}"
                                                                                       src="{{ c.member.profile.avatar_url }}"></a>
                                         </span>
                                                                     </div>
-                                                                    <span class="mr-3">{{ c.member.username }}</span>
+                                                                    <span class="ml-3">{{ c.member.username }}</span>
                                                                 </div>
                                                                 <div class="row align-self-center">
                                                                     {% if c.is_teamlead is True %}

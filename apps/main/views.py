@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-from apps.project.models import Project
+from apps.project.models import Project, ProjectRequest
 from django.contrib.auth.models import User
 from apps.user.models import UserProfile
 
@@ -75,6 +75,12 @@ def index(request, projects_list=None, type='projects', sort='-created_at'):
     except EmptyPage:
         projects = paginator.page(paginator.num_pages)
 
+    if request.user.is_authenticated:
+        requested = [i.project for i in ProjectRequest.objects.filter(user=request.user, status=1)]
+        context.update({'requested': requested})
+    else:
+        context.update({'requested' : []})
+
     context.update({'object_list': projects})
     context.update({'type': type})
     context.update({'sort': sort})
@@ -110,7 +116,6 @@ def search_engine(request):
                 s = UserProfile.objects.filter((Q(user__username=i) | Q(user__first_name__iexact=i) | Q(user__last_name__iexact=i)))
                 object_list |= s
                 object_list = object_list.union(UserProfile.objects.filter(skills__name__icontains=i).distinct())
-    print(object_list)
 
 
 

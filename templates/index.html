@@ -109,7 +109,11 @@ ellips {
 {#                <div class="row">#}
                 {% for pr in object_list %}
                     <div class="glossary__results__item mb--1 infinite-item" data-item="{{pr.name.title}}">
+                        {% if pr in requested %}
+                        <div class="card bg-lighter" href="#" title="Вы отправили запрос на вступление в команду этого проекта" style="{{ pr.card_color }}">
+                        {% else %}
                         <div class="card" href="#" style="{{ pr.card_color }}">
+                        {% endif %}
 
                             <div class="card-body" style="max-height: 40rem;">
                                 <div class="row">

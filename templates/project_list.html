@@ -113,9 +113,9 @@
 
         </div>
 
-    <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block mb-3"> Запросы в команды проектов: </a>
+    <a class="h2 text-blue text-uppercase d-none d-lg-inline-block mb-3 mt-3"> Исходящие запросы в команды проектов (от Вас): </a>
     <div class="card-columns">
-            {% for pr in pending_projects %}
+            {% for pr in out_pending_projects %}
                 <div class="card" style="{{ pr.card_color }}">
                     <div class="card-body" style="max-height: 40rem;">
                         <div class="row">
@@ -194,5 +194,46 @@
         </div>
     </div>
 
+    <a class="h2 text-blue text-uppercase d-none d-lg-inline-block mb-3 ml-5 mt-3"> Входящие запросы (от других пользователей в Ваши проекты): </a>
+    <div class="card-columns ml-5 mb-3">
+            {% for req in in_pending_projects %}
+                <div class="card" style="{{ pr.card_color }}">
+                    <div class="card-body" style="max-height: 40rem;">
+                         <li class="list-group-item">
+                            <div class="btn-group">
+                                <div class="row ml-2 align-items-center">
+                                    <span class="avatar rounded-circle mr-2" style="width: 40px; height: 40px;">
+                                       <a href="{{ req.user.profile.link }}"><img alt="{{ req.user.username }}" src="{{ req.user.profile.avatar_url }}"></a>
+                                    </span>
+                                    {% if req.user.profile.first_name and req.user.profile.last_name%}
+                                    <a class="" href="{{ req.user.profile.link }}">{{req.user.profile.first_name }} {{req.user.profile.last_name }}</a>
+                                    {% elif req.user.profile.first_name or req.user.profile.last_name %}
+                                        <a class="" href="{{ req.user.profile.link }}">{% if req.user.profile.first_name %}{{req.user.profile.first_name }}{% endif %}{% if req.user.profile.last_name %}{{req.user.profile.last_name }}{% endif %}</a>
+                                    {% endif %}
+                                        <a class="ml-2" href="{{ req.user.profile.link }}" style="color: black; font-weight: normal;">{{req.user.username}}</a>
+                                    <div class="heading ml-2 mt-1">>  <a href="{% url 'project_view' req.project.id %}"><b>{{ req.project.name }}</b></a></div>
+                                </div>
+                            </div>
+                                <a href="{{ req.user.profile.github }}"><button class='btn btn-icon-only float-right btn-neutral' href="{{ req.user.profile.github }}" type="button">
+                                <img src="{{ STATIC_URL }}/img/icons/common/github-alt.svg" style="width: 30px; height: 30px;">
+                                </button></a>
+                            </li>
+                    </div>
+                    <div class="card-footer bg-secondary text-muted align-items-center">
+                        <div class="row">
+                                            <a href="/project/accept/?user={{ req.user.username }}&project={{ req.project.id }}" class="badge badge-primary ml-3 mr-2" title="Добавить">
+                                                <i class="fa fa-thumbs-up" style="font-size: 20px;"></i>
+                                            </a>
+                                            <a href="/project/decline/?user={{ req.user.username }}&project={{ req.project.id }}" class="badge badge-danger" title="Отклонить запрос">
+                                                <i class="fa fa-thumbs-down" style="font-size: 20px;"></i>
+                                            </a>
+                        <footer class="ml-5">Запрос отправлен: <b>{{ req.created_at }}</b></footer>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
     </div>
 {% endblock %}

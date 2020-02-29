@@ -28,6 +28,8 @@ urlpatterns = [
     path('project/e/<int:id>/', p.project_view_or_edit, name='project_edit'),
     path('project/r/<int:id>/', p.project_request, name='project_request'),
     path('project/ur/<int:id>', p.projects_undo_request, name='project_request_undo'),
+    path('project/accept/', p.projects_accept_request, name='project_request_accept'),
+    path('project/decline/', p.projects_decline_request, name='project_request_decline'),
     path('list_skills/', apps.main.views.json_skills),
     path('search/', apps.main.views.search_engine),
     path('oauth/', include('social_django.urls', namespace='social')),
