@@ -63,9 +63,10 @@
                                                 </button>
                                             </a>
                                         {% else %}
+                                            <a href="{% url 'project_view' pr.id %}">
                                             <button class='btn btn-primary float-right' style="">
                                                 <i class="fa fa-book-open" style=""></i>
-                                            </button>
+                                            </button></a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -142,9 +143,10 @@
                                                 </button>
                                             </a>
                                         {% else %}
+                                            <a href="{% url 'project_view' pr.id %}">
                                             <button class='btn btn-primary float-right' style="">
                                                 <i class="fa fa-book-open" style=""></i>
-                                            </button>
+                                            </button></a>
                                         {% endif %}
                                     </div>
                                 </div>
