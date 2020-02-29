@@ -81,6 +81,8 @@ def projects_list(request):
         # paginate_by = 100  # if pagination is desired
         context = get_context(request, 'MyProjects')
         context['projects'] = Project.objects.filter(collaborators__member=request.user).order_by("-created_at")
+        pending_projects = [i.project for i in ProjectRequest.objects.filter(user=request.user, status=1)]
+        context.update({'pending_projects' : pending_projects})
         return render(request, template_name, context)
     else:
         return redirect('/account/login/')
@@ -281,6 +283,14 @@ def project_request(request, id):
         m.add(request, 'success', 'Ваш запрос отправлен тимлиду проекта.')
     response_data.update({'messages': ajax_messages(request)})
     return JsonResponse(response_data)
+
+@login_required
+def projects_undo_request(request, id):
+    project = Project.objects.get(id=id)
+    for i in ProjectRequest.objects.filter(project=project, user=request.user, status=1):
+        i.delete()
+    return redirect('/projects/')
+
 
 
 
