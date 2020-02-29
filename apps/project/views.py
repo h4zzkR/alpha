@@ -6,9 +6,12 @@ from django.views.generic.list import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import ProjectForm, ProjectAddForm
 # from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
-from .models import Project
+from .models import Project, ProjectRequest
 from ..main.views import ajax_messages, json_skills, Messages, get_context
+import os
+from django.conf import settings
 
+from django.contrib.auth.decorators import login_required
 
 def handler404(request):
     """
@@ -115,6 +118,14 @@ def project_view(request, id):
         context = get_context(request, 'Проект')
         context.update({'project' : project})
         context.update({"user": request.user})
+        context.update({'is_in': False})
+        if request.user.is_authenticated is True:
+            for i in project.collaborators.all():
+                if request.user == i.member:
+                    context.update({'is_in': True})
+                    break
+        else:
+            context.update({'is_in': True}) #do not touch, it is hack for non display on unloginned
         return render(request, 'project_view.html', context)
     else:
         return handler403(request)
@@ -244,10 +255,41 @@ def project_team_edit(request, id):
     return render(request, 'project_team_edit.html', context)
 
 
+@login_required
+def project_request(request, id):
+    m = Messages()
+    project = Project.objects.get(id=id)
+    user = request.user
+    response_data = {}
+    for i in project.collaborators.all():
+        if user == i.member:
+            m.add(request, 'error', 'Вы уже в составе команды проекта.')
+            return redirect('/', request)
+    check = ProjectRequest.objects.filter(user=user, project=project, status=1)
+
+    if len(check) != 0:
+        m.add(request, 'error', 'Вы уже отправляли запрос, дождитесь рассмотрения вашей заявки.')
+    else:
+        project.request_project(request.user)
+        #TODO
+        args = {'template_name' : 'concat_request_project.html',
+                'user' : request.user.username,
+                'unsub' : os.path.join(settings.HOST, 'unsub_email'),
+                'domain' : settings.DOMAIN
+                                 }
+        project.author.profile.email_user('Вашим проектом кто-то заинтересовался!', args)
+        m.add(request, 'success', 'Ваш запрос отправлен тимлиду проекта.')
+    response_data.update({'messages': ajax_messages(request)})
+    return JsonResponse(response_data)
+
+
+
+
 def kick_from_project(request, project_id, user_to_kick):
     user_to_kick = User.objects.get(username=user_to_kick)
     project = Project.objects.get(id=project_id)
     m = Messages()
+
     response_data = {}
     if request.user in project.members_with_edit_rights():
         project.kick_member(user_to_kick)

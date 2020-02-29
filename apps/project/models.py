@@ -88,6 +88,12 @@ class Project(models.Model):
             col.is_author = is_author
         col.save()
 
+    def request_project(self, user):
+        request = ProjectRequest(user=user, project=self)
+        request.save()
+
+
+
 
 class ProjectInvitation(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -106,50 +112,13 @@ class ProjectSkills(models.Model):
     # tags = models.ManyToManyField(Tag)
     tags = TaggableManager()
 
-    def get_status(self):
-        if self.status == 0:
-            return 'Набор в проект'
-        elif self.status == 1:
-            return 'В разработке'
-        elif self.status == 2:
-            return 'Поиск участников'
-        elif self.status == 3:
-            return 'Завершен'
-
-    def list_tags(self):
-        return ','.join([t.name for t in self.tags.all()])
-
-    def members_with_edit_rights(self):
-        return [i.member for i in self.collaborators.filter(can_edit_project=True)]
-
-    def add_member(self, user, role=None, can_edit_project=False, is_teamlead=False, is_author=False):
-        c = Collaborator.objects.create(member=user,
-                                        role=role, can_edit_project=can_edit_project,
-                                        is_teamlead=is_teamlead, is_author=is_author)
-        c.save()
-        self.collaborators.add(c)
-
-    def kick_member(self, user):
-        try:
-            self.collaborators.remove(Collaborator.objects.get(member=user))
-        except Collaborator.DoesNotExist:
-            pass
-
-    def change_rights(self, user, can_edit_project=None, is_teamlead=None, is_author=None):
-        col = self.collaborators.get(member=user)
-        if can_edit_project is not None:
-            col.can_edit_project = can_edit_project
-        if is_teamlead is not None:
-            col.is_teamlead = is_teamlead
-        if is_author is not None:
-            col.is_author = is_author
-        col.save()
-
 
 class ProjectRequest(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
     status = models.IntegerField(default=1)  # 1 - pending, 2 - accepted, 3 - rejected
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ProjectInvite(models.Model):

@@ -58,8 +58,12 @@
 
                         <div class="list-group" id="myTab" role="tablist">
                             <a class="list-group-item list-group-item-action active" href="" role="tab" aria-controls="about">Описание</a>
-                            <a class="list-group-item list-group-item-action"
+                            <a class="list-group-item list-group-item-action rounded-bottom"
                                href="{% url 'project_team_edit' project.id %}" role="tab" aria-controls="team">Команда</a>
+                            {% if is_in is not True %}
+{# TODO #}                            <a class="list-group-item list-group-item-action mt-3 rounded-top bg-success border-0" id="request_project" style="color: white;"
+                               role="tab" aria-controls="team">Запрос в команду</a>
+                            {% endif %}
 
                         </div>
 
@@ -270,5 +274,51 @@
                 return false;
             }
         });
+    </script>
+
+    <script>
+    function update_messages(messages){
+        $("#div_messages").html("");
+        var i = 0
+        $.each(messages, function (i, m) {
+            var msg = "<div id='message" + i + "'" + "class=\"alert" + "\x20" + m.level + "\x20" + "alert-dismissible data-auto-dismiss myalert-bottom role=\"alert\">" +
+                  "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">" +
+                    "<span aria-hidden=\"true\">&times;</span></button>" + m.message + "</div>";
+            $("#div_messages").append(msg);
+            i++;
+
+        });
+
+    };
+
+    function ajaxAutoHideMessages(arrayLength) {
+    // TODO ADD HIDING IN ORDER WITH DELAY
+        for (var i = 0; i < parseInt(arrayLength); i++) {
+            var x = "#message" + i.toString();
+           // console.log(x);
+            $(x).fadeTo(2000, 500).slideUp(500, function () {
+                $(x).slideUp(500);
+            });
+        }
+    };
+
+    </script>
+    <script>
+    $('#request_project').click(function(){
+          $.ajax({
+                   type: "GET",
+                   url: "{% url 'project_request' project.id %}",
+                   data: {'id': {{project.id}}, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                   dataType: "json",
+                   success: function(response) {
+                       update_messages(response.messages);
+                       ajaxAutoHideMessages(json.messages.length);
+                    },
+                    error: function(rs, e) {
+                       update_messages(rs.messages);
+                       ajaxAutoHideMessages(json.messages.length);
+                    }
+              });
+        })
     </script>
 {% endblock %}

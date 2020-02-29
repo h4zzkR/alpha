@@ -95,6 +95,7 @@ class UserProfile(models.Model):
         # {{ link }}
         template_name = os.path.join(settings.BASE_DIR, 'templates/mail/' + arguments['template_name'])
         del arguments['template_name']
+        arguments.update({'username' : self.user.username})
 
         text_content = f'Привет, { self.user.username }!'
 
