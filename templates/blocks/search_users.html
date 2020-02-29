@@ -19,9 +19,9 @@
                 <a class="ml-2" href="{{ u.link }}" style="color: black; font-weight: normal;">{{u.user.username}}</a>
         </div>
     </div>
-        <button class='btn btn-icon-only float-right btn-neutral' type="button">
+        <a href="{{ u.github }}"><button class='btn btn-icon-only float-right btn-neutral' href="{{ u.github }}" type="button">
         <img src="{{ STATIC_URL }}/img/icons/common/github-alt.svg" style="width: 30px; height: 30px;">
-        </button>
+        </button></a>
     </li>
     </div>
     <!--END Glossary Result item-->

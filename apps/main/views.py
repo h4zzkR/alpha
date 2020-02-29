@@ -102,13 +102,14 @@ def search_engine(request):
             object_list.order_by(sort)
     elif type == 'users':
         object_list = UserProfile.objects.none()
-        if len(data) != 1 and data[0] != '':
+        if len(data) == 1 and data[0] == '':
+            object_list |= UserProfile.objects.all()
+        else:
             for i in data:
                 s = UserProfile.objects.filter((Q(user__username=i)))
                 object_list |= s
                 object_list = object_list.union(UserProfile.objects.filter(skills__name=i).distinct())
-        else:
-            object_list |= UserProfile.objects.all()
+    print(object_list)
 
 
 
