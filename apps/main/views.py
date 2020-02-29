@@ -98,6 +98,7 @@ def search_engine(request):
     sort = request.GET['sort']
     # TODO
 
+    print(sort)
     if type == 'projects':
         object_list = Project.objects.none()
         for i in data:
@@ -106,7 +107,6 @@ def search_engine(request):
                     is_public=True))
             object_list |= s
             object_list = object_list.union(Project.objects.filter(tags__name__icontains=i).distinct())
-            object_list.order_by(sort)
     elif type == 'users':
         object_list = UserProfile.objects.none()
         if len(data) == 1 and data[0] == '':
@@ -121,7 +121,10 @@ def search_engine(request):
 
     page = request.GET.get('page', 1)
     context = get_context(request, 'Dashboard')
-    context.update({'object_list': object_list})
+    if type == 'projects':
+        context.update({'object_list': object_list.order_by(sort)})
+    else:
+        context.update({'object_list' : object_list})
     context.update({'type': type})
     context.update({'value': ' '.join(data)})
     context.update({'sort': sort})
