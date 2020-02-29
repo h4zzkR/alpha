@@ -49,42 +49,40 @@ def json_skills(tags=UserProfile.skills.all()):
 
 
 def index(request, projects_list=None, type='projects', sort='-created_at'):
-    if request.user.is_authenticated:
-        context = get_context(request, 'Dashboard')
-        # print(request.user.profile)
-        # context.update({'projects': Project.objects.all()})
+    context = get_context(request, 'Dashboard')
+    # print(request.user.profile)
+    # context.update({'projects': Project.objects.all()})
 
-        # arguments = {'template_name' : 'concat_reset.html',
-        #         'link' : 'http://127.0.0.1:8000/',
-        #         'unsub' : 'http://127.0.0.1:8000/',
-        #         'domain' : 'concat.org'}
+    # arguments = {'template_name' : 'concat_reset.html',
+    #         'link' : 'http://127.0.0.1:8000/',
+    #         'unsub' : 'http://127.0.0.1:8000/',
+    #         'domain' : 'concat.org'}
 
-        # user = User.objects.get(username=request.user.username)
-        # github_login = user.social_auth.get(provider='github')
-        # user.profile.reset_password()
-        # print(user.profile.github_stars)
-        if projects_list is None:
-            projects_list = Project.objects.filter(is_public=True).order_by("-created_at")
+    # user = User.objects.get(username=request.user.username)
+    # github_login = user.social_auth.get(provider='github')
+    # user.profile.reset_password()
+    # print(user.profile.github_stars)
+    if projects_list is None:
+        projects_list = Project.objects.filter(is_public=True).order_by("-created_at")
 
-        page = request.GET.get('page', 1)
-        paginator = Paginator(projects_list, 20)
-        try:
-            projects = paginator.page(page)
-        except PageNotAnInteger:
-            projects = paginator.page(1)
-        except EmptyPage:
-            projects = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(projects_list, 20)
+    try:
+        projects = paginator.page(page)
+    except PageNotAnInteger:
+        projects = paginator.page(1)
+    except EmptyPage:
+        projects = paginator.page(paginator.num_pages)
 
-        context.update({'object_list': projects})
-        context.update({'type': type})
-        context.update({'sort': sort})
-
+    context.update({'object_list': projects})
+    context.update({'type': type})
+    context.update({'sort': sort})
+    try:
         skills = ["'" + n.name + "'" for n in request.user.profile.skills.all()]
         context.update({'skills': ", ".join(skills) })
-        return render(request, 'index.html', context)
-    else:
-        context = get_context(request, 'greetings')
-        return redirect('account/login')
+    except AttributeError:
+        pass
+    return render(request, 'index.html', context)
 
 
 def search_engine(request):

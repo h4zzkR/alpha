@@ -144,3 +144,15 @@ class ProjectSkills(models.Model):
         if is_author is not None:
             col.is_author = is_author
         col.save()
+
+
+class ProjectRequest(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    status = models.IntegerField(default=1)  # 1 - pending, 2 - accepted, 3 - rejected
+
+
+class ProjectInvite(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    status = models.IntegerField(default=1)  # 1 - pending, 2 - accepted, 3 - rejected

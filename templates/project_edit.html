@@ -58,10 +58,9 @@
                     <div class="mb-3">
 
                         <div class="list-group" id="myTab" role="tablist">
-                            <a class="list-group-item list-group-item-action active" id="about-tab" data-toggle="list"
-                               href="#about" role="tab" aria-controls="about">Описание</a>
-                            <a class="list-group-item list-group-item-action" id="team-tab" data-toggle="list"
-                               href="#team" role="tab" aria-controls="team">Команда</a>
+                            <a class="list-group-item list-group-item-action active" href="" role="tab" aria-controls="about">Описание</a>
+                            <a class="list-group-item list-group-item-action"
+                               href="{% url 'project_team_edit' project.id %}"role="tab" aria-controls="team">Команда</a>
                         </div>
 
                     </div>

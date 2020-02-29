@@ -21,7 +21,9 @@ urlpatterns = [
     path('reset_update/<str:reset_obj>/', u.reset_password, name='reset_update'),
     path('projects/new/', p.project_create, name="project_create"),
     path('projects/', p.projects_list, name='projects_list'),
-
+    path('project/e/<int:id>/team/', p.project_team_edit, name='project_team_edit'),
+    path('project/v/<int:id>/team/', p.project_team_view, name='project_team_view'),
+    path('project/v/<int:id>/team/add/', p.project_team_view, name='project_team_add'),
     path('project/v/<int:id>/', p.project_view, name='project_view'),
     path('project/e/<int:id>/', p.project_view_or_edit, name='project_edit'),
     path('list_skills/', apps.main.views.json_skills),
