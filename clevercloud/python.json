@@ -1,1 +1,1 @@
-{ "deploy": { "managetasks": [ "migrate" ]}}
+{ "deploy": { "managetasks": [ "migrate", "collectstatic -c" ]}}
