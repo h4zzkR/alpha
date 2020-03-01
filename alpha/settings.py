@@ -2,7 +2,7 @@ import os
 from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOST = 'http://217.182.75.251/'
+HOST = 'https://concat.pythonanywhere.com'
 DOMAIN = 'concat.org' #need for emailing templates
 AUTO_CONFIRM = True
 
@@ -133,13 +133,13 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'concat',
+        'NAME': 'd50q8kdahcod8s',
 
-        'USER': 'concat',
+        'USER': 'xrbqkztyuxhpne',
 
-        'PASSWORD': 's1XTPKlOjWo4',
+        'PASSWORD': '54bcc36ee3a7ddf3b3018eafd21eb52c7f67510cd460a978f317a06a053465ee',
 
-        'HOST': 'localhost',
+        'HOST': 'ec2-54-247-125-38.eu-west-1.compute.amazonaws.com',
 
         'PORT': '5432',
 
