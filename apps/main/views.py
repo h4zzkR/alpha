@@ -51,18 +51,6 @@ def json_skills(tags=UserProfile.skills.all()):
 
 def index(request, projects_list=None, type='projects', sort='-created_at'):
     context = get_context(request, 'Dashboard')
-    # print(request.user.profile)
-    # context.update({'projects': Project.objects.all()})
-
-    # arguments = {'template_name' : 'concat_reset.html',
-    #         'link' : 'http://127.0.0.1:8000/',
-    #         'unsub' : 'http://127.0.0.1:8000/',
-    #         'domain' : 'concat.org'}
-
-    # user = User.objects.get(username=request.user.username)
-    # github_login = user.social_auth.get(provider='github')
-    # user.profile.reset_password()
-    # print(user.profile.github_stars)
     if projects_list is None:
         projects_list = Project.objects.filter(is_public=True).order_by("-created_at")
 
@@ -98,7 +86,7 @@ def search_engine(request):
     sort = request.GET['sort']
     # TODO
 
-    print(sort)
+    # print(sort)
     if type == 'projects':
         object_list = Project.objects.none()
         for i in data:
