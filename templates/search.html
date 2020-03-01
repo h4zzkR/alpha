@@ -130,19 +130,6 @@ text-decoration: underline;
 
                                     <div class="col-12 col-md-6">
                                             <div class="btn-toolbar float-right" role="group">
-                                                {% if pr.is_public == 1 %}
-                                                 <div class="btn-group mr-2 top--2 right--4" role="group" aria-label="First group">
-                                                  <button class='btn btn-outline-light p-1' style="font-size: 20px; margin-right: 5px;">
-                                                     <i class="fa fa-unlock" style=""></i>
-                                                    </button>
-                                                 </div>
-                                                {% else %}
-                                                     <div class="btn-group mr-2 top--2 right--4" role="group" aria-label="First group">
-                                                  <button class='btn btn-light p-1' style="font-size: 20px; margin-right: 5px;">
-                                                     <i class="fa fa-lock" style=""></i>
-                                                    </button>
-                                                 </div>
-                                                {% endif %}
                                                 <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
                                                     {% if user in pr.members_with_edit_rights%}
                                                     <a href="/project/e/{{ pr.id }}">
