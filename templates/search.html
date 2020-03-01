@@ -17,7 +17,11 @@
     grid-gap: .9rem;
 }
 
-ellips {
+a:hover {
+text-decoration: underline;
+}
+
+.ellips {
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -31,9 +35,11 @@ ellips {
 .has-search .form-control-feedback {
     position: absolute;
     z-index: 2;
+    margin-left: 10px;
+    top: 6px;
     display: block;
-    width: 2.375rem;
-    height: 2.375rem;
+    width: 1.5rem;
+    height: 1.5rem;
     line-height: 2.375rem;
     text-align: center;
     pointer-events: none;
@@ -47,42 +53,42 @@ ellips {
 
 
 <div class="main-content ml-5 mr-5">
+    <div class="row">
+    <div class="col-2 col-sm-2 mr--9 mt-4">
+        <div class="mb-3">
+        <div class="list-group" id="myTab" role="tablist">
+                            <a class="list-group-item list-group-item-action projects {% if type == 'projects' %}active{% endif %}" id="{% if type == 'projects' %}active-tab{% endif %}" data-toggle="list"
+                               href="#about" role="tab" aria-controls="about" onclick="change_type_projects()">Проекты</a>
+                            <a class="list-group-item list-group-item-action users {% if type == 'users' %}active{% endif %}" id="{% if type == 'users' %}active-tab{% endif %}" data-toggle="list"
+                               href="#team" role="tab" aria-controls="team" onclick="change_type_users();">Пользователи</a>
+        </div>
+    </div></div>
     <div class="container py-4">
 
-{#        <nav class="glossary__nav mb-4">#}
-{#            <ul class="list-inline">#}
-{#                <li class="glossary__nav__item active">#}
-{#                    <a class="card card__content" data-nav="#" data-toggle="glossary" href="#">#</a>#}
-{#                </li>#}
-{#                <li class="glossary__nav__item">#}
-{#                    <a class="card card__content" data-nav="A" data-toggle="glossary" href="#">A</a>#}
-{#                </li>#}
-{#                <li class="glossary__nav__item">#}
-{#                    <a class="card card__content" data-nav="B" data-toggle="glossary" href="#">B</a>#}
-{#                </li>#}
-{#                <li class="glossary__nav__item">#}
-{#                    <a class="card card__content" data-nav="C" data-toggle="glossary" href="#">C</a>#}
-{#                </li>#}
-{#                <li class="glossary__nav__item">#}
-{#                    <a class="card card__content" data-nav="D" data-toggle="glossary" href="#">D</a>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </nav>#}
         <!--END Glossary Nav-->
         <div class="glossary__search mb-3">
             <div class="row justify-content-between">
+                <div class="row col-10">
+                    <div class="col-12">
+                    <form action="/search/?"  class="glossary__search__form" id="main_search" method="get">
+                      <div class="form-group has-search" style="">
+{#                          width:150%;#}
+                        <i class="fa fa-search mt-1 form-control-feedback" style="font-size: 20px;"></i>
+                        <input class="form-control" id="searchInput" value="{{ value }}" placeholder="Поиск среди проектов: теги через пробел, имя пользователя и т.п." type="search">
+                      </div>
 
-            <form action="/search/?"  class="glossary__search__form col-9" id="main_search" method="get">
+                        <input type="hidden" name="q" id="form-q" value="">
+                        <input type="hidden" name="type" id="form-type" value="{{ type }}">
+                        <input type="hidden" name="sort" id="form-sort" value="-created_at">
+                        </form>
+                     </div>
+{#                    <div class="col-12">#}
+{#                        <button type="button matchBtn" id="match_btn" class="btn btn-primary" onclick="change_but()">#}
+{#                            Match!#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
 
-                  <div class="form-group has-search">
-                    <span class="fa fa-search form-control-feedback mt-1"></span>
-                    <input class="form-control" id="searchInput" value="{{ value }}" placeholder="Поиск среди проектов: теги через пробел, имя пользователя и т.п." type="search">
-                  </div>
-
-                    <input type="hidden" name="q" id="form-q" value="">
-                    <input type="hidden" name="type" id="form-type" value="projects">
-                    <input type="hidden" name="sort" id="form-sort" value="-created_at">
-            </form>
             <select class=" mr-3 mt-1 sort-btn" id="sort_btn" data-style="btn-white" style="height: 80%;">
                 {% if sort == '-created_at' %}
                 <option selected data-tokens="Новое" id="-created_at">Новое</option>
@@ -101,11 +107,13 @@ ellips {
 
 
         <h3 class="glossary__results__term title-style--three" style="width: 100%;"></h3>
+
+        {% if type == 'projects' %}
         <div class="glossary__results mb-6 card-columns" style="width: 100%;">
-            <div class="glossary__results__row" data-term="#">
+            <div class="glossary__results__row infinite-container" data-term="#">
 {#                <div class="row">#}
                 {% for pr in object_list %}
-                    <div class="glossary__results__item mb--1" data-item="{{pr.name.title}}">
+                    <div class="glossary__results__item mb--1 infinite-item" data-item="{{pr.name.title}}">
                         <div class="card" href="#" style="{{ pr.card_color }}">
 
                             <div class="card-body" style="max-height: 40rem;">
@@ -194,7 +202,17 @@ ellips {
                     <!--END Glossary Result item-->
                 {% endfor %}
             </div>
+        {% else %}
+                    {% include 'blocks/search_users.html' %}
+        {% endif %}
+
+
+
+              {% if object_list.has_next %}
+                <a class="infinite-more-link" href="?page={{ object_list.next_page_number }}"></a>
+              {% endif %}
         </div>
+    </div>
     </div>
 
 </div>
@@ -202,6 +220,7 @@ ellips {
 
 {% block scripts %}
 {#    <script src="/static/js/index_search.js"></script>#}
+
 <script type="text/javascript">
 // Using jQuery.
 
@@ -209,15 +228,9 @@ $(function() {
 
     $('#main_search').each(function() {
         $(this).find('input').keypress(function(e) {
-            // Enter pressed?
-
-            {#url.searchParams.append('x', 42);#}
-
-            {#url.searchParams.set('x', 42);#}
             if(e.which == 10 || e.which == 13) {
 
                 var url = new URL(this.form.action);
-                console.log(url);
                 var params = document.getElementById("searchInput").value.split(' ').join('+');
 
                 var sel = document.getElementById("sort_btn");
@@ -229,10 +242,24 @@ $(function() {
                 else {
                     sort = 'created_at';
                 }
+                console.log('dfdf');
+
+                console.log(document.getElementById("active-tab"));
+                var type = '';
+                if (document.getElementById("active-tab").className.includes('users')) {
+                    type = 'users';
+                }
+                else {
+                    type = 'projects';
+                }
+
+                console.log(type);
 
 
                 document.getElementById("form-q").value = params;
                 document.getElementById("form-sort").value = sort;
+                document.getElementById("form-type").value = type;
+
 
                 this.form.submit();
             }
@@ -243,6 +270,37 @@ $(function() {
     });
 
     $('#sort_btn').change(function() {
+        var url = new URL(window.location.href);
+        console.log(url);
+        var params = document.getElementById("searchInput").value.split(' ').join('+');
+
+        var sel = document.getElementById("sort_btn");
+        var sort = sel.options[sel.selectedIndex].value;
+        console.log(sort);
+
+        if (sort == 'Новое'){
+            sort = '-created_at';
+        }
+        else {
+            sort = 'created_at';
+        }
+
+
+        document.getElementById("form-q").value = params;
+        document.getElementById("form-sort").value = sort;
+        $('#main_search').submit();
+    });
+
+</script>
+
+<script language="JavaScript" type="text/javascript">
+function change_but(){
+    var skills = [{{skills}}];var url = new URL(window.location.href);var params = skills.join('+');var sel = document.getElementById("sort_btn");var sort = sel.options[sel.selectedIndex].value;sort = '-created_at';document.getElementById("form-q").value = params;document.getElementById("form-sort").value = sort;$('#main_search').submit();
+}
+</script>
+
+<script>
+function change_type_users(){
         var url = new URL(window.location.href);
         console.log(url);
         var params = document.getElementById("searchInput").value.split(' ').join('+');
@@ -260,9 +318,31 @@ $(function() {
 
         document.getElementById("form-q").value = params;
         document.getElementById("form-sort").value = sort;
+        document.getElementById("form-type").value = 'users';
         $('#main_search').submit();
-    });
+}
 
+function change_type_projects(){
+        var url = new URL(window.location.href);
+        console.log(url);
+        var params = document.getElementById("searchInput").value.split(' ').join('+');
+
+        var sel = document.getElementById("sort_btn");
+        var sort = sel.options[sel.selectedIndex].value;
+
+        if (sort == 'Новое'){
+            sort = '-created_at';
+        }
+        else {
+            sort = 'created_at';
+        }
+
+
+        document.getElementById("form-q").value = params;
+        document.getElementById("form-sort").value = sort;
+        document.getElementById("form-type").value = 'projects';
+        $('#main_search').submit();
+}
 </script>
 {#<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>#}
 

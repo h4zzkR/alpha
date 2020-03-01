@@ -170,11 +170,10 @@ class ProfileEditForm(forms.ModelForm):
                                      'class': 'form-control form-control-alternative'}))
 
 
-    skills = TagField(min_length=2, widget=forms.TextInput(
+    skills = TagField(min_length=2, required=False, widget=forms.TextInput(
         attrs={
                'data-role' : 'tagsinput',
-               'name' : 'skills',
-                'required' : False,},
+               'name' : 'skills',},
 
     ))
 

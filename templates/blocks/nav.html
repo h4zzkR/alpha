@@ -26,7 +26,7 @@
                        aria-expanded="false">
                         <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="{{ user.username }}" src="{{ user.profile.avatar.url }}">
+                <img alt="{{ user.username }}" src="{{ user.profile.avatar_url }}">
               </span>
                         </div>
                     </a>
@@ -152,7 +152,7 @@
                                 <i class="ni ni-app text-red"></i> Новый Проект
                             </a>
                         {% endif %}
-                    <!-- {% if pagename == 'Соревнования' and user.profile.confirmed is True %}
+                        <!-- {% if pagename == 'Соревнования' and user.profile.confirmed is True %}
                             <a class=" nav-link active" href=""> {# TODO: Link #}
                                 <i class="ni ni-trophy text-primary"></i> Соревнования
                             </a>
@@ -206,12 +206,14 @@
      <i class="fab fa-vk" style="font-size: 20px;"></i>
     </span>
             </a>
-            <a href="https://t.me/alpha_dev_gr" class="social-buttons__button social-button social-button--facebook" aria-label="Telegram">
+            <a href="https://t.me/alpha_dev_gr" class="social-buttons__button social-button social-button--facebook"
+               aria-label="Telegram">
     <span class="social-button__inner">
      <i class="fab fa-telegram-plane" style="font-size: 20px;"></i>
   </span>
             </a>
-            <a href="https://github.com/alphafinder" class="social-buttons__button social-button social-button--github" aria-label="GitHub">
+            <a href="https://github.com/alphafinder" class="social-buttons__button social-button social-button--github"
+               aria-label="GitHub">
     <span class="social-button__inner">
      <i class="fab fa-github" style="font-size: 20px;"></i>
     </span>

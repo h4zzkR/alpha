@@ -4,6 +4,7 @@ from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = 'http://127.0.0.1:8000/'
+DOMAIN = 'concat.org' #need for emailing templates
 AUTO_CONFIRM = True
 
 SITE_ID = 1 

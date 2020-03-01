@@ -83,14 +83,19 @@ class UserProfile(models.Model):
         else:
             return False
 
+    @property
     def avatar_url(self):
-        return self.avatar.url
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        else:
+            return 'media/profile/photos/default.png'
 
     def email_user(self, subject, arguments, text_content=None, message=None):
         # arguments = { KEY : VALUE } for template
         # {{ link }}
         template_name = os.path.join(settings.BASE_DIR, 'templates/mail/' + arguments['template_name'])
         del arguments['template_name']
+        arguments.update({'username' : self.user.username})
 
         text_content = f'Привет, { self.user.username }!'
 

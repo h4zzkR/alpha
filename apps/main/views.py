@@ -3,9 +3,10 @@ import json
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-from apps.project.models import Project
+from apps.project.models import Project, ProjectRequest
 from django.contrib.auth.models import User
 from apps.user.models import UserProfile
 
@@ -49,42 +50,46 @@ def json_skills(tags=UserProfile.skills.all()):
 
 
 def index(request, projects_list=None, type='projects', sort='-created_at'):
+    context = get_context(request, 'Dashboard')
+    # print(request.user.profile)
+    # context.update({'projects': Project.objects.all()})
+
+    # arguments = {'template_name' : 'concat_reset.html',
+    #         'link' : 'http://127.0.0.1:8000/',
+    #         'unsub' : 'http://127.0.0.1:8000/',
+    #         'domain' : 'concat.org'}
+
+    # user = User.objects.get(username=request.user.username)
+    # github_login = user.social_auth.get(provider='github')
+    # user.profile.reset_password()
+    # print(user.profile.github_stars)
+    if projects_list is None:
+        projects_list = Project.objects.filter(is_public=True).order_by("-created_at")
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(projects_list, 20)
+    try:
+        projects = paginator.page(page)
+    except PageNotAnInteger:
+        projects = paginator.page(1)
+    except EmptyPage:
+        projects = paginator.page(paginator.num_pages)
+
     if request.user.is_authenticated:
-        context = get_context(request, 'Dashboard')
-        # print(request.user.profile)
-        # context.update({'projects': Project.objects.all()})
+        requested = [i.project for i in ProjectRequest.objects.filter(user=request.user, status=1)]
+        context.update({'requested': requested})
+    else:
+        context.update({'requested' : []})
 
-        # arguments = {'template_name' : 'concat_reset.html',
-        #         'link' : 'http://127.0.0.1:8000/',
-        #         'unsub' : 'http://127.0.0.1:8000/',
-        #         'domain' : 'concat.org'}
-
-        # user = User.objects.get(username=request.user.username)
-        # github_login = user.social_auth.get(provider='github')
-        # user.profile.reset_password()
-        # print(user.profile.github_stars)
-        if projects_list is None:
-            projects_list = Project.objects.filter(is_public=True).order_by("-created_at")
-
-        page = request.GET.get('page', 1)
-        paginator = Paginator(projects_list, 20)
-        try:
-            projects = paginator.page(page)
-        except PageNotAnInteger:
-            projects = paginator.page(1)
-        except EmptyPage:
-            projects = paginator.page(paginator.num_pages)
-
-        context.update({'object_list': projects})
-        context.update({'type': type})
-        context.update({'sort': sort})
-
+    context.update({'object_list': projects})
+    context.update({'type': type})
+    context.update({'sort': sort})
+    try:
         skills = ["'" + n.name + "'" for n in request.user.profile.skills.all()]
         context.update({'skills': ", ".join(skills) })
-        return render(request, 'index.html', context)
-    else:
-        context = get_context(request, 'greetings')
-        return redirect('account/login')
+    except AttributeError:
+        pass
+    return render(request, 'index.html', context)
 
 
 def search_engine(request):
@@ -93,21 +98,33 @@ def search_engine(request):
     sort = request.GET['sort']
     # TODO
 
-    projects_list = Project.objects.none()
-    print(data)
+    print(sort)
     if type == 'projects':
+        object_list = Project.objects.none()
         for i in data:
             s = Project.objects.filter(
                 (Q(name__icontains=i) | Q(collaborators__member__username__contains=i)) & Q(
                     is_public=True))
-            projects_list |= s
-            projects_list = projects_list.union(Project.objects.filter(tags__name=i).distinct())
+            object_list |= s
+            object_list = object_list.union(Project.objects.filter(tags__name__icontains=i).distinct())
+    elif type == 'users':
+        object_list = UserProfile.objects.none()
+        if len(data) == 1 and data[0] == '':
+            object_list |= UserProfile.objects.all()
+        else:
+            for i in data:
+                s = UserProfile.objects.filter((Q(user__username=i) | Q(user__first_name__iexact=i) | Q(user__last_name__iexact=i)))
+                object_list |= s
+                object_list = object_list.union(UserProfile.objects.filter(skills__name__icontains=i).distinct())
 
 
 
     page = request.GET.get('page', 1)
     context = get_context(request, 'Dashboard')
-    context.update({'object_list': projects_list})
+    if type == 'projects':
+        context.update({'object_list': object_list.order_by(sort)})
+    else:
+        context.update({'object_list' : object_list})
     context.update({'type': type})
     context.update({'value': ' '.join(data)})
     context.update({'sort': sort})

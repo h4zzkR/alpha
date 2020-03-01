@@ -1,93 +1,6 @@
  <div class="card shadow">
-{#                    <div class="card-header bg-white border-0">#}
-{#                            <div class="row align-items-center">#}
-{#                            <div class="col-8">#}
-{#                                <h3 class="mb-0">#}
-{#                                    <input type="text" name="name" class="form-control" value="{{ project.name }}" placeholder="Название" label="name" required="" id="id_name">#}
-{#                                </h3>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
 
                     <div class="card-body">
-
-{#                        <div class="row ml-lg-2">#}
-{#                        <div class="col-lg-3 column-left ml-lg--4" style="">#}
-{#                            <div class="col-lg-13">#}
-{#                            <div class="col-lg-15">#}
-{#                                <div class="form-group">#}
-{#                                    <label class="form-control-label" for="{{ form.technical_spec_url.id }}">Ссылка на тех-задание (google docs)</label>#}
-{#                                    {{ form.technical_spec_url }}#}
-{#                                </div>#}
-{#                            </div>#}
-{#                            <div class="col-lg-15">#}
-{#                                    <div class="form-group">#}
-{#                                        <label class="form-control-label" for="{{ form.vcs_url.id }}">Ссылка на систему контроля версий</label>#}
-{#                                        {{ form.vcs }}#}
-{#                                    </div>#}
-{#                            </div>#}
-{#                            <div class="col-lg-15">#}
-{#                                    <div class="form-group">#}
-{#                                        <label class="form-control-label" for="{{ form.max_people.id }}">Размер команды (0 - не задан)</label>#}
-{#                                        {{ form.max_people }}#}
-{#                                    </div>#}
-{#                            </div>#}
-{##}
-{#                            <div class="col-lg-15">#}
-{#                                    <div class="form-group">#}
-{#                                        <label class="form-control-label" for="{{ form.trello.id }}">Kanban Board</label>#}
-{#                                        {{ form.trello }}#}
-{#                                    </div>#}
-{#                            </div>#}
-{##}
-{#                            <div class="col-lg-15">#}
-{#                                    <div class="form-group">#}
-{#                                        <label class="form-control-label" for="{{ form.callback.id }}">Кооперация</label>#}
-{#                                        {{ form.callback }}#}
-{#                                    </div>#}
-{#                            </div>#}
-{##}
-{#                               <div class="col-lg-15">#}
-{#                               <div class="form-group">#}
-{#                                    <label for="">Тип проекта</label>#}
-{#                                    <select name="is_public" class="form-control form-control-alternative" id="type">#}
-{#                                    {% if project.is_public == 1 %}#}
-{#                                      <option selected="selected" value="1">Открытый</option>#}
-{#                                      <option value="0">Приватный</option>#}
-{#                                    {% else %}#}
-{#                                        <option value="1">Открытый</option>#}
-{#                                        <option selected="selected" value="0">Приватный</option>#}
-{#                                    {% endif %}#}
-{##}
-{#                                    </select>#}
-{#                                      </div>#}
-{#                            </div>#}
-{##}
-{##}
-{#                            </div>#}
-{#                        </div>#}
-{##}
-{#                        <div class="ml-lg-4 col-lg-9 mt-0">#}
-{#                                    <label class="form-control-label" for="input-description">Расширенное описание*</label>#}
-{#                                    <div class="form-group">#}
-{#                                         <textarea name="description" type="text" cols="40" rows="4" placeholder=""#}
-{#                                                   id="input-description" minlength="300" maxlength="5000"#}
-{#                                                   class="form-control form-control-alternative">{{ form.description.value }}</textarea>#}
-{#                                </div>#}
-{#                        </div>#}
-{#            </div>#}
-{##}
-{#            <hr class="my-4"/>#}
-{##}
-{#            <div class="col-lg-9 mt-0 ml--2">#}
-{#                <label class="form-control-label" for="input-description">Тэги быстрого поиска: </label>#}
-{#            <div class="bootstrap-tagsinput">#}
-{#                <input class="typeahead form-control" type="text" name="tags"#}
-{#                       data-role="tagsinput" id="tags-input" value="{{ project.list_tags }}" minlength="2" required="">#}
-{#            </div>#}
-{#            </div>#}
-
-{#            <div class="card bg-secondary text-muted mb-2" style="height: 35px;"></div>#}
             <ul class="list-group">
                 {% for c in project.collaborators.all %}
                     <li class="list-group-item d-flex flex-row justify-content-between align-items-center">
@@ -146,13 +59,24 @@
 
             <hr class="my-4"/>
             <div class="card bg-secondary text-muted mb-2" style="height: 300px;">
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible" id="message{{ forloop.counter0 }}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+
+            {% endif %}
                 <form action='' autocomplete='off'>
                 <div class="d-flex flex-row justify-content-around align-items-center">
 
                     <div class="input-group mb-3" style="width: 70%; z-index: 0;">
                       <input type="text" class="form-control autocomplete" id='myInput' name='user' placeholder="Никнейм пользователя" aria-label="Recipient's username" aria-describedby="basic-addon2">
                       <div class="input-group-append" style="margin-left: 1px;">
-                        <button class="btn btn-outline-primary" type="button-addon2">Пригласить в команду</button>
+                        <button class="btn btn-outline-primary" type="button-addon2" type="submit">Пригласить в команду</button>
                       </div>
                     </div>
                 </div>
@@ -166,4 +90,3 @@
 
 
         </div>
-</div>

@@ -13,7 +13,10 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.forms import *
 
 
-
+class ProjectAddForm(forms.Form):
+    username = forms.CharField(required=True, max_length=User._meta.get_field('username').max_length,
+                               widget=TextInput(attrs={'class': 'form-control autocomplete', 'placeholder': 'Имя Пользователя/Email',
+                                                       'id': 'myInput', 'name': 'user', 'aria-describedby': 'basic-addon2'}))
 
 
 class ProjectForm(forms.ModelForm):
