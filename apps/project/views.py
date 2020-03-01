@@ -87,7 +87,7 @@ def projects_list(request):
         out_pending_projects = [i.project for i in ProjectRequest.objects.filter(user=request.user, status=1)]
         context.update({'out_pending_projects' : out_pending_projects})
 
-        in_pending_projects = ProjectRequest.objects.filter(project__in=user_projects, status=1)
+        in_pending_projects = ProjectRequest.objects.filter(project__in=user_projects, status=1, project__author=request.user)
         context.update({'in_pending_projects' : in_pending_projects})
 
         print(in_pending_projects)

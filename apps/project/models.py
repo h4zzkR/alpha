@@ -73,6 +73,13 @@ class Project(models.Model):
         c.save()
         self.collaborators.add(c)
 
+    def is_editor(self, user):
+        for c in collaborators.all():
+            if c.member == user:
+                if c.can_edit_project:
+                    return True
+        return False
+
     def kick_member(self, user):
         try:
             self.collaborators.remove(Collaborator.objects.get(member=user))
