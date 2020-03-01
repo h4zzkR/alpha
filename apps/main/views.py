@@ -113,7 +113,7 @@ def search_engine(request):
             object_list |= UserProfile.objects.all()
         else:
             for i in data:
-                s = UserProfile.objects.filter((Q(user__username=i) | Q(user__first_name__iexact=i) | Q(user__last_name__iexact=i)))
+                s = UserProfile.objects.filter((Q(user__username__contains=i) | Q(user__first_name__contains=i) | Q(user__last_name__contains=i)))
                 object_list |= s
                 object_list = object_list.union(UserProfile.objects.filter(skills__name__icontains=i).distinct())
 
