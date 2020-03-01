@@ -348,6 +348,23 @@ def projects_decline_request(request):
         return handler404(request)
     return redirect('/projects', request)
 
+def project_delete(request, id):
+    m = Messages()
+    project = Project.objects.get(id=id)
+    m.add(request, 'success', f'Ваш проект был удален.')
+    for c in project.collaborators.all():
+        args = {'template_name': 'concat_delete_notification.html',
+                'project': ' ' + project.name,
+                'unsub': os.path.join(settings.HOST, 'unsub_email'),
+                'domain': settings.DOMAIN,
+                'link': settings.HOST + '/',
+                }
+        c.member.profile.email_user(f'Сожалеем, проект {project.name} был удален', args)
+
+
+    project.delete()
+    return redirect('/projects/', request)
+
 
 
 

@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from taggit.managers import TaggableManager
 from django import template
+from django.contrib.postgres.fields import ArrayField
 
 
 register = template.Library()

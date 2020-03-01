@@ -61,6 +61,32 @@
                             <a class="list-group-item list-group-item-action active" href="" role="tab" aria-controls="about">Описание</a>
                             <a class="list-group-item list-group-item-action"
                                href="{% url 'project_team_edit' project.id %}"role="tab" aria-controls="team">Команда</a>
+                            {% if user in project.members_with_edit_rights %}
+{# TODO #}                            <a data-toggle="modal" data-target="#exampleModal" class="list-group-item list-group-item-action mt-3 rounded-top rounded-bottom bg-danger border-0" id="delete_project" style="color: white;"
+                               role="tab" aria-controls="team">Удалить проект</a>
+
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        Внимание! Вы уверены?
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                          <a href="{% url 'project_delete' project.id %}">
+                                        <button type="button" class="btn btn-danger">Подтвердить</button>
+                                              </a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            {% endif %}
                         </div>
 
                     </div>

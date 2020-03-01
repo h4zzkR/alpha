@@ -27,6 +27,7 @@ urlpatterns = [
     path('project/v/<int:id>/', p.project_view, name='project_view'),
     path('project/e/<int:id>/', p.project_view_or_edit, name='project_edit'),
     path('project/r/<int:id>/', p.project_request, name='project_request'),
+    path('project/d/<int:id>/', p.project_delete, name='project_delete'),
     path('project/ur/<int:id>', p.projects_undo_request, name='project_request_undo'),
     path('project/accept/', p.projects_accept_request, name='project_request_accept'),
     path('project/decline/', p.projects_decline_request, name='project_request_decline'),
