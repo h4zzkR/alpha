@@ -3,12 +3,12 @@ from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = 'https://concat.cleverapps.io'
-DOMAIN = 'concat.org' #need for emailing templates
+DOMAIN = 'concat.cleverapps.io' #need for emailing templates
 AUTO_CONFIRM = True
 
-SITE_ID = 1 
+SITE_ID = 1
 SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = bool(os.environ.get('DEBUG', True))
 ALLOWED_HOSTS = ["217.182.75.251", "localhost", "127.0.0.1", "concat.cleverapps.io"]
 
 MESSAGE_TAGS = {
