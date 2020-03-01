@@ -22,7 +22,7 @@ def get_context(request, pagename):
     context.update({'user': request.user})
     if request.user.is_authenticated:
         context.update(
-            {'nav_projects': Project.objects.filter(collaborators__member=request.user).order_by("-created_at")})
+            {'nav_projects': Project.objects.filter(collaborators__member=request.user).order_by("-created_at")[:7]})
     # TEMP FIX OF MISSING MEDIA_URL AND STATIC_URL
     # context.update({'BASE_DIR': settings.BASE_DIR})
     return context
