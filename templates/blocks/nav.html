@@ -101,12 +101,12 @@
                 {% if not user.is_authenticated %}
                     <li class="nav-item">
                         {% if pagename == 'greetings' %}
-                            <a class=" nav-link active" href=""> {# TODO: Link #}
+                            <a class=" nav-link active" href="/"> {# TODO: Link #}
                                 {#                                страница для неавторизированных #}
                                 <i class="ni ni-compass-04 text-primary"></i>Добро пожаловать!
                             </a>
                         {% else %}
-                            <a class=" nav-link" href=""> {# TODO: Link #}
+                            <a class=" nav-link" href="/"> {# TODO: Link #}
                                 <i class="ni ni-compass-04 text-blue"></i>Добро пожаловать!
                             </a>
                         {% endif %}
@@ -191,7 +191,7 @@
             <!-- Navigation -->
             <ul class="navbar-nav mb-md-3">
                 <li class="nav-item">
-                    <a class="nav-link" href=""> {#  TODO: Link #}
+                    <a class="nav-link" href="https://concat.tilda.ws"> {#  TODO: Link #}
                         <i class="ni ni-planet"></i> О нас
                     </a>
                 </li>
@@ -201,16 +201,10 @@
             <div class="nav align-items-center pt-sm-0" style="margin-top: 1px;">
                 <img src="{{ STATIC_URL }}img/brand/logo.png" width="55px" height="55px" alt="...">
             </div>
-            <a href="#" class="social-buttons__button social-button social-button--facebook" aria-label="VK">
+            <a href="https://vk.com/concat_team" class="social-buttons__button social-button social-button--facebook" aria-label="VK">
     <span class="social-button__inner">
      <i class="fab fa-vk" style="font-size: 20px;"></i>
     </span>
-            </a>
-            <a href="https://t.me/alpha_dev_gr" class="social-buttons__button social-button social-button--facebook"
-               aria-label="Telegram">
-    <span class="social-button__inner">
-     <i class="fab fa-telegram-plane" style="font-size: 20px;"></i>
-  </span>
             </a>
             <a href="https://github.com/alphafinder" class="social-buttons__button social-button social-button--github"
                aria-label="GitHub">
