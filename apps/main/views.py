@@ -51,6 +51,7 @@ def json_skills(tags=UserProfile.skills.all()):
 
 def index(request, projects_list=None, type='projects', sort='-created_at'):
     context = get_context(request, 'Dashboard')
+    m = Messages()
     if projects_list is None:
         projects_list = Project.objects.filter(is_public=True).order_by("-created_at")
 
@@ -77,6 +78,9 @@ def index(request, projects_list=None, type='projects', sort='-created_at'):
         context.update({'skills': ", ".join(skills) })
     except AttributeError:
         pass
+    if not request.user.is_authenticated:
+        m.add(request, 'warning', 'Вы незарегистрированы в системе.')
+        m.add(request, 'warning', 'Для отправки запросов тимлидам проектов и создания проектов, пожалуйста, зарегистрируйтесь или войдите')
     return render(request, 'index.html', context)
 
 
