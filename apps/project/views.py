@@ -13,7 +13,8 @@ from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 
-def handler404(request):
+
+def handler404(request, exception=None):
     """
     Страница ошибки 404
     :param request: объект c деталями запроса
@@ -24,7 +25,7 @@ def handler404(request):
     return render(request, "404.html", status=404)
 
 
-def handler403(request):
+def handler403(request, exception=None):
     """
     Страница ошибки 403
     :param request: объект c деталями запроса
@@ -35,7 +36,7 @@ def handler403(request):
     return render(request, "403.html", status=403)
 
 
-def handler500(request):
+def handler500(request, exception=None):
     """
     Страница ошибки 505
     :param request: объект c деталями запроса
@@ -85,10 +86,11 @@ def projects_list(request):
         context['projects'] = user_projects
 
         out_pending_projects = [i.project for i in ProjectRequest.objects.filter(user=request.user, status=1)]
-        context.update({'out_pending_projects' : out_pending_projects})
+        context.update({'out_pending_projects': out_pending_projects})
 
-        in_pending_projects = ProjectRequest.objects.filter(project__in=user_projects, status=1, project__author=request.user)
-        context.update({'in_pending_projects' : in_pending_projects})
+        in_pending_projects = ProjectRequest.objects.filter(project__in=user_projects, status=1,
+                                                            project__author=request.user)
+        context.update({'in_pending_projects': in_pending_projects})
 
         print(in_pending_projects)
         return render(request, template_name, context)
@@ -126,7 +128,7 @@ def project_view(request, id):
         return handler404(request)
     if project.is_public:
         context = get_context(request, 'Проект')
-        context.update({'project' : project})
+        context.update({'project': project})
         context.update({"user": request.user})
         context.update({'is_in': False})
         if request.user.is_authenticated is True:
@@ -135,7 +137,7 @@ def project_view(request, id):
                     context.update({'is_in': True})
                     break
         else:
-            context.update({'is_in': True}) #do not touch, it is hack for non display on unloginned
+            context.update({'is_in': True})  # do not touch, it is hack for non display on unloginned
         return render(request, 'project_view.html', context)
     else:
         return handler403(request)
@@ -281,18 +283,19 @@ def project_request(request, id):
         m.add(request, 'error', 'Вы уже отправляли запрос, дождитесь рассмотрения вашей заявки.')
     else:
         project.request_project(request.user)
-        #TODO
-        args = {'template_name' : 'concat_request_project.html',
-                'username' : request.user.username,
-                'user' : request.user.username,
-                'link' : settings.HOST + 'projects/',
-                'unsub' : os.path.join(settings.HOST, 'unsub_email'),
-                'domain' : settings.DOMAIN
-                                 }
+        # TODO
+        args = {'template_name': 'concat_request_project.html',
+                'username': request.user.username,
+                'user': request.user.username,
+                'link': settings.HOST + 'projects/',
+                'unsub': os.path.join(settings.HOST, 'unsub_email'),
+                'domain': settings.DOMAIN
+                }
         project.author.profile.email_user('Вашим проектом кто-то заинтересовался!', args)
         m.add(request, 'success', 'Ваш запрос отправлен тимлиду проекта.')
     response_data.update({'messages': ajax_messages(request)})
     return JsonResponse(response_data)
+
 
 @login_required
 def projects_undo_request(request, id):
@@ -300,6 +303,7 @@ def projects_undo_request(request, id):
     for i in ProjectRequest.objects.filter(project=project, user=request.user, status=1):
         i.delete()
     return redirect('/projects/')
+
 
 def projects_accept_request(request):
     username, pr_id = request.GET['user'], request.GET['project']
@@ -312,13 +316,13 @@ def projects_accept_request(request):
         project.add_member(user, role='')
         project.save()
         m.add(request, 'success', f'{username} был добавлен в Вашу команду!')
-        args = {'template_name' : 'concat_request_accept.html',
-                'project' : project.name,
+        args = {'template_name': 'concat_request_accept.html',
+                'project': project.name,
                 'username': username,
-                'unsub' : os.path.join(settings.HOST, 'unsub_email'),
-                'domain' : settings.DOMAIN,
+                'unsub': os.path.join(settings.HOST, 'unsub_email'),
+                'domain': settings.DOMAIN,
                 'link': settings.HOST + 'project/v/' + pr_id,
-                                 }
+                }
         user.profile.email_user('Вы были добавлены в команду.', args)
         proj_request.delete()
     else:
@@ -348,6 +352,7 @@ def projects_decline_request(request):
         return handler404(request)
     return redirect('/projects', request)
 
+
 def project_delete(request, id):
     m = Messages()
     project = Project.objects.get(id=id)
@@ -361,11 +366,8 @@ def project_delete(request, id):
                 }
         c.member.profile.email_user(f'Сожалеем, проект {project.name} был удален', args)
 
-
     project.delete()
     return redirect('/projects/', request)
-
-
 
 
 def kick_from_project(request, project_id, user_to_kick):
@@ -383,4 +385,3 @@ def kick_from_project(request, project_id, user_to_kick):
     m.add(request, 'success', f'Пользователь {user_to_kick.username} больше не в команде!')
     return JsonResponse(response_data)
     # email kicked user
-

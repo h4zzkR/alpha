@@ -7,6 +7,11 @@ import apps.main.views
 import apps.user.views as u
 import apps.project.views as p
 
+
+handler404 = 'apps.project.views.handler404'
+handler403 = 'apps.project.views.handler403'
+handler500 = 'apps.project.views.handler500'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', apps.main.views.index, name="index"),
