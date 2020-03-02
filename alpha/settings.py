@@ -3,12 +3,11 @@ from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = 'https://concat.cleverapps.io'
-DOMAIN = 'concat.cleverapps.io' #need for emailing templates
+DOMAIN = 'concat.cleverapps.io'  # need for emailing templates
 AUTO_CONFIRM = True
 
-SITE_ID = 1
-SECRET_KEY = '%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'
 DEBUG = False
+SITE_ID = 1
 ALLOWED_HOSTS = ["217.182.75.251", "localhost", "127.0.0.1", "concat.cleverapps.io"]
 
 MESSAGE_TAGS = {
@@ -143,8 +142,6 @@ DATABASES = {
 
         'PORT': '5432',
 
-
-
     }
 
 }
@@ -189,8 +186,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/722
 
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'templates/static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get("STORAGE_MEDIA", 'media'))
+STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get("STORAGE_STATIC", 'static'))
+MEDIA_URL = "http://" + os.environ.get("FRONT_DOMAIN", "127.0.0.1:8000") + os.environ.get("STORAGE_MEDIA", "/media/")
+STATIC_URL = "http://" + os.environ.get("FRONT_DOMAIN", "127.0.0.1:8000") + os.environ.get("STORAGE_STATIC", "/static/")
+SECRET_KEY = os.environ.get("SECRET", "'%vkruwrhxujcdcup=mnk_x1loax+8=4+$@(f2on5l$^hw-yl#_'")
+PUBLIC_REGISTER_ENABLED = True
