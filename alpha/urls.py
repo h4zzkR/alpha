@@ -13,7 +13,7 @@ handler404 = 'apps.project.views.handler404'
 handler403 = 'apps.project.views.handler403'
 handler500 = 'apps.project.views.handler500'
 
-urlpatterns =  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
+urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('admin/', admin.site.urls),
     path('', apps.main.views.index, name="index"),

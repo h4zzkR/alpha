@@ -6,7 +6,7 @@ from apps.project.models import Project
 from django.core.cache import cache
 import os
 from django.core.mail import EmailMultiAlternatives
-
+from alpha.settings import HOST
 from django.conf import settings
 
 from django.dispatch import receiver
@@ -64,7 +64,7 @@ class UserProfile(models.Model):
         return self.user.username
 
     def link(self):
-        return 'http://217.182.75.251/u/' + self.user.username
+        return HOST + self.user.username
 
     def last_seen(self):
         return cache.get('seen_%s' % self.user.username)
