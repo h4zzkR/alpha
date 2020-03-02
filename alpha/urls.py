@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -12,7 +13,8 @@ handler404 = 'apps.project.views.handler404'
 handler403 = 'apps.project.views.handler403'
 handler500 = 'apps.project.views.handler500'
 
-urlpatterns = [
+urlpatterns =  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
+    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('admin/', admin.site.urls),
     path('', apps.main.views.index, name="index"),
     path('account/register/', u.RegisterFormView.as_view(), name="user_register"),
@@ -39,6 +41,5 @@ urlpatterns = [
     path('list_skills/', apps.main.views.json_skills),
     path('search/', apps.main.views.search_engine),
     path('oauth/', include('social_django.urls', namespace='social')),
-
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
-    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^(?P<exception>.*)/$', p.handler404, name="page_404"),
+]
