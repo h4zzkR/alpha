@@ -64,7 +64,7 @@ class UserProfile(models.Model):
         return self.user.username
 
     def link(self):
-        return 'https://' + HOST + '/' + self.user.username
+        return 'https://' + HOST + '/u/' + self.user.username
 
     def last_seen(self):
         return cache.get('seen_%s' % self.user.username)
