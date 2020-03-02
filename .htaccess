@@ -1,0 +1,11 @@
+
+Alias /media/ /home/bas/app_6d304013-a7d9-414e-95fa-1aa1f88eb6d3/media/
+Alias /static/ /home/bas/app_6d304013-a7d9-414e-95fa-1aa1f88eb6d3/static/
+
+<Directory /home/bas/app_6d304013-a7d9-414e-95fa-1aa1f88eb6d3/static>
+Require all granted
+</Directory>
+
+<Directory /home/bas/app_6d304013-a7d9-414e-95fa-1aa1f88eb6d3/media>
+Require all granted
+</Directory>
