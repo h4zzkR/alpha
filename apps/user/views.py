@@ -97,7 +97,7 @@ def profile_resolver(request, username):
             context = get_context(request, 'Профиль')
             context.update({'form': user_form})
             context.update({'form2': profile_form})
-            context.update({'user': u})
+            context.update({'user_profile': u})
             context.update({'skills': json_skills()})
             return render(request, 'profile_view.html', context)
         except User.DoesNotExist:

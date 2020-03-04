@@ -2,10 +2,10 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {% if user.first_name == "" or user.last_name ==    "" %}
-        {{ user.username }} | Аккаунт Concat
+    {% if user_profile.first_name == "" or user_profile.last_name ==    "" %}
+        {{ user_profile.username }} | Аккаунт Concat
     {% else %}
-        {{ user.first_name }} {{ user.last_name }} | Аккаунт Concat
+        {{ user_profile.first_name }} {{ user_profile.last_name }} | Аккаунт Concat
     {% endif %}
 {% endblock %}
 
@@ -48,7 +48,7 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white" id="username">{{ user.username }}</h1>
+                    <h1 class="display-2 text-white" id="username">{{ user_profile.username }}</h1>
 
 {#                    <table>#}
 {#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
@@ -56,7 +56,7 @@
 {#                     </table>#}
 
                     <div class="btn-group">
-                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user.username }}
+                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user_profile.username }}
                         </button>
                         <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
                     </div>
@@ -74,14 +74,14 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="/media/{{ user.profile.avatar_url }}" id='card-avatar-0' class="rounded-circle">
+                            <img src="/media/{{ user_profile.profile.avatar_url }}" id='card-avatar-0' class="rounded-circle">
                         </a>
                     </div>
                 </div>
             </div>
             <div class="card-header text-center border-0 pt-5 pt-md-2 pb-0 pb-md-4">
                 <div class="d-flex justify-content-lg-between justify-content-between">
-                    <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
+                    <a href="{{ user_profile.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
                         <i class="fab fa-telegrams fa-3x tg-icon"></i>
                     </a>
 a
@@ -105,7 +105,7 @@ a
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#avatar_menu">
-                                    <img src="{{ user.profile.avatar_url }}" id="card-avatar-1" class="rounded-circle"
+                                    <img src="{{ user_profile.profile.avatar_url }}" id="card-avatar-1" class="rounded-circle"
                                          style="width: 135px; pointer-events: none;">
                                 </a>
                             </div>
@@ -113,7 +113,7 @@ a
                     </div>
                     <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                         <div class="d-flex justify-content-lg-between justify-content-between">
-                            <a href="{{ user.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
+                            <a href="{{ user_profile.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
                                 <i class="fab fa-telegram fa-3x tg-icon"></i>
                             </a>
                             </a>
@@ -125,24 +125,24 @@ a
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-0">
                                     <div>
-                      <span class="heading" title="Репозитории">{{ user.profile.projects_cnt }}
+                      <span class="heading" title="Репозитории">{{ user_profile.profile.projects_cnt }}
                           <i class="ni ni-app" style="vertical-align: -3px;"></i>
-                          {{ user.profile.github_projects_cnt }}
+                          {{ user_profile.profile.github_projects_cnt }}
                       </span>
                                     </div>
                                     <div>
                       <span class="heading" title="Количество звезд на github">
                           <i class="fa fa-star"></i>
-                          {{ user.profile.github_stars }}
+                          {{ user_profile.profile.github_stars }}
                       </span>
                                     </div>
                         <div>
                       <span class="heading" title="Github followers">
-                          <i class="fa fa-users"></i>{{ user.profile.github_followers }}
+                          <i class="fa fa-users"></i>{{ user_profile.profile.github_followers }}
                       </span>
                         </div>
                                     <div>
-                      <span class="heading">{{ user.profile.rate }}
+                      <span class="heading">{{ user_profile.profile.rate }}
                           <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
                       </span>
                                     </div>
@@ -151,10 +151,10 @@ a
                         </div>
                         <div class="text-center">
                             <h3 id="user_full_name">
-                                {{ user.first_name }} {{ user.last_name }}
+                                {{ user_profile.first_name }} {{ user_profile.last_name }}
                             </h3>
                             <hr class="my-4"/>
-                            <p id="user-bio">{{ user.profile.bio }}</p>
+                            <p id="user-bio">{{ user_profile.profile.bio }}</p>
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@ a
                                  <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
                                     <input class="typeahead form-control" form="profile-form" autocomplete="off"
                                            type="text" id="skills-input"
-                                           name="skills"  value="{{ user.profile.list_skills }}" data-role="tagsinput" disabled>
+                                           name="skills"  value="{{ user_profile.profile.list_skills }}" data-role="tagsinput" disabled>
                                 </div>
                         </div>
                     </div>
@@ -236,8 +236,8 @@ a
                                         <div class="form-group">
                                             <label class="form-control-label" for="github">Github/Gitlab (ссылка на
                                                 профиль)</label>
-                                            {% if user.profile.github_account != ''%}
-                                                <input type="url" name="github" value="{{user.profile.github}}" placeholder="Ссылка на Профиль"
+                                            {% if user_profile.profile.github_account != ''%}
+                                                <input type="url" name="github" value="{{user_profile.profile.github}}" placeholder="Ссылка на Профиль"
                                                        id="github" class="form-control form-control-alternative" onchange="checkURL(this)" maxlength="50" readonly>
                                             {% else %}
                                             {{ form2.github }}
@@ -316,7 +316,7 @@ a
         function CopyLink() {
             var dummy = document.createElement("textarea");
             //ATTN: URL MUST BE some.domain/some_path/
-            var copyText = "{{ request.scheme }}://{{ request.get_host }}{% url 'user_get_profile' user.username %}";
+            var copyText = "{{ request.scheme }}://{{ request.get_host }}{% url 'user_get_profile' user_profile.username %}";
             document.body.appendChild(dummy);
             dummy.value = copyText;
             dummy.select();
@@ -387,7 +387,7 @@ a
     </script>
     <script src="{{ STATIC_URL }}js/counter.js"></script>
     <script>
-        var stars = parseInt(githubStars("{{user.profile.github_account}}"));
+        var stars = parseInt(githubStars("{{user_profile.profile.github_account}}"));
         $("#github-stars").val(stars);
     </script>
 
