@@ -57,11 +57,13 @@ def messages_parser(request, query=None):
 class LoginFormView(FormView):
     form_class = AuthForm
     template_name = "login.html"
-    success_url = "/"
+    success_url = "/account/profile/"
 
     def form_valid(self, form):
         self.user = form.get_user()
         login(self.request, self.user)
+        m = Messages()
+        m.add(self.request, "Заполните свой профиль как можно больше.", "warning")
         return super(LoginFormView, self).form_valid(form)
 
     def form_invalid(self, form):
