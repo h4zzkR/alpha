@@ -15,7 +15,7 @@ from taggit.forms import *
 
 class ProjectAddForm(forms.Form):
     username = forms.CharField(required=True, max_length=User._meta.get_field('username').max_length,
-                               widget=TextInput(attrs={'class': 'form-control autocomplete', 'placeholder': 'Имя Пользователя/Email',
+                               widget=TextInput(attrs={'class': 'form-control ', 'placeholder': 'Имя Пользователя/Email',
                                                        'id': 'myInput', 'name': 'user', 'aria-describedby': 'basic-addon2'}))
 
 
@@ -76,7 +76,7 @@ class ProjectForm(forms.ModelForm):
                                                'class': 'form-control form-control-alternative',
                                                }))
 
-    tags = TagField(min_length=2, widget=forms.TextInput(
+    tags = TagField(widget=forms.TextInput(
         attrs={
                'data-role' : 'tagsinput',
                'name' : 'tags',

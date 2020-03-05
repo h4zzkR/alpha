@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import ProjectForm, ProjectAddForm
 # from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
-from .models import Project, ProjectRequest
+from .models import Project, ProjectRequest, ProjectInvite
 from ..main.views import ajax_messages, json_skills, Messages, get_context
 import os
 from django.conf import settings
@@ -229,17 +229,36 @@ def project_team_edit(request, id):
         if request.user.is_authenticated and col.can_edit_project is True:
             project_form = ProjectAddForm(request.POST)
             if project_form.is_valid():
-                project = project_form.save()
+                try:
+                    u = User.objects.get(username=project_form.cleaned_data['username'])
+                except User.DoesNotExist:
+                    try:
+                        u = User.objects.get(email=project_form.cleaned_data['username'])
+                    except User.DoesNotExist:
+                        m.add(request, 'error', 'Пользователя с таким именем/email не существует.')
+                        return redirect(f'/project/e/{id}/team/', request)
+                try:
+                    req = ProjectInvite.objects.get(user=u, project=project)
+                    if req.status == 1:
+                        m.add(request, 'warning', 'Пользователь ещё не ответил на предыдущее приглашение')
+                    elif req.status == 2:
+                        m.add(request, 'success', 'Пользователь уже работает над проектом')
+                    else:
+                        m.add(request, 'error', 'Пользователь уже отклонил приглашение.')
+
+                except ProjectInvite.DoesNotExist:
+                    req = ProjectInvite(user=u, project=project)
+                    req.save()
+                    m.add(request, 'success', 'Пользователь уже работает над проектом')
+                return redirect(f'/project/e/{id}/team/', request)
                 # response_data.update(project_form.cleaned_data)
                 # response_data.update(project_form.cleaned_data)
                 # m.add(request, 'success', 'Успешно')
-                project.save()
-                project_form.save_m2m()
-                response_data.update({'messages': ajax_messages(request)})
             else:
                 print(project_form.errors)
                 m.add(request, 'error', 'Что-то пошло не так...')
                 response_data.update({'messages': ajax_messages(request)})
+                return redirect(f'/project/e/{id}/team/', request)
             # return JsonResponse(response_data)
         else:
             # just view project
@@ -270,16 +289,19 @@ def project_team_edit(request, id):
 @login_required
 def project_request(request, id):
     m = Messages()
+    st = "success"
     project = Project.objects.get(id=id)
     user = request.user
     response_data = {}
     for i in project.collaborators.all():
         if user == i.member:
+            st = "error"
             m.add(request, 'error', 'Вы уже в составе команды проекта.')
             return redirect('/', request)
     check = ProjectRequest.objects.filter(user=user, project=project, status=1)
 
     if len(check) != 0:
+        st = "error"
         m.add(request, 'error', 'Вы уже отправляли запрос, дождитесь рассмотрения вашей заявки.')
     else:
         project.request_project(request.user)
@@ -294,6 +316,7 @@ def project_request(request, id):
         project.author.profile.email_user('Вашим проектом кто-то заинтересовался!', args)
         m.add(request, 'success', 'Ваш запрос отправлен тимлиду проекта.')
     response_data.update({'messages': ajax_messages(request)})
+    response_data.update({'status': st})
     return JsonResponse(response_data)
 
 

@@ -101,15 +101,6 @@ class Project(models.Model):
         request.save()
 
 
-
-
-class ProjectInvitation(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
-    cancelled = models.IntegerField(default=0)  # 0 - unread, 1 - accepted, 2 - unaccepted
-    message = models.TextField(default="Hey, join my project.")
-
-
 class Skill(models.Model):
     name = models.CharField(max_length=30)
 
@@ -125,7 +116,6 @@ class ProjectRequest(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
     status = models.IntegerField(default=1)  # 1 - pending, 2 - accepted, 3 - rejected
-
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -133,3 +123,4 @@ class ProjectInvite(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
     status = models.IntegerField(default=1)  # 1 - pending, 2 - accepted, 3 - rejected
+    created_at = models.DateTimeField(auto_now_add=True)

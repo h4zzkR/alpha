@@ -19,221 +19,267 @@
     }
 
 {% endblock %}
-
+{% block scripts %}
+    <script>
+        function project_redirect(move, id) {
+            window.location.href = "/project/" + move + "/" + id.toString();
+        }
+    </script>
+{% endblock %}
 {% block content %}
 
 
     <div class="main-content ml-5 mr-5">
     <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block mb-3"> Ваши текущие проекты: </a>
-        <div class="card-columns">
-            {% for pr in projects %}
-                <div class="card" style="{{ pr.card_color }}">
-                    <div class="card-body" style="max-height: 40rem;">
-                        <div class="row">
-                            <div class="col-12 col-md-6 col-sm-12">
-                                <h4 class="card-title" style="width: 100%;">
-                                    <span>{{ pr.name.title }}</span>
-                                </h4>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="btn-toolbar float-right" role="group">
-                                    {% if pr.is_public == 1 %}
-                                        <div class="btn-group mr-2 top--2 right--4" role="group"
-                                             aria-label="First group">
-                                            <button class='btn btn-outline-light p-1'
-                                                    style="font-size: 20px; margin-right: 5px;">
-                                                <i class="fa fa-unlock" style=""></i>
-                                            </button>
-                                        </div>
-                                    {% else %}
-                                        <div class="btn-group mr-2 top--2 right--4" role="group"
-                                             aria-label="First group">
-                                            <button class='btn btn-light p-1'
-                                                    style="font-size: 20px; margin-right: 5px;">
-                                                <i class="fa fa-lock" style=""></i>
-                                            </button>
-                                        </div>
-                                    {% endif %}
-                                    <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
-                                        {% if user in pr.members_with_edit_rights %}
-                                            <a href="{% url 'project_edit' pr.id %}">
-                                                <button class='btn btn-danger float-right' style=""
-                                                        href="{% url 'project_edit' pr.id %}">
-                                                    <i class="fa fa-edit" style=""></i>
-                                                </button>
-                                            </a>
-                                        {% else %}
-                                            <a href="{% url 'project_view' pr.id %}">
-                                            <button class='btn btn-primary float-right' style="">
-                                                <i class="fa fa-book-open" style=""></i>
-                                            </button></a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {#        <p class="card-text" style="max-height: 350px; overflow: hidden;">{{ pr.description.title }}</p>#}
-                        {% if pr.author.username == user.username %}
-                            <footer class="blockquote-footer">Создатель: <cite title="Source Title">Вы</cite></footer>
-                        {% else %}
-                            <footer class="blockquote-footer">Создатель: <cite
-                                    title="Source Title">{{ pr.author.username }}</cite></footer>
-                        {% endif %}
-                        <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
-
-                    </div>
-                    <div class="card-footer bg-secondary">
-                        <div style="display: inline-table;">
-                            {% for tag in pr.tags.all %}
-                                <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="card-footer bg-secondary text-muted">
-                        <div class="row">
-                            <div class="col-12 col-md-6 col-sm-12">
-                                {% for c in pr.collaborators.all %}
-                                    <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
-                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}"
-                                                                  src="{{ c.member.profile.avatar_url }}"></a>
-                    </span>
-                                {% endfor %}
-                            </div>
-                            <div class="col-12 col-md-6 col-sm-12">
-                                <h5 class="float-right">
-                                    {{ pr.get_status }}
-                                </h5>
-                                <br>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-
-        </div>
-
-    <a class="h2 text-blue text-uppercase d-none d-lg-inline-block mb-3 mt-3"> Исходящие запросы в команды проектов (от Вас): </a>
     <div class="card-columns">
-            {% for pr in out_pending_projects %}
-                <div class="card" style="{{ pr.card_color }}">
-                    <div class="card-body" style="max-height: 40rem;">
-                        <div class="row">
-                            <div class="col-12 col-md-6 col-sm-12">
-                                <h4 class="card-title" style="width: 100%;">
-                                    <span>{{ pr.name.title }}</span>
-                                </h4>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="btn-toolbar float-right" role="group">
-                                        <div class="btn-group mr-2 top--2 right--4" role="group"
-                                             aria-label="First group">
-                                            <a href="{% url 'project_request_undo' pr.id %}">
-                                            <button class='btn btn-outline-danger p-1' title="Отозвать заявку"
-                                                    style="font-size: 20px; margin-right: 5px;">
-                                                <i class="fa fa-minus-circle" style=""></i>
-                                            </button></a>
-                                        </div>
-                                    <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
-                                        {% if user in pr.members_with_edit_rights %}
-                                            <a href="{% url 'project_edit' pr.id %}">
-                                                <button class='btn btn-danger float-right' style=""
-                                                        href="{% url 'project_edit' pr.id %}">
-                                                    <i class="fa fa-edit" style=""></i>
-                                                </button>
-                                            </a>
-                                        {% else %}
-                                            <a href="{% url 'project_view' pr.id %}">
-                                            <button class='btn btn-primary float-right' style="">
-                                                <i class="fa fa-book-open" style=""></i>
-                                            </button></a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    {% for pr in projects %}
+        {% if user in pr.members_with_edit_rights %}
+            <div class="card" style="{{ pr.card_color }};cursor:pointer;"
+                 onclick="project_redirect('e', {{ pr.id }})">
+        {% else %}
+            <div class="card" style="{{ pr.card_color }};cursor:pointer;"
+                 onclick="project_redirect('v', {{ pr.id }})">
+        {% endif %}
 
-                        {#        <p class="card-text" style="max-height: 350px; overflow: hidden;">{{ pr.description.title }}</p>#}
-                        {% if pr.author.username == user.username %}
-                            <footer class="blockquote-footer">Создатель: <cite title="Source Title">Вы</cite></footer>
+    <div class="card-body" style="max-height: 40rem;">
+        <div class="row">
+            <div class="col-12 col-md-6 col-sm-12">
+                <h4 class="card-title" style="width: 100%;">
+                    <span>{{ pr.name.title }}</span>
+                </h4>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="btn-toolbar float-right" role="group">
+                    {% if pr.is_public == 1 %}
+                        <div class="btn-group mr-2 top--2 right--4" role="group"
+                             aria-label="First group">
+                            <button class='btn btn-outline-light p-1'
+                                    style="font-size: 20px; margin-right: 5px;">
+                                <i class="fa fa-unlock" style=""></i>
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="btn-group mr-2 top--2 right--4" role="group"
+                             aria-label="First group">
+                            <button class='btn btn-light p-1'
+                                    style="font-size: 20px; margin-right: 5px;">
+                                <i class="fa fa-lock" style=""></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
+                        {% if user in pr.members_with_edit_rights %}
+                            <a href="{% url 'project_edit' pr.id %}">
+                                <button class='btn btn-danger float-right' style=""
+                                        href="{% url 'project_edit' pr.id %}">
+                                    <i class="fa fa-edit" style=""></i>
+                                </button>
+                            </a>
                         {% else %}
-                            <footer class="blockquote-footer">Создатель: <cite
-                                    title="Source Title">{{ pr.author.username }}</cite></footer>
+                            <a href="{% url 'project_view' pr.id %}">
+                                <button class='btn btn-primary float-right' style="">
+                                    <i class="fa fa-book-open" style=""></i>
+                                </button>
+                            </a>
                         {% endif %}
-                        <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    </div>
-                    <div class="card-footer bg-secondary">
-                        <div style="display: inline-table;">
-                            {% for tag in pr.tags.all %}
-                                <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="card-footer bg-secondary text-muted">
-                        <div class="row">
-                            <div class="col-12 col-md-6 col-sm-12">
-                                {% for c in pr.collaborators.all %}
-                                    <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
+        {#        <p class="card-text" style="max-height: 350px; overflow: hidden;">{{ pr.description.title }}</p>#}
+        {% if pr.author.username == user.username %}
+            <footer class="blockquote-footer">Создатель: <cite title="Source Title">Вы</cite></footer>
+        {% else %}
+            <footer class="blockquote-footer">Создатель: <cite
+                    title="Source Title">{{ pr.author.username }}</cite></footer>
+        {% endif %}
+        <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
+
+    </div>
+    <div class="card-footer bg-secondary">
+        <div style="display: inline-table;">
+            {% for tag in pr.tags.all %}
+                <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-footer bg-secondary text-muted">
+        <div class="row">
+            <div class="col-12 col-md-6 col-sm-12">
+                {% for c in pr.collaborators.all %}
+                    <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
                        <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}"
                                                                   src="{{ c.member.profile.avatar_url }}"></a>
                     </span>
-                                {% endfor %}
+                {% endfor %}
+            </div>
+            <div class="col-12 col-md-6 col-sm-12">
+                <h5 class="float-right">
+                    {{ pr.get_status }}
+                </h5>
+                <br>
+            </div>
+        </div>
+    </div>
+    </div>
+        </a>
+    {% endfor %}
+
+</div>
+
+    <a class="h2 text-blue text-uppercase d-none d-lg-inline-block mb-3 mt-3"> Исходящие запросы в команды проектов
+        (от Вас): </a>
+    <div class="card-columns">
+    {% for pr in out_pending_projects %}
+        {% if user in pr.members_with_edit_rights %}
+            <div class="card" style="{{ pr.card_color }};cursor:pointer;"
+                 onclick="project_redirect('e', {{ pr.id }})">
+        {% else %}
+            <div class="card" style="{{ pr.card_color }};cursor:pointer;"
+                 onclick="project_redirect('v', {{ pr.id }})">
+        {% endif %}
+        <div class="card" style="{{ pr.card_color }}">
+            <div class="card-body" style="max-height: 40rem;">
+                <div class="row">
+                    <div class="col-12 col-md-6 col-sm-12">
+                        <h4 class="card-title" style="width: 100%;">
+                            <span>{{ pr.name.title }}</span>
+                        </h4>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="btn-toolbar float-right" role="group">
+                            <div class="btn-group mr-2 top--2 right--4" role="group"
+                                 aria-label="First group">
+                                <a href="{% url 'project_request_undo' pr.id %}">
+                                    <button class='btn btn-outline-danger p-1' title="Отозвать заявку"
+                                            style="font-size: 20px; margin-right: 5px;">
+                                        <i class="fa fa-minus-circle" style=""></i>
+                                    </button>
+                                </a>
                             </div>
-                            <div class="col-12 col-md-6 col-sm-12">
-                                <h5 class="float-right">
-                                    {{ pr.get_status }}
-                                </h5>
-                                <br>
+                            <div class="btn-group mr-2 top--2 right--3" role="group" aria-label="Second group">
+                                {% if user in pr.members_with_edit_rights %}
+                                    <a href="{% url 'project_edit' pr.id %}">
+                                        <button class='btn btn-danger float-right' style=""
+                                                href="{% url 'project_edit' pr.id %}">
+                                            <i class="fa fa-edit" style=""></i>
+                                        </button>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'project_view' pr.id %}">
+                                        <button class='btn btn-primary float-right' style="">
+                                            <i class="fa fa-book-open" style=""></i>
+                                        </button>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
 
+                {#        <p class="card-text" style="max-height: 350px; overflow: hidden;">{{ pr.description.title }}</p>#}
+                {% if pr.author.username == user.username %}
+                    <footer class="blockquote-footer">Создатель: <cite title="Source Title">Вы</cite></footer>
+                {% else %}
+                    <footer class="blockquote-footer">Создатель: <cite
+                            title="Source Title">{{ pr.author.username }}</cite></footer>
+                {% endif %}
+                <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
+
+            </div>
+            <div class="card-footer bg-secondary">
+                <div style="display: inline-table;">
+                    {% for tag in pr.tags.all %}
+                        <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card-footer bg-secondary text-muted">
+                <div class="row">
+                    <div class="col-12 col-md-6 col-sm-12">
+                        {% for c in pr.collaborators.all %}
+                            <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
+                       <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}"
+                                                                  src="{{ c.member.profile.avatar_url }}"></a>
+                    </span>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 col-md-6 col-sm-12">
+                        <h5 class="float-right">
+                            {{ pr.get_status }}
+                        </h5>
+                        <br>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        </a>
+    {% endfor %}
 
-    <a class="h2 text-blue text-uppercase d-none d-lg-inline-block mb-3 ml-5 mt-3"> Входящие запросы (от других пользователей в Ваши проекты): </a>
+</div>
+</div>
+
+    <a class="h2 text-blue text-uppercase d-none d-lg-inline-block mb-3 ml-5 mt-3"> Входящие запросы (от других
+        пользователей в Ваши проекты): </a>
     <div class="card-columns ml-5 mb-3">
-            {% for req in in_pending_projects %}
-                <div class="card" style="{{ pr.card_color }}">
-                    <div class="card-body" style="max-height: 40rem;">
-                         <li class="list-group-item">
-                            <div class="btn-group">
-                                <div class="row ml-2 align-items-center">
+    {% for req in in_pending_projects %}
+        {% if user in pr.members_with_edit_rights %}
+            <div class="card" style="{{ pr.card_color }};cursor:pointer;"
+                 onclick="project_redirect('e', {{ pr.id }})">
+        {% else %}
+            <div class="card" style="{{ pr.card_color }};cursor:pointer;"
+                 onclick="project_redirect('v', {{ pr.id }})">
+        {% endif %}
+    <div class="card-body" style="max-height: 40rem;">
+        <li class="list-group-item">
+            <div class="btn-group">
+                <div class="row ml-2 align-items-center">
                                     <span class="avatar rounded-circle mr-2" style="width: 40px; height: 40px;">
-                                       <a href="{{ req.user.profile.link }}"><img alt="{{ req.user.username }}" src="{{ req.user.profile.avatar_url }}"></a>
+                                       <a href="{{ req.user.profile.link }}"><img alt="{{ req.user.username }}"
+                                                                                  src="{{ req.user.profile.avatar_url }}"></a>
                                     </span>
-                                    {% if req.user.profile.first_name and req.user.profile.last_name%}
-                                    <a class="" href="{{ req.user.profile.link }}">{{req.user.profile.first_name }} {{req.user.profile.last_name }}</a>
-                                    {% elif req.user.profile.first_name or req.user.profile.last_name %}
-                                        <a class="" href="{{ req.user.profile.link }}">{% if req.user.profile.first_name %}{{req.user.profile.first_name }}{% endif %}{% if req.user.profile.last_name %}{{req.user.profile.last_name }}{% endif %}</a>
-                                    {% endif %}
-                                        <a class="ml-2" href="{{ req.user.profile.link }}" style="color: black; font-weight: normal;">{{req.user.username}}</a>
-                                    <div class="heading ml-2 mt-1">>  <a href="{% url 'project_view' req.project.id %}"><b>{{ req.project.name }}</b></a></div>
-                                </div>
-                            </div>
-                                <a href="{{ req.user.profile.github }}"><button class='btn btn-icon-only float-right btn-neutral' href="{{ req.user.profile.github }}" type="button">
-                                <img src="{{ STATIC_URL }}/img/icons/common/github-alt.svg" style="width: 30px; height: 30px;">
-                                </button></a>
-                            </li>
-                    </div>
-                    <div class="card-footer bg-secondary text-muted align-items-center">
-                        <div class="row">
-                                            <a href="/project/accept/?user={{ req.user.username }}&project={{ req.project.id }}" class="badge badge-primary ml-3 mr-2" title="Добавить">
-                                                <i class="fa fa-thumbs-up" style="font-size: 20px;"></i>
-                                            </a>
-                                            <a href="/project/decline/?user={{ req.user.username }}&project={{ req.project.id }}" class="badge badge-danger" title="Отклонить запрос">
-                                                <i class="fa fa-thumbs-down" style="font-size: 20px;"></i>
-                                            </a>
-                        <footer class="ml-5">Запрос отправлен: <b>{{ req.created_at }}</b></footer>
-                        </div>
+                    {% if req.user.profile.first_name and req.user.profile.last_name %}
+                        <a class=""
+                           href="{{ req.user.profile.link }}">{{ req.user.profile.first_name }} {{ req.user.profile.last_name }}</a>
+                    {% elif req.user.profile.first_name or req.user.profile.last_name %}
+                        <a class="" href="{{ req.user.profile.link }}">
+                            {% if req.user.profile.first_name %}{{ req.user.profile.first_name }}{% endif %}
+                            {% if req.user.profile.last_name %}
+                                {{ req.user.profile.last_name }}{% endif %}</a>
+                    {% endif %}
+                    <a class="ml-2" href="{{ req.user.profile.link }}"
+                       style="color: black; font-weight: normal;">{{ req.user.username }}</a>
+                    <div class="heading ml-2 mt-1">> <a
+                            href="{% url 'project_view' req.project.id %}"><b>{{ req.project.name }}</b></a>
                     </div>
                 </div>
-            {% endfor %}
-
+            </div>
+            <a href="{{ req.user.profile.github }}">
+                <button class='btn btn-icon-only float-right btn-neutral' href="{{ req.user.profile.github }}"
+                        type="button">
+                    <img src="{{ STATIC_URL }}/img/icons/common/github-alt.svg"
+                         style="width: 30px; height: 30px;">
+                </button>
+            </a>
+        </li>
+    </div>
+    <div class="card-footer bg-secondary text-muted align-items-center">
+        <div class="row">
+            <a href="/project/accept/?user={{ req.user.username }}&project={{ req.project.id }}"
+               class="badge badge-primary ml-3 mr-2" title="Добавить">
+                <i class="fa fa-thumbs-up" style="font-size: 20px;"></i>
+            </a>
+            <a href="/project/decline/?user={{ req.user.username }}&project={{ req.project.id }}"
+               class="badge badge-danger" title="Отклонить запрос">
+                <i class="fa fa-thumbs-down" style="font-size: 20px;"></i>
+            </a>
+            <footer class="ml-5">Запрос отправлен: <b>{{ req.created_at }}</b></footer>
         </div>
     </div>
     </div>
+        </a>
+    {% endfor %}
+
+</div>
 {% endblock %}

@@ -118,7 +118,7 @@
                                                     {% if user in project.members_with_edit_rights %}
                                                         <a href="{% url 'project_view' project.id %}">
                                                             <button class='btn btn-primary float-right' type="button" style="">
-                                                                <i class="fa fa-book-open" ></i>
+                                                                <i class="fa fa-book" ></i>
                                                             </button>
                                                         </a>
                                                     {% endif %}
@@ -132,7 +132,7 @@
                                                     <div class="bootstrap-tagsinput">
                                                         <input class="typeahead form-control" type="text" name="tags"
                                                                data-role="tagsinput" id="tags-input"
-                                                               value="{{ project.list_tags }}" minlength="2">
+                                                               value="{{ project.list_tags }}">
                                                     </div>
                                                 </div>
                                             <div class="card-body">
