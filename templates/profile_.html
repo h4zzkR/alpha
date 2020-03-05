@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block title %}
@@ -20,19 +19,19 @@
 
 {% block styles %}
     .CodeMirror, .CodeMirror-scroll {
-        min-height: 575px;
+    min-height: 575px;
     }
 {% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block main_content_class %}
-<div class="main-content" style="padding-bottom: 60px;">
+    <div class="main-content" style="padding-bottom: 60px;">
 {% endblock %}
 
 {% block content %}
     <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
-        <div class="container-fluid" >
+        <div class="container-fluid">
             <!-- Brand -->
             <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
             <!-- Form -->
@@ -54,16 +53,18 @@
                     <p class="text-white mt-0 mb-4">Это страница вашего профиля. Здесь вы можете просмотреть и изменить
                         информацию о себе.</p>
 
-{#                    <table>#}
-{#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
-{#                       <tr><th>Online</th><td>{{ profile.online }}</td></tr>#}
-{#                     </table>#}
+                    {#                    <table>#}
+                    {#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
+                    {#                       <tr><th>Online</th><td>{{ profile.online }}</td></tr>#}
+                    {#                     </table>#}
 
                     <div class="btn-group">
                         <button onclick="FocusOnUsername();" class="btn btn-outline-info btn-xs">Редактировать</button>
-                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user.username }}
+                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">
+                            @{{ user.username }}
                         </button>
-                        <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
+                        <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать
+                        </button>
                     </div>
                 </div>
             </div>
@@ -102,8 +103,8 @@
 
             <div class="card-body pt-0 pt-md-4">
                 <div class="text-center">
-{#                    <a href='/gencon'>#}
-                <span class="btn btn-outline-danger" id="gen_new_avatar" onclick="avatar()">
+                    {#                    <a href='/gencon'>#}
+                    <span class="btn btn-outline-danger" id="gen_new_avatar" onclick="avatar()">
                   Сгенерировать Identicon
                 <span class="font-weight-light"></span>
                 </span>
@@ -112,22 +113,23 @@
                     </div>
                     <form method="post" action="/update_avatar/">
                         {% csrf_token %}
-{#                        <div class="file-upload">#}
-{#                          <label for="custom-file-upload" class="filupp">#}
-{#                            <span class="filupp-file-name js-value">Выберите файл</span>#}
-{#                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">#}
-{#                          </label>#}
-{#                        </div>#}
+                        {#                        <div class="file-upload">#}
+                        {#                          <label for="custom-file-upload" class="filupp">#}
+                        {#                            <span class="filupp-file-name js-value">Выберите файл</span>#}
+                        {#                            <input type="file" name="attachment-file" value="1" id="custom-file-upload">#}
+                        {#                          </label>#}
+                        {#                        </div>#}
                         <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">Upload</span>
-                          </div>
-                          <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="attachment-file" id="inputGroupFile01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                          </div>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Upload</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="attachment-file"
+                                       id="inputGroupFile01">
+                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            </div>
                         </div>
-                        <input type="submit"  value="Загрузить" class="btn btn-outline-danger">
+                        <input type="submit" value="Загрузить" class="btn btn-outline-danger">
                     </form>
                     <hr class="my-4"/>
                     <a href="#"></a>
@@ -141,9 +143,9 @@
 
     <div class="container-fluid mt--7">
         <div class="row"></div>
-            <div class="col-xl-4 float-lg-right">
-                <!-- ИНФО В ОБЩЕМ ВИДЕ -->
-                <div class="order-xl-2 mb-5 mb-xl-0">
+        <div class="col-xl-4 float-lg-right">
+            <!-- ИНФО В ОБЩЕМ ВИДЕ -->
+            <div class="order-xl-2 mb-5 mb-xl-0">
                 <div class="card card-profile shadow">
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
@@ -186,11 +188,11 @@
                           {{ user.profile.github_stars }}
                       </span>
                                     </div>
-                        <div>
+                                    <div>
                       <span class="heading" title="Github followers">
                           <i class="fa fa-users"></i>{{ user.profile.github_followers }}
                       </span>
-                        </div>
+                                    </div>
                                     <div>
                       <span class="heading">{{ user.profile.rate }}
                           <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
@@ -206,140 +208,151 @@
                             <hr class="my-4"/>
                             <p id="user-bio">{{ user.profile.bio }}</p>
                         </div>
+                        {% if user.profile.github_account == "" %}
+                            <a class="btn btn-neutral btn-icon" href="{% url 'social:begin' 'github' %}">
+{#                <a href="{% provider_login_url "github" process="login" method="js_sdk" %}" class="btn btn-neutral btn-icon">#}
+                  <span class="btn-inner--icon"><img src="/static/img/icons/common/github.svg"></span>
+                  <span class="btn-inner--text">Github</span>
+                </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-                <!-- END OF ИНФО В ОБЩЕМ ВИДЕ -->
+            <!-- END OF ИНФО В ОБЩЕМ ВИДЕ -->
 
-                <!-- ИНФО РЕЙТИНГ -->
-                <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
-                    <div class="card card-profile shadow">
-                        <div class="card-header text-center border-0 pt-8 pt-md-4">
-                            Расскажите, в чем Вы хороши:
-                        </div>
-                        <div class="card-body pt-0 pt-md-4">
-                                 <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
-                                    <input class="typeahead form-control" form="profile-form" autocomplete="off"
-                                           type="text" id="skills-input"
-                                           name="skills"  value="{{ user.profile.list_skills }}" data-role="tagsinput">
-                                </div>
-                        </div>
+            <!-- ИНФО РЕЙТИНГ -->
+            <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
+                <div class="card card-profile shadow">
+                    <div class="card-header text-center border-0 pt-8 pt-md-4">
+                        Расскажите, в чем Вы хороши:
                     </div>
+                    <div class="card-body pt-0 pt-md-4">
+                        <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
+                            <input class="typeahead form-control" form="profile-form" autocomplete="off"
+                                   type="text" id="skills-input"
+                                   name="skills" value="{{ user.profile.list_skills }}" data-role="tagsinput">
+                        </div>
                     </div>
                 </div>
-                <!-- END OF ИНФО РЕЙТИНГ -->
             </div>
-
-            <div class="col-xl-8 order-xl-1 scrolling">
-                <form role="form" method="POST" id="profile-form" action="{%  url 'user_profile' %}">
-                    {% csrf_token %}
-                    <div class="card bg-secondary shadow ml-4">
-                        <div class="card-header bg-white border-0">
-                            <div class="row align-items-center">
-                                <div class="col-8">
-                                    <h3 class="mb-0">Мой аккаунт</h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="heading-small text-muted mb-4">Общая информация</h6>
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-username"
-                                                   id="focus">Никнейм</label>
-                                            <input type="text" name="username" value="{{user.username}}" class="form-control" placeholder="Новый никнейм" label="username"
-                                                   {% if user.github_ud is not None %} readonly {% endif %}id="username" maxlength="150">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-email">Почта</label>
-                                            {{ form.email }}
-                                        </div>
-                                    </div>
-{#                                    var stars = githubStars("stretchr");#}
-                                <input id="github-stars" name="github-stars" type="hidden" value=0>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-first-name">Имя</label>
-                                            {{ form.first_name }}
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-last-name">Фамилия</label>
-                                            {{ form.last_name }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr class="my-4"/>
-                            <!-- Address -->
-                            <h6 class="heading-small text-muted mb-4">Контактная информация (по желанию)</h6>
-
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="github">Ваш Github/Gitlab (ссылка на
-                                                профиль)</label>
-                                            {% if user.profile.github_account != ''%}
-                                                <input type="url" name="github" value="{{user.profile.github}}" placeholder="Ссылка на ваш профиль"
-                                                       id="github" class="form-control form-control-alternative" onchange="checkURL(this)" maxlength="50" readonly>
-                                            {% else %}
-                                            {{ form2.github }}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-gitlab">LinkedIn</label>
-                                            {{ form2.linked_in }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-telegram">Telegram</label>
-                                            {{ form2.telegram }}
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-vk">Vk</label>
-                                            {{ form2.vk }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <hr class="my-4"/>
-                            <!-- Description -->
-                            <h6 class="heading-small text-muted mb-4">О себе</h6>
-                            <div class="pl-lg-4">
-                                <div class="form-group">
-                                    <label>Био</label>
-                                    {{ form2.bio }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        </div>
+        <!-- END OF ИНФО РЕЙТИНГ -->
     </div>
-</div>
+
+    <div class="col-xl-8 order-xl-1 scrolling">
+        <form role="form" method="POST" id="profile-form" action="{% url 'user_profile' %}">
+            {% csrf_token %}
+            <div class="card bg-secondary shadow ml-4">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Мой аккаунт</h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h6 class="heading-small text-muted mb-4">Общая информация</h6>
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username"
+                                           id="focus">Никнейм</label>
+                                    <input type="text" name="username" value="{{ user.username }}" class="form-control"
+                                           placeholder="Новый никнейм" label="username"
+                                            {% if user.github_ud is not None %} readonly {% endif %}id="username"
+                                           maxlength="150">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-email">Почта</label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                            {#                                    var stars = githubStars("stretchr");#}
+                            <input id="github-stars" name="github-stars" type="hidden" value=0>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-first-name">Имя</label>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-last-name">Фамилия</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4"/>
+                    <!-- Address -->
+                    <h6 class="heading-small text-muted mb-4">Контактная информация (по желанию)</h6>
+
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="github">Ваш Github/Gitlab (ссылка на
+                                        профиль)</label>
+                                    {% if user.profile.github_account != '' %}
+                                        <input type="url" name="github" value="{{ user.profile.github }}"
+                                               placeholder="Ссылка на ваш профиль"
+                                               id="github" class="form-control form-control-alternative"
+                                               onchange="checkURL(this)" maxlength="50" readonly>
+                                    {% else %}
+                                        {{ form2.github }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-gitlab">LinkedIn</label>
+                                    {{ form2.linked_in }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-telegram">Telegram</label>
+                                    {{ form2.telegram }}
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-vk">Vk</label>
+                                    {{ form2.vk }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr class="my-4"/>
+                    <!-- Description -->
+                    <h6 class="heading-small text-muted mb-4">О себе</h6>
+                    <div class="pl-lg-4">
+                        <div class="form-group">
+                            <label>Био</label>
+                            {{ form2.bio }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
 {% endblock %}
 
 
@@ -357,13 +370,13 @@
     <script src="{{ STATIC_URL }}js/typeahead.js"></script>
 
     <script>
-    $(document).ready(function() {
-    $('input[type="file"]').change(function(){
-        var value = $("input[type='file']").val();
-        $('.js-value').text(value);
-    });
+        $(document).ready(function () {
+            $('input[type="file"]').change(function () {
+                var value = $("input[type='file']").val();
+                $('.js-value').text(value);
+            });
 
-});
+        });
     </script>
     <script>
         const answer = document.getElementById("copyResult");
@@ -389,23 +402,23 @@
     </script>
 
     <script>
-    $(function () {
-        $('body').on('close.bs.alert', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(e.target).fadeOut();
+        $(function () {
+            $('body').on('close.bs.alert', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(e.target).fadeOut();
+            });
         });
-    });
     </script>
 
     <script>
-    function FocusOnUsername() {
-        $('html,body').animate({
-                scrollTop: $(".scrolling").offset().top
-            },
-            'slow');
-        $("#username").focus();
-    }
+        function FocusOnUsername() {
+            $('html,body').animate({
+                    scrollTop: $(".scrolling").offset().top
+                },
+                'slow');
+            $("#username").focus();
+        }
     </script>
 
     <script>
@@ -419,21 +432,21 @@
     <script>
         var data = '{{ skills }}'.replace(/&quot;/g, '\"');
         var task = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          local: jQuery.parseJSON(data) //your can use json type
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: jQuery.parseJSON(data) //your can use json type
         });
 
         task.initialize();
 
         $('#skills-input').tagsinput({
-          {#itemValue: "value",#}
-          {#itemText: "text",#}
-          typeaheadjs: {
-            name: "task",
-            displayKey: "text",
-            source: task.ttAdapter()
-          }
+            {#itemValue: "value",#}
+            {#itemText: "text",#}
+            typeaheadjs: {
+                name: "task",
+                displayKey: "text",
+                source: task.ttAdapter()
+            }
         });
 
         //insert data to input in load page
