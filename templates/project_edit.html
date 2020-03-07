@@ -59,7 +59,7 @@
 
                         <div class="list-group" id="myTab" role="tablist">
                             <a class="list-group-item list-group-item-action active" href="" role="tab" aria-controls="about">Описание</a>
-                            <a class="list-group-item list-group-item-action"
+                            <a class="list-group-item list-group-item-action rounded-bottom" 
                                href="{% url 'project_team_edit' project.id %}"role="tab" aria-controls="team">Команда</a>
                             {% if user in project.members_with_edit_rights %}
 {# TODO #}                            <a data-toggle="modal" data-target="#exampleModal" class="list-group-item list-group-item-action mt-3 rounded-top rounded-bottom bg-danger border-0" id="delete_project" style="color: white;"
