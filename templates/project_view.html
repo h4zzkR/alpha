@@ -198,10 +198,9 @@
                                                                        placeholder=""
                                                                        id="input-description" minlength="300"
                                                                        maxlength="5000"
-                                                                       class="form-control form-control-alternative">{% if project.description == '' %}
-                                                                 К сожалению, создатель проекта не описал идею. В
-                                                                 ближайшее время мы удалим этот проект.{% else %}
-                                                                 {{ project.description }}{% endif %}</textarea>
+                                                                       class="form-control form-control-alternative">{% if project.description == '' %}К сожалению, создатель проекта не описал идею. В
+                                                                 ближайшее время мы удалим этот проект.{% else %}{{ project.description }}{% endif %}</textarea>
+<!--                                                             не надо менять здесь отступы и делать переносы на новую строку, на фронте эти переносы видны в текстовом поле -->
                                                         </div>
                                                     </div>
                                                 </div>
