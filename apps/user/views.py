@@ -245,16 +245,21 @@ def save_profile(backend, user, response, *args, **kwargs):
             user = User(user_id=user.id)
         user.profile.github_account = response.get('login')
         user.email = response.get('email')
-        user.profile.bio = response.get('bio')
+        if user.email == "":
+            user.email = "wrongemail"
+        if response['bio'] is None:
+            user.profile.bio = "Нет биографии"
+        else:
+            user.profile.bio = response['bio']
         img = Image.open(BytesIO(requests.get(response.get('avatar_url')).content))
         pillow_update_avatar(img, user)
-        print(response)
-        user.profile.github_projects_cnt = response.get('public_repos')
+        user.profile.github_projects_cnt = response.get('public_repos', 0)
         user.profile.github = response.get('html_url')
-        user.username = response.get('login')
+        if user.username == response.get('login'):
+            user.username = response.get('login')
+
         user.github_id = response.get('id')
-        if user.profile.confirmed is False:
-            user.profile.confirmed = True
+        user.profile.confirmed = True
 
         name = response.get('name')
         if name is not None:
@@ -263,12 +268,15 @@ def save_profile(backend, user, response, *args, **kwargs):
                 user.profile.last_name = name.split()[1]
             else:
                 user.profile.first_name = name.split()[0]
-
+        else:
+            name = "Anonymous User"
         user.profile.github_access_token = response.get('access_token')
         user.profile.github_followers = response.get('followers')
         location = response.get('location')
         if location is not None:
             user.profile.location = location
+        else:
+            user.profile.location = "NO LOCATION"
         repos = response.get('repos_url')
         # stars, commits = github_count_commits_stars(repos)
         # print(stars, commits)
