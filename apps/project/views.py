@@ -235,21 +235,21 @@ def project_team_edit(request, id):
                     try:
                         u = User.objects.get(email=project_form.cleaned_data['username'])
                     except User.DoesNotExist:
-                        m.add(request, 'error', 'Пользователя с таким именем/email не существует.')
+                        m.add(request, 'error', 'Пользователя с таким именем/email не существует')
                         return redirect(f'/project/e/{id}/team/', request)
                 try:
                     req = ProjectInvite.objects.get(user=u, project=project)
                     if req.status == 1:
                         m.add(request, 'warning', 'Пользователь ещё не ответил на предыдущее приглашение')
                     elif req.status == 2:
-                        m.add(request, 'success', 'Пользователь уже работает над проектом')
+                        m.add(request, 'success', 'Пользователь уже в команде проекта')
                     else:
-                        m.add(request, 'error', 'Пользователь уже отклонил приглашение.')
+                        m.add(request, 'error', 'Пользователь отклонил приглашение')
 
                 except ProjectInvite.DoesNotExist:
                     req = ProjectInvite(user=u, project=project)
                     req.save()
-                    m.add(request, 'success', 'Пользователь уже работает над проектом')
+                    m.add(request, 'success', 'Пользователю было отправлено приглашение в команду проекта')
                 return redirect(f'/project/e/{id}/team/', request)
                 # response_data.update(project_form.cleaned_data)
                 # response_data.update(project_form.cleaned_data)
