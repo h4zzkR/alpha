@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block styles %}
+
     .card-deck {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -40,83 +41,82 @@
     }
 
 {% endblock %}
-
 {% block content %}
 
 
 
     <div class="main-content ml-5 mr-5">
     <div class="row">
-        <div class="col-2 col-sm-2 mr--9 mt-4">
-            <div class="mb-3">
-                <div class="list-group" id="myTab" role="tablist">
-                    <a class="list-group-item list-group-item-action projects {% if type == 'projects' %}active{% endif %}"
-                       id="{% if type == 'projects' %}active-tab{% endif %}" data-toggle="list"
-                       href="#about" role="tab" aria-controls="about" onclick="change_type_projects()">Проекты</a>
-                    <a class="list-group-item list-group-item-action users {% if type == 'users' %}active{% endif %}"
-                       id="{% if type == 'users' %}active-tab{% endif %}" data-toggle="list"
-                       href="#team" role="tab" aria-controls="team" onclick="change_type_users();">Пользователи</a>
-                </div>
+    <div class="col-2 col-sm-2 mr--9 mt-4">
+        <div class="mb-3">
+            <div class="list-group" id="myTab" role="tablist">
+                <a class="list-group-item list-group-item-action projects {% if type == 'projects' %}active{% endif %}"
+                   id="{% if type == 'projects' %}active-tab{% endif %}" data-toggle="list"
+                   href="#about" role="tab" aria-controls="about" onclick="change_type_projects()">Проекты</a>
+                <a class="list-group-item list-group-item-action users {% if type == 'users' %}active{% endif %}"
+                   id="{% if type == 'users' %}active-tab{% endif %}" data-toggle="list"
+                   href="#team" role="tab" aria-controls="team" onclick="change_type_users();">Пользователи</a>
             </div>
         </div>
-        <div class="container py-4">
+    </div>
+    <div class="container py-4">
 
-            <!--END Glossary Nav-->
-            <div class="glossary__search mb-3">
-                <div class="row justify-content-between">
-                    <div class="row col-10">
-                        <div class="col-12">
-                            <form action="/search/?" class="glossary__search__form" id="main_search" method="get">
-                                <div class="form-group has-search" style="">
-                                    {#                          width:150%;#}
-                                    <i class="fa fa-search mt-1 form-control-feedback" style="font-size: 20px;"></i>
-                                    <input class="form-control" id="searchInput" value="{{ value }}"
-                                           placeholder="Поиск среди проектов: теги через пробел, имя пользователя и т.п."
-                                           type="search">
-                                </div>
-
-                                <input type="hidden" name="q" id="form-q" value="">
-                                <input type="hidden" name="type" id="form-type" value="{{ type }}">
-                                <input type="hidden" name="sort" id="form-sort" value="-created_at">
-                            </form>
+    <!--END Glossary Nav-->
+    <div class="glossary__search mb-3">
+        <div class="row justify-content-between">
+            <div class="row col-10">
+                <div class="col-12">
+                    <form action="/search/?" class="glossary__search__form" id="main_search" method="get">
+                        <div class="form-group has-search" style="">
+                            {#                          width:150%;#}
+                            <i class="fa fa-search mt-1 form-control-feedback" style="font-size: 20px;"></i>
+                            <input class="form-control" id="searchInput" value="{{ value }}"
+                                   placeholder="Поиск среди проектов: теги через пробел, имя пользователя и т.п."
+                                   type="search">
                         </div>
-                        {#                    <div class="col-12">#}
-                        {#                        <button type="button matchBtn" id="match_btn" class="btn btn-primary" onclick="change_but()">#}
-                        {#                            Match!#}
-                        {#                        </button>#}
-                        {#                    </div>#}
-                    </div>
 
-                    <select class=" mr-3 mt-1 sort-btn" id="sort_btn" data-style="btn-white" style="height: 80%;">
-                        {% if sort == '-created_at' %}
-                            <option selected data-tokens="Новое" id="-created_at">Новое</option>
-                            <option data-tokens="Новое" id="created_at">Старое</option>
-                        {% elif sort == 'created_at' %}
-                            <option data-tokens="Новое" id="-created_at">Новое</option>
-                            <option selected data-tokens="Новое" id="created_at">Старое</option>
-                        {% endif %}
-                        <option data-tokens="Новое">Лучшее</option>
-                    </select>
-
+                        <input type="hidden" name="q" id="form-q" value="">
+                        <input type="hidden" name="type" id="form-type" value="{{ type }}">
+                        <input type="hidden" name="sort" id="form-sort" value="-created_at">
+                    </form>
                 </div>
-            <!--END Glossary Search-->
+                {#                    <div class="col-12">#}
+                {#                        <button type="button matchBtn" id="match_btn" class="btn btn-primary" onclick="change_but()">#}
+                {#                            Match!#}
+                {#                        </button>#}
+                {#                    </div>#}
+            </div>
+
+            <select class=" mr-3 mt-1 sort-btn" id="sort_btn" data-style="btn-white" style="height: 80%;">
+                {% if sort == '-created_at' %}
+                    <option selected data-tokens="Новое" id="-created_at">Новое</option>
+                    <option data-tokens="Новое" id="created_at">Старое</option>
+                {% elif sort == 'created_at' %}
+                    <option data-tokens="Новое" id="-created_at">Новое</option>
+                    <option selected data-tokens="Новое" id="created_at">Старое</option>
+                {% endif %}
+                <option data-tokens="Новое">Лучшее</option>
+            </select>
+
+        </div>
+        <!--END Glossary Search-->
 
 
-            <h3 class="glossary__results__term title-style--three" style="width: 100%;"></h3>
+        <h3 class="glossary__results__term title-style--three" style="width: 100%;"></h3>
 
-            <div class="glossary__results mb-6 card-columns" style="width: 100%;">
-                <div class="glossary__results__row infinite-container" data-term="#">
-                    {#                <div class="row">#}
-                    {% for pr in object_list %}
-                        {% if user in pr.members_with_edit_rights %}
-                            <div class="glossary__results__item mb--1 infinite-item"
-                                 onclick="project_redirect('e', {{ pr.id }})" style="cursor:pointer"
-                                 data-item="{{ pr.name.title }}">
-                        {% else %}
-                            <div class="glossary__results__item mb--1 infinite-item"
-                                 onclick="project_redirect('v', {{ pr.id }})" style="cursor:pointer"
-                                 data-item="{{ pr.name.title }}">
-                        {% endif %}
+        <div class="glossary__results mb-6 card-columns" style="width: 100%;">
+            <div class="glossary__results__row infinite-container" data-term="#">
+                {#                <div class="row">#}
+                {% for pr in object_list %}
+                    {% if user in pr.members_with_edit_rights %}
+                        <div class="glossary__results__item mb--1 infinite-item"
+                             onclick="project_redirect('e', {{ pr.id }})" style="cursor:pointer"
+                             data-item="{{ pr.name.title }}">
+                    {% else %}
+                        <div class="glossary__results__item mb--1 infinite-item"
+                             onclick="project_redirect('v', {{ pr.id }})" style="cursor:pointer"
+                             data-item="{{ pr.name.title }}">
+                    {% endif %}
                     {% if pr in requested %}
                         <div class="card bg-lighter" href="#"
                              title="Вы отправили запрос на вступление в команду этого проекта"
@@ -125,93 +125,93 @@
                         <div class="card" href="#" style="{{ pr.card_color }}">
                     {% endif %}
 
-                    <div class="card-body" style="max-height: 40rem;">
-                        <div class="row">
+                <div class="card-body" style="max-height: 40rem;">
+                    <div class="row">
 
 
-                            <!--START title-->
-                            <div class="col-12 col-md-6 col-sm-12">
-                                <h4 class="card-title card__title" style="width: 100%;">
-                                    <span>{{ pr.name.title }}</span>
-                                </h4>
-                            </div>
-                            <!--END title-->
+                        <!--START title-->
+                        <div class="col-12 col-md-6 col-sm-12">
+                            <h4 class="card-title card__title" style="width: 100%;">
+                                <span>{{ pr.name.title }}</span>
+                            </h4>
+                        </div>
+                        <!--END title-->
 
-                            <div class="col-12 col-md-6">
-                                <div class="btn-toolbar float-right" role="group">
-                                    <div class="btn-group mr-2 top--2 right--3" role="group"
-                                         aria-label="Second group">
-                                        {% if user in pr.members_with_edit_rights %}
-                                            <a href="/project/e/{{ pr.id }}">
-                                                <button class='btn btn-danger float-right' style="">
-                                                    <i class="fa fa-edit" style=""></i>
-                                                </button>
-                                            </a>
-                                        {% else %}
-                                            <a href="/project/v/{{ pr.id }}">
-                                                <button class='btn btn-primary float-right' style="">
-                                                    <i class="fa fa-book-open" style=""></i>
-                                                </button>
-                                            </a>
-                                        {% endif %}
-                                    </div>
+                        <div class="col-12 col-md-6">
+                            <div class="btn-toolbar float-right" role="group">
+                                <div class="btn-group mr-2 top--2 right--3" role="group"
+                                     aria-label="Second group">
+                                    {% if user in pr.members_with_edit_rights %}
+                                        <a href="/project/e/{{ pr.id }}">
+                                            <button class='btn btn-danger float-right' style="">
+                                                <i class="fa fa-edit" style=""></i>
+                                            </button>
+                                        </a>
+                                    {% else %}
+                                        <a href="/project/v/{{ pr.id }}">
+                                            <button class='btn btn-primary float-right' style="">
+                                                <i class="fa fa-book-open" style=""></i>
+                                            </button>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
-
                         </div>
 
-                        <p class="card-text"
-                           style="max-height: 350px; overflow: hidden;">{{ pr.description.title }}</p>
-                        {% if pr.author.username == user.username %}
-                            <footer class="blockquote-footer">Создатель: <cite
-                                    title="Source Title"><b>Вы</b></cite>
-                            </footer>
-                        {% else %}
-                            <footer class="blockquote-footer">Создатель: <cite
-                                    title="Source Title"><b>{{ pr.author.username }}</b></cite></footer>
-                        {% endif %}
-                        <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
                     </div>
 
-                    <div class="card-footer container bg-secondary">
-                        <div class="row" style="display:flex">
-                            {% for tag in pr.tags.all %}
-                                <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
+                    <p class="card-text"
+                       style="max-height: 350px; overflow: hidden;">{{ pr.description.title }}</p>
+                    {% if pr.author.username == user.username %}
+                        <footer class="blockquote-footer">Создатель: <cite
+                                title="Source Title"><b>Вы</b></cite>
+                        </footer>
+                    {% else %}
+                        <footer class="blockquote-footer">Создатель: <cite
+                                title="Source Title"><b>{{ pr.author.username }}</b></cite></footer>
+                    {% endif %}
+                    <footer class="blockquote-footer">Создан: <b>{{ pr.created_at }}</b></footer>
+                </div>
 
-                    <div class="card-footer bg-secondary text-muted">
-                        <div class="row">
-                            <div class="col-12 col-md-6 col-sm-12">
-                                {% for c in pr.collaborators.all %}
-                                    <span class="avatar rounded-circle" style="width: 30px; height: 30px;"
-                                          title="{{ c.member.username }}">
+                <div class="card-footer container bg-secondary">
+                    <div class="row" style="display:flex">
+                        {% for tag in pr.tags.all %}
+                            <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card-footer bg-secondary text-muted">
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-sm-12">
+                            {% for c in pr.collaborators.all %}
+                                <span class="avatar rounded-circle" style="width: 30px; height: 30px;"
+                                      title="{{ c.member.username }}">
                                            <a href="{{ c.member.profile.link }}"><img alt="{{ c.member.username }}"
                                                                                       src="{{ c.member.profile.avatar_url }}"></a>
                                         </span>
-                                {% endfor %}
-                            </div>
-                            <div class="col-12 col-md-6 col-sm-12">
-                                <h5 class="float-right">
-                                    {{ pr.get_status }}
-                                </h5>
-                                <br>
-                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-12 col-md-6 col-sm-12">
+                            <h5 class="float-right">
+                                {{ pr.get_status }}
+                            </h5>
+                            <br>
                         </div>
                     </div>
+                </div>
 
-                    </div>
-                    </div>
-                        <!--END Glossary Result item-->
-                    {% endfor %}
-                    </div>
+                </div>
+                </div>
+                    <!--END Glossary Result item-->
+                {% endfor %}
+                </div>
 
 
 
-                    {% if object_list.has_next %}
-                        <a class="infinite-more-link" href="?page={{ object_list.next_page_number }}"></a>
-                    {% endif %}
+                {% if object_list.has_next %}
+                    <a class="infinite-more-link" href="?page={{ object_list.next_page_number }}"></a>
+                {% endif %}
                 </div>
             </div>
         </div>

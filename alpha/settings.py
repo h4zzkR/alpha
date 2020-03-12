@@ -148,6 +148,27 @@ DATABASES = {
     }
 
 }
+# DATABASES = {
+#
+#     'default': {
+#
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#
+#         'NAME': 'concat',
+#
+#         'USER': 'concat',
+#
+#         'PASSWORD': 's1XTPKlOjWo4',
+#
+#         'HOST': 'localhost',
+#
+#         'PORT': '5432',
+#
+#
+#
+#     }
+#
+# }
 
 USER_ONLINE_TIMEOUT = 300
 

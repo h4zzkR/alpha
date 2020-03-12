@@ -36,7 +36,7 @@ class RegisterFormView(FormView):
     form_class = RegisterForm
     success_url = '/account/login/'
     template_name = "register.html"
-
+    extra_context = {'pagename': 'Регистрация'}
     def form_valid(self, form):
         form.save()
         return super(RegisterFormView, self).form_valid(form)
@@ -58,7 +58,7 @@ class LoginFormView(FormView):
     form_class = AuthForm
     template_name = "login.html"
     success_url = "/account/profile/"
-
+    extra_context = {'pagename': 'Вход'}
     def form_valid(self, form):
         self.user = form.get_user()
         login(self.request, self.user)
