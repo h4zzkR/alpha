@@ -125,27 +125,27 @@
 
                 {% else %}
                     <li class="nav-item">
-                        {% if pagename == 'Dashboard' %}
+                        {% if pagename == 'Лента Проектов' %}
                             <a class=" nav-link active" href="/">
-                                <i class="ni ni-tv-2 text-primary"></i> Лента проектов
+                                <i class="ni ni-tv-2 text-primary"></i> Лента Проектов
                             </a>
                         {% else %}
                             <a class=" nav-link" href="/">
-                                <i class="ni ni-tv-2 text-blue"></i> Лента проектов
+                                <i class="ni ni-tv-2 text-blue"></i> Лента Проектов
                             </a>
                         {% endif %}
-                        {% if pagename == 'MyProjects' %}
+                        {% if pagename == 'Мои Проекты' %}
                             <a class=" nav-link active" href="{% url 'projects_list' %}"> {# TODO: Link #}
-                                <i class="ni ni-collection text-primary"></i> Мои Проекты
+                                <i class="ni ni-collection text-teal"></i> Мои Проекты
                             </a>
                         {% else %}
                             <a class=" nav-link" href="{% url 'projects_list' %}"> {# TODO: Link #}
                                 <i class="ni ni-collection text-teal"></i> Мои Проекты
                             </a>
                         {% endif %}
-                        {% if pagename == 'Новый проект' %}
+                        {% if pagename == 'Новый Проект' %}
                             <a class=" nav-link active" href="{% url 'project_create' %}"> {# TODO: Link #}
-                                <i class="ni ni-app text-primary"></i> Новый Проект
+                                <i class="ni ni-app text-red"></i> Новый Проект
                             </a>
                         {% else %}
                             <a class=" nav-link" href="{% url 'project_create' %}"> {# TODO: Link #}

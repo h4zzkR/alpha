@@ -50,7 +50,7 @@ def json_skills(tags=UserProfile.skills.all()):
 
 
 def index(request, projects_list=None, type='projects', sort='-created_at'):
-    context = get_context(request, 'Dashboard')
+    context = get_context(request, 'Лента Проектов')
     m = Messages()
     if projects_list is None:
         projects_list = Project.objects.filter(is_public=True).order_by("-created_at")
@@ -108,11 +108,8 @@ def search_engine(request):
                 s = UserProfile.objects.filter((Q(user__username__contains=i) | Q(user__first_name__contains=i) | Q(user__last_name__contains=i)))
                 object_list |= s
                 object_list = object_list.union(UserProfile.objects.filter(skills__name__icontains=i).distinct())
-
-
-
     page = request.GET.get('page', 1)
-    context = get_context(request, 'Dashboard')
+    context = get_context(request, f'Поиск | {data}')
     if type == 'projects':
         context.update({'object_list': object_list.order_by(sort)})
     else:

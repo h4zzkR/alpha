@@ -80,7 +80,7 @@ def projects_list(request):
         template_name = 'project_list.html'
         context = {}
         # paginate_by = 100  # if pagination is desired
-        context = get_context(request, 'MyProjects')
+        context = get_context(request, 'Мои Проекты')
 
         user_projects = Project.objects.filter(collaborators__member=request.user).order_by("-created_at")
         context['projects'] = user_projects
@@ -111,10 +111,9 @@ def project_create(request):
     else:
         form = ProjectForm()
 
-    context = get_context(request, 'Новый проект')
+    context = get_context(request, 'Новый Проект')
     context.update({
         'form': form,
-        'pagename': 'Новый проект',
         'tags': json_skills(Project.tags.all())
     })
 
@@ -127,7 +126,7 @@ def project_view(request, id):
     except Project.DoesNotExist:
         return handler404(request)
     if project.is_public:
-        context = get_context(request, 'Проект')
+        context = get_context(request, f'Проект | {project.name}')
         context.update({'project': project})
         context.update({"user": request.user})
         context.update({'is_in': False})
@@ -188,7 +187,7 @@ def project_view_or_edit(request, id):
             project_form = ProjectForm()
             project = Project.objects.get(id=id)
 
-    context = get_context(request, 'Проект')
+    context = get_context(request, f'Проект | {project.name}')
     context.update({
         'form': project_form,
         'user_id': project.id,
@@ -204,7 +203,7 @@ def project_team_view(request, id):
     except Project.DoesNotExist:
         return handler404(request)
     if project.is_public:
-        context = get_context(request, 'Проект')
+        context = get_context(request, f'Команда | {project.name}')
         context.update({'project': project})
         context.update({"user": request.user})
         return render(request, 'project_team_view.html', context)
@@ -276,7 +275,7 @@ def project_team_edit(request, id):
             project_form = ProjectAddForm()
             project = Project.objects.get(id=id)
 
-    context = get_context(request, 'Команда')
+    context = get_context(request, f'Команда | {project.name}')
     context.update({
         'form': project_form,
         'user_id': project.id,
