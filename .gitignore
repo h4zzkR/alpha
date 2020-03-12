@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+static/
 # C extensions
 *.so
 venv/
@@ -123,3 +123,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+ Media folder
+media/profile/photos/*.png
+media/profile/photos/*.svg
+!media/profile/photos/default.png
+!media/profile/photos/admin.png

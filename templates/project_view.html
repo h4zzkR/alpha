@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+
+
+{% block extra_links %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link href="{{ STATIC_URL }}css/bootstrap-tagsinput.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/typeagead-styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.10/dist/css/bootstrap-select.min.css">
+
+    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+{% endblock %}
+
+{% block styles %}
+    .CodeMirror, .CodeMirror-scroll {
+    min-height: 575px;
+    }
+
+    #id_name {
+    max-width: 80%;
+    font-size: 20px;
+    color: black;
+    }
+
+    first {
+    z-index: 1000;
+    }
+
+    .autocomplete {
+    position: relative;
+    display: inline-block;
+    }
+    .autocomplete-items {
+    position: absolute;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    }
+
+{% endblock %}
+
+{% block content %}
+    <div class="main-content pb-10 ml-4">
+
+        <div class="ml-4">
+            <div class="row" style="width: 100%;">
+
+                <div class="col-2 col-sm-2 mr--1">
+                    <div class="mb-3">
+
+                        <div class="list-group" id="myTab" role="tablist">
+                            <a class="list-group-item list-group-item-action active" href="" role="tab"
+                               aria-controls="about">Описание</a>
+                            <a class="list-group-item list-group-item-action rounded-bottom"
+                               href="{% url 'project_team_edit' project.id %}" role="tab"
+                               aria-controls="team">Команда</a>
+                            {% if is_in is not True %}
+                                {# TODO #}
+                                <a class="list-group-item list-group-item-action mt-3 rounded-top border-0"
+                                   id="request_project" style="color: white;cursor:pointer; background-color:#2dce89;"
+                                   role="tab" aria-controls="team">
+                                    <div id="request_text">Запрос в команду</div>
+                                </a>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-10 order-xl-1 scrolling mb-5">
+                    <form role="form" id="project-form" action="">
+
+                        <div class="mt--4">
+                            <div class="card-body">
+
+                                <div class="tab-content" id="myTabContent" style="width: 100%;">
+                                    <div class="tab-pane fade show active" id="about" role="tabpanel"
+                                         aria-labelledby="about-tab">
+
+                                        <div class="card bg-secondary shadow">
+                                            <div class="card-header bg-white border-0">
+                                                <div class="row align-items-center">
+                                                    <div class="col-8">
+                                                        <h3 class="mb-0">
+                                                            <input type="text" name="name" class="form-control"
+                                                                   value="{{ project.name.title }}"
+                                                                   placeholder="Название"
+                                                                   label="name" required="" id="id_name" readonly>
+                                                        </h3>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div style="display: inline-table;">
+                                                            {% for tag in project.tags.all %}
+                                                                <a class="mr-1 mb-1 badge badge-info">#{{ tag }}</a>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col" title="Редактировать проект">
+                                                        {% if user in project.members_with_edit_rights %}
+                                                            <a href="{% url 'project_edit' project.id %}">
+                                                                <button class='btn btn-danger float-right' style=""
+                                                                        type="button">
+                                                                    <i class="fa fa-edit" style=""></i>
+                                                                </button>
+                                                            </a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-9 mt-0 ml-lg-2">
+                                            </div>
+                                            <div class="card-body">
+
+                                                <div class="row ml-lg-2">
+                                                    <div class="col-lg-3 column-left ml-lg--4" style="">
+                                                        <div class="col-lg-13">
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label">Техзадание:</label>
+                                                                    <input type="url"
+                                                                           value="{% if project.vcs == '' %}Не задано{% else %}{{ project.technical_spec_url }}{% endif %}"
+                                                                           class="form-control form-control-alternative"
+                                                                           readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label">VCS</label>
+                                                                    <input type="url"
+                                                                           value="{% if project.vcs == '' %}Не задано{% else %}{{ project.vcs }}{% endif %}"
+                                                                           class="form-control form-control-alternative"
+                                                                           readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label">Размер
+                                                                        команды</label>
+                                                                    <input type="url"
+                                                                           value="{% if project.max_people == 0 %}Без ограничений{% else %}{{ project.max_people }}{% endif %}"
+                                                                           class="form-control form-control-alternative"
+                                                                           readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label">Kanban
+                                                                        Board</label>
+                                                                    <input type="url"
+                                                                           value="{% if project.trello == '' %}Не задано{% else %}{{ project.trello }}{% endif %}"
+                                                                           class="form-control form-control-alternative"
+                                                                           readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label class="form-control-label">Связь с
+                                                                        тимлидом</label>
+                                                                    <input type="url"
+                                                                           value="{% if project.callback == '' %}Не указано{% else %}{{ project.callback }}{% endif %}"
+                                                                           class="form-control form-control-alternative"
+                                                                           readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-15">
+                                                                <div class="form-group">
+                                                                    <label for="">Тип проекта</label>
+                                                                    <input type="url"
+                                                                           value="{% if project.is_public == 1 %}Открытый{% else %}Закрытый{% endif %}"
+                                                                           class="form-control form-control-alternative"
+                                                                           readonly>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="ml-lg-4 col-lg-9 mt-0">
+                                                        <label class="form-control-label" for="input-description">О
+                                                            проекте:</label>
+                                                        <div class="form-group">
+                                                             <textarea name="description" type="text" cols="40" rows="4"
+                                                                       placeholder=""
+                                                                       id="input-description" minlength="300"
+                                                                       maxlength="5000"
+                                                                       class="form-control form-control-alternative">{% if project.description == '' %}К сожалению, создатель проекта не описал идею. В
+                                                                 ближайшее время мы удалим этот проект.{% else %}{{ project.description }}{% endif %}</textarea>
+<!--                                                             не надо менять здесь отступы и делать переносы на новую строку, на фронте эти переносы видны в текстовом поле -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-4 mt--3"/>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+                                        {% include "blocks/project_view_command_.html" %}
+                                    </div>
+                                    <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">
+                                        ...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'blocks/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $('#loader').hide();
+        new SimpleMDE({
+            element: document.getElementById("input-description"),
+            autosave: {
+                enabled: false,
+                unique_id: "input-description",
+            },
+            toolbar: false,
+            spellChecker: false,
+        });
+    </script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>
+    <script src="{{ STATIC_URL }}js/ajax_search_user.js"></script>
+    {#    <script src="{{ STATIC_URL }}js/select_with_input.js"></script>#}
+    <script src="{{ STATIC_URL }}js/typeahead.js"></script>
+    <script>
+        var data = '{{ tags }}'.replace(/&quot;/g, '"');
+        var task = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: jQuery.parseJSON(data) //your can use json type
+        });
+
+        task.initialize();
+
+        $('#tags-input').tagsinput({
+            {#itemValue: "value",#}
+            {#itemText: "text",#}
+            typeaheadjs: {
+                name: "task",
+                displayKey: "text",
+                source: task.ttAdapter()
+            }
+        });
+
+        //insert data to input in load page
+
+
+    </script>
+    <script>
+        $('#project-form').on('keyup keypress', function (e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+
+    <script>
+        function update_messages(messages) {
+            $("#div_messages").html("");
+            var i = 0
+            $.each(messages, function (i, m) {
+                var msg = "<div id='message" + i + "'" + "class=\"alert" + "\x20" + m.level + "\x20" + "alert-dismissible data-auto-dismiss myalert-bottom role=\"alert\">" +
+                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">" +
+                    "<span aria-hidden=\"true\">&times;</span></button>" + m.message + "</div>";
+                $("#div_messages").append(msg);
+                i++;
+
+            });
+
+        };
+
+        function ajaxAutoHideMessages(arrayLength) {
+            // TODO ADD HIDING IN ORDER WITH DELAY
+            for (var i = 0; i < parseInt(arrayLength); i++) {
+                var x = "#message" + i.toString();
+                // console.log(x);
+                $(x).fadeTo(2000, 500).slideUp(500, function () {
+                    $(x).slideUp(500);
+                });
+            }
+        };
+
+    </script>
+    <script>
+        $('#request_project').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'project_request' project.id %}",
+                data: {'id': {{project.id}}, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                dataType: "json",
+                beforeSend: function (xhr) {
+                    document.getElementById("request_text").innerHTML = "Отправка запроса...";
+                    document.getElementById("request_project").style.cssText = "color: white;cursor:pointer;background-color:#fb6340;";
+                },
+                success: function (response) {
+                    if (response.status == 'success') {
+                        document.getElementById("request_text").innerHTML = "Запрос отправлен";
+                        document.getElementById("request_project").style.cssText = "color: white;cursor:pointer;background-color:#00a35d;";
+                    } else {
+                        document.getElementById("request_text").innerHTML = "Ошибка отправки";
+                        document.getElementById("request_project").style.cssText = "color: white;cursor:not-allowed;background-color:#f75676;";
+                        $('#request_project').off('click');
+                    }
+                    update_messages(response.messages);
+                    ajaxAutoHideMessages(json.messages.length);
+                },
+                error: function (rs, e) {
+                    console.log(e);
+                }
+            });
+        })
+    </script>
+{% endblock %}

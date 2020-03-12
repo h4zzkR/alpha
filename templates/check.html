@@ -1,0 +1,10 @@
+It is template to render callback Telegram widget!
+
+<!-- {{ telegram_login_widget|safe }} --> {% autoescape off %}
+{{ telegram_login_widget }}{% endautoescape %}
+
+<script type="text/javascript">
+    function onTelegramAuth(user) {
+        alert('Вы вошли как ' + user.first_name + ' ' + user.last_name + '!');
+    }
+</script>

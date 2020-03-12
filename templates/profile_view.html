@@ -1,0 +1,394 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if user_profile.first_name == "" or user_profile.last_name ==    "" %}
+        {{ user_profile.username }} | Аккаунт Concat
+    {% else %}
+        {{ user_profile.first_name }} {{ user_profile.last_name }} | Аккаунт Concat
+    {% endif %}
+{% endblock %}
+
+{% block extra_links %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
+    <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
+    <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/typeagead-styles.css">
+{% endblock %}
+
+{% block styles %}
+    .CodeMirror, .CodeMirror-scroll {
+        min-height: 575px;
+    }
+{% endblock %}
+
+{% block main_content_class %}
+<div class="main-content" style="padding-bottom: 60px;">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-top navbar-expand-md navbar" id="navbar-main">
+        <div class="container-fluid" >
+            <!-- Brand -->
+            <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
+            <!-- Form -->
+            {% include "blocks/search.html" %}
+            <!-- User -->
+            {% include "blocks/profile_menu.html" %}
+        </div>
+    </nav>
+
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+         style="min-height: 600px; background-size: cover; background-position: center top;">
+        <!-- Mask -->
+        <span class="mask bg-gradient-default opacity-5 mt--7"></span>
+        <!-- Header container -->
+        <div class="container-fluid d-flex align-items-center">
+            <div class="row">
+                <div class="col-lg-7 col-md-10">
+                    <h1 class="display-2 text-white" id="username">{{ user_profile.username }}</h1>
+
+{#                    <table>#}
+{#                       <tr><th>Был(-а)</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }} назад{% else %} недавно{% endif %}</td></tr>#}
+{#                       <tr><th>Online</th><td>{{ profile.online }}</td></tr>#}
+{#                     </table>#}
+
+                    <div class="btn-group">
+                        <button onclick="CopyLink();" class="btn btn-primary btn-xs" id="copyButton">@{{ user_profile.username }}
+                        </button>
+                        <button onclick="CopyLink();" class="btn btn-outline-danger btn-xs" id="copyResult">Копировать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+    <div class="overlay" id="avatar_menu">
+        <div class="col-xl-3 order-xl-2 mb-5 mb-xl-0 popup">
+
+            <div class="row justify-content-center mt-2">
+                <a class="close" id="close-popup" href="#">&times;</a>
+                <div class="col-lg-3 order-lg-2">
+                    <div class="card-profile-image">
+                        <a href="#">
+                            <img src="/media/{{ user_profile.profile.avatar_url }}" id='card-avatar-0' class="rounded-circle">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header text-center border-0 pt-5 pt-md-2 pb-0 pb-md-4">
+                <div class="d-flex justify-content-lg-between justify-content-between">
+                    <a href="{{ user_profile.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
+                        <i class="fab fa-telegrams fa-3x tg-icon"></i>
+                    </a>
+a
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!--  END OF ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+
+
+
+    <div class="container-fluid mt--7">
+        <div class="row"></div>
+            <div class="col-xl-4 float-lg-right">
+                <!-- ИНФО В ОБЩЕМ ВИДЕ -->
+                <div class="order-xl-2 mb-5 mb-xl-0">
+                <div class="card card-profile shadow">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3 order-lg-2">
+                            <div class="card-profile-image">
+                                <a href="#avatar_menu">
+                                    <img src="{{ user_profile.profile.avatar_url }}" id="card-avatar-1" class="rounded-circle"
+                                         style="width: 135px; pointer-events: none;">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                        <div class="d-flex justify-content-lg-between justify-content-between">
+                            <a href="{{ user_profile.profile.telegram }}" class="btn-icon float-lg-left ml-4" style="">
+                                <i class="fab fa-telegram fa-3x tg-icon"></i>
+                            </a>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body pt-0 pt-md-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-profile-stats d-flex justify-content-center mt-md-0">
+                                    <div>
+                      <span class="heading" title="Репозитории">{{ user_profile.profile.projects_cnt }}
+                          <i class="ni ni-app" style="vertical-align: -3px;"></i>
+                          {{ user_profile.profile.github_projects_cnt }}
+                      </span>
+                                    </div>
+                                    <div>
+                      <span class="heading" title="Количество звезд на github">
+                          <i class="fa fa-star"></i>
+                          {{ user_profile.profile.github_stars }}
+                      </span>
+                                    </div>
+                        <div>
+                      <span class="heading" title="Github followers">
+                          <i class="fa fa-users"></i>{{ user_profile.profile.github_followers }}
+                      </span>
+                        </div>
+                                    <div>
+                      <span class="heading">{{ user_profile.profile.rate }}
+                          <i class="ni ni-trophy" style="vertical-align: -3px;"></i>
+                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 id="user_full_name">
+                                {{ user_profile.first_name }} {{ user_profile.last_name }}
+                            </h3>
+                            <hr class="my-4"/>
+                            <p id="user-bio">{{ user_profile.profile.bio }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <!-- END OF ИНФО В ОБЩЕМ ВИДЕ -->
+
+                <!-- ИНФО РЕЙТИНГ -->
+                <div class="order-xl-2 mb-5 mt-md-4 mb-xl-0">
+                    <div class="card card-profile shadow">
+                        <div class="card-header text-center border-0 pt-8 pt-md-4">
+                            Умения:
+                        </div>
+                        <div class="card-body pt-0 pt-md-4">
+                                 <div class="bootstrap-tagsinput" id="bootstrap-tagsinput">
+                                    <input class="typeahead form-control" form="profile-form" autocomplete="off"
+                                           type="text" id="skills-input"
+                                           name="skills"  value="{{ user_profile.profile.list_skills }}" data-role="tagsinput" disabled>
+                                </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- END OF ИНФО РЕЙТИНГ -->
+            </div>
+
+            <div class="col-xl-8 order-xl-1 scrolling">
+                <form role="form" method="POST" id="profile-form" action="{%  url 'user_profile' %}">
+                    {% csrf_token %}
+                    <div class="card bg-secondary shadow ml-4">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h3 class="mb-0">Аккаунт</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="heading-small text-muted mb-4">Общая информация</h6>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-username"
+                                                   id="focus">Никнейм</label>
+                                            {{ form.username }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-email">Почта</label>
+                                            {{ form.email }}
+                                        </div>
+                                    </div>
+{#                                    var stars = githubStars("stretchr");#}
+                                <input id="github-stars" name="github-stars" type="hidden" value=0>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-first-name">Имя</label>
+                                            {{ form.first_name }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-last-name">Фамилия</label>
+                                            {{ form.last_name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4"/>
+                            <!-- Address -->
+                            <h6 class="heading-small text-muted mb-4">Контактная информация</h6>
+
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="github">Github/Gitlab (ссылка на
+                                                профиль)</label>
+                                            {% if user_profile.profile.github_account != ''%}
+                                                <input type="url" name="github" value="{{user_profile.profile.github}}" placeholder="Ссылка на Профиль"
+                                                       id="github" class="form-control form-control-alternative" onchange="checkURL(this)" maxlength="50" readonly>
+                                            {% else %}
+                                            {{ form2.github }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-gitlab">LinkedIn</label>
+                                            {{ form2.linked_in }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-telegram">Telegram</label>
+                                            {{ form2.telegram }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-vk">Vk</label>
+                                            {{ form2.vk }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr class="my-4"/>
+                            <!-- Description -->
+                            <h6 class="heading-small text-muted mb-4">О себе</h6>
+                            <div class="pl-lg-4">
+                                <div class="form-group">
+                                    <label>Био</label>
+                                    {{ form2.bio }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'blocks/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ STATIC_URL }}js/profile/ajax_profile_submit.js"></script>
+    <script src="{{ STATIC_URL }}js/gen_avatar.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/hqx.js"></script>
+
+    <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>
+    <script src="{{ STATIC_URL }}js/typeahead.js"></script>
+
+    <script>
+    $(document).ready(function() {
+    $('input[type="file"]').change(function(){
+        var value = $("input[type='file']").val();
+        $('.js-value').text(value);
+    });
+
+});
+    </script>
+    <script>
+        const answer = document.getElementById("copyResult");
+
+        function CopyLink() {
+            var dummy = document.createElement("textarea");
+            //ATTN: URL MUST BE some.domain/some_path/
+            var copyText = "{{ request.scheme }}://{{ request.get_host }}{% url 'user_get_profile' user_profile.username %}";
+            document.body.appendChild(dummy);
+            dummy.value = copyText;
+            dummy.select();
+            const successful = document.execCommand("copy");
+            document.body.removeChild(dummy);
+            answer.style.display = '';
+            if (successful) {
+                answer.innerHTML = 'Скопировано';
+                answer.classList.add('active');
+            } else {
+                answer.innerHTML = 'Невозможно скопировать';
+            }
+            {#alert("Copied the text: " + copyText);#}
+        }
+    </script>
+
+    <script>
+    $(function () {
+        $('body').on('close.bs.alert', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(e.target).fadeOut();
+        });
+    });
+    </script>
+
+    <script>
+    function FocusOnUsername() {
+        $('html,body').animate({
+                scrollTop: $(".scrolling").offset().top
+            },
+            'slow');
+        $("#username").focus();
+    }
+    </script>
+
+    <script>
+        function checkURL(o) {
+            if (!/^https?:\/\//i.test(o.value) && o.value != "") {
+                o.value = "https://" + o.value;
+            }
+        }
+    </script>
+
+    <script>
+        var data = '{{ skills }}'.replace(/&quot;/g, '\"');
+        var task = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          local: jQuery.parseJSON(data) //your can use json type
+        });
+
+        task.initialize();
+
+        $('#skills-input').tagsinput({
+          {#itemValue: "value",#}
+          {#itemText: "text",#}
+          typeaheadjs: {
+            name: "task",
+            displayKey: "text",
+            source: task.ttAdapter()
+          }
+        });
+
+        //insert data to input in load page
+
+
+    </script>
+    <script src="{{ STATIC_URL }}js/counter.js"></script>
+    <script>
+        var stars = parseInt(githubStars("{{user_profile.profile.github_account}}"));
+        $("#github-stars").val(stars);
+    </script>
+
+{% endblock %}

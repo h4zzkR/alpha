@@ -1,0 +1,92 @@
+ <div class="card shadow">
+
+                    <div class="card-body">
+            <ul class="list-group">
+                {% for c in project.collaborators.all %}
+                    <li class="list-group-item d-flex flex-row justify-content-between align-items-center">
+                        <div class="d-flex flex-row" style="width: 100%;">
+                            <div class="row align-self-center">
+                                    <div class="col-4 ml-2">
+                                        <span class="avatar rounded-circle" style="width: 30px; height: 30px;">
+                                           <a href="{{ c.member.profile.link }}"><img alt="{{ c.username }}" src="{{ c.member.profile.avatar_url }}"></a>
+                                        </span>
+                                    </div>
+                                    <span class="col-7">{{ c.member.username }}</span>
+                            </div>
+                            <div class="row align-self-center">
+                            {% if c.is_teamlead is True %}
+                                <div class="col-4 mr-4">
+                                    <span class="badge badge-danger badge-pill">Тимлид</span>
+                                </div>
+                            {% endif %}
+                            {% if c.member == project.author %}
+                                <div class="">
+                                <span class="badge badge-success badge-pill">Создатель</span>
+                                </div>
+                            {% endif %}
+    {#                    <div class="col-1">#}
+    {#                        <span class="badge badge-primary badge-pill " style="font-size: 17px;">{{ c.role }}</span>#}
+    {#                    </div>#}
+    {#                    </div></li>#}
+                            </div>
+
+
+                            <div class="row mr-1 ml-auto" style="max-width: 100%;">
+                              <div class="col-12">
+                                <select class="selectpicker form-control first" id="select1" data-style="btn-gray" data-live-search="true" multiple data-width="100%" data-max-options="4">
+                                  <option data-tokens="программист разработчик">Программист</option>
+                                  <option data-tokens="программист разработчик старший главный">Старший программист</option>
+                                  <option data-tokens="дизайнер фронт front">Дизайнер</option>
+                                  <option data-tokens="аналитик data science">Аналитик</option>
+                                  <option data-tokens="AI ai engineer">AI engineer</option>
+                                  <option data-tokens="менеджер">Менеджер</option>
+                                  <option data-tokens="dev ops">DevOps</option>
+                                  <option data-tokens="admin">Администратор</option>
+                                  <option data-tokens="тест">Тестировщик</option>
+                                  <option data-tokens="проект">Проектировщик</option>
+                                  <option data-tokens="бэк программист">Backend engineer</option>
+                                  <option data-tokens="фронт">Frontend developer</option>
+                                  <option data-tokens="фуллстак стак программист">Fullstack developer</option>
+                                  <option data-tokens="андроид android программист">Андроид разработчик</option>
+                                  <option data-tokens="ios айос программист">iOS разработчик</option>
+                                </select>
+                              </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+            </ul>
+
+            <hr class="my-4"/>
+            <div class="card bg-secondary text-muted mb-2" style="height: 300px;">
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible" id="message{{ forloop.counter0 }}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+
+            {% endif %}
+                <form action='' autocomplete='off'>
+                <div class="d-flex flex-row justify-content-around align-items-center">
+
+                    <div class="input-group mb-3" style="width: 70%; z-index: 0;">
+                      <input type="text" class="form-control autocomplete" id='myInput' name='user' placeholder="Никнейм пользователя" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                      <div class="input-group-append" style="margin-left: 1px;">
+                        <button class="btn btn-outline-primary" type="button-addon2" type="submit">Пригласить в команду</button>
+                      </div>
+                    </div>
+                </div>
+                </form>
+
+
+
+                </div>
+
+            </div>
+
+
+        </div>

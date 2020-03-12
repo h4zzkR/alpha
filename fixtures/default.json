@@ -1,0 +1,316 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$xT2QjiudwegG$vHu9aU1jpMyxfXK5aALUhbsbvXT1yXL8NBv3HHMSTpE=",
+      "last_login": "2020-02-23T07:34:32.218Z",
+      "is_superuser": false,
+      "username": "test_user",
+      "first_name": "",
+      "last_name": "",
+      "email": "test_mail@mail.ru",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2020-02-22T18:26:45.044Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "!KDNSmzzAg1dH9YD1xmFIu7YuobnwiRI54TWumzwk",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "H4T3H4K3RS",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2020-02-23T07:06:55.189Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$eMu0c3GbuPFJ$SQmp1jpM+2zVNiAmBgej3hl6pt86Thc0G1Cv83XR4aI=",
+      "last_login": "2020-02-23T07:08:49.525Z",
+      "is_superuser": false,
+      "username": "root2",
+      "first_name": "",
+      "last_name": "",
+      "email": "root@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2020-02-23T07:08:35.955Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$I1KNLpKshz9g$KmOFxDxazo9tN38sC/p5H4H5s2n9t7ZaP1+pH8qObdI=",
+      "last_login": "2020-02-23T07:20:20.635Z",
+      "is_superuser": true,
+      "username": "adminconcat",
+      "first_name": "",
+      "last_name": "",
+      "email": "sevavov.2004@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2020-02-23T07:18:01.379Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "79dfygcfdnf06gqlellhs8kgkmezx70e",
+    "fields": {
+      "session_data": "YzFhNzEwZTA0Yzk0NWJlOTZkMDg0YTM5MjBkZTRkMzE3MTk0NGQ3Yjp7Il9hdXRoX3VzZXJfaWQiOiI0IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlMmIxZTg0YmIzMjY3MzJlM2U4ZDE1MmJkOGVhYWE5MjBkZGZkNmUwIn0=",
+      "expire_date": "2020-03-08T07:20:20.644Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "7wkmqaqpcjds0o52l77hn7ybqhjpi1gw",
+    "fields": {
+      "session_data": "MmNhZTMyMDM0NGEwZGY0Nzg4ZDFkM2U1M2M4MGEyNjI2YTk5OGYzMjp7ImdpdGh1Yl9zdGF0ZSI6Ijd5QWc4TEdicFNxdXhZUWRtV2djc2t2UDN0a2hCYUNFIn0=",
+      "expire_date": "2020-03-08T07:06:37.130Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "fjcdoegrljvzz4bnyav9ppjl6gre9vxl",
+    "fields": {
+      "session_data": "NTYyODNlZjM4YzBkYzdiZTM3Yzc3YzhiZDI1ZGQ1Yjc4NTVlOTM0Zjp7Il9hdXRoX3VzZXJfaWQiOiI0IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI3MDQyZmMxZGY0ZDZhNDdmZjNhMzVjYWUwYmJiOTY2MzZiZjVlMWI5In0=",
+      "expire_date": "2020-03-08T07:18:41.390Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "tpjflgsjl1bh5k55s13dcho7mxvfumlo",
+    "fields": {
+      "session_data": "NzM3OTBkMmFiN2QyZmE4ODg0NTNiY2UwOGM3YzVlYTZhZGZjNjM3Mzp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI5MzM1MTQ0MzE4YWNlY2UyNDBhOWQ0ZDY2NGRlNGQwYTA1Y2MyZmVhIn0=",
+      "expire_date": "2020-03-07T18:26:51.167Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "wdcyaghpxyfy2gkzjg542qbs8hiel20t",
+    "fields": {
+      "session_data": "NzNlNDEwZDYyN2ZjYTAzNjQ3MDUzZDQ3N2JkZmE4NmVkMTNkNjBiYjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIzYmUxZWMyNTE4MjY3MzU0MzgyNjc0Yzg3MGY1NDg0ZWJmNzY0NjU0In0=",
+      "expire_date": "2020-03-08T05:05:05.329Z"
+    }
+  },
+  {
+    "model": "project.collaborator",
+    "pk": 1,
+    "fields": {
+      "member": 1,
+      "role": "\u0420\u043e\u043b\u044c \u043d\u0435 \u0437\u0430\u0434\u0430\u043d\u0430",
+      "entered_at": "2020-02-23T06:38:52.610Z",
+      "can_edit_project": true,
+      "is_teamlead": true,
+      "is_author": true
+    }
+  },
+  {
+    "model": "project.project",
+    "pk": 1,
+    "fields": {
+      "name": "Test Project",
+      "description": "",
+      "max_people": 0,
+      "author": 1,
+      "technical_spec_url": "",
+      "is_public": false,
+      "status": 1,
+      "trello": "",
+      "vcs": "",
+      "callback": "",
+      "created_at": "2020-02-23T06:38:52.541Z",
+      "collaborators": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "user.userprofile",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "first_name": "",
+      "last_name": "",
+      "avatar": "profile/photos/1_5j0fchM.png",
+      "confirmed": false,
+      "rating": 0,
+      "active_projects_cnt": 0,
+      "good_teamlead": 0,
+      "status": "",
+      "vk": "",
+      "linked_in": "",
+      "telegram": "",
+      "bio": "",
+      "location": "",
+      "github_account": "",
+      "github_projects_cnt": 0,
+      "github": "",
+      "github_id": null,
+      "github_followers": 0,
+      "github_access_token": null,
+      "github_commits": 0,
+      "github_stars": 0
+    }
+  },
+  {
+    "model": "user.userprofile",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "first_name": "",
+      "last_name": "",
+      "avatar": "",
+      "confirmed": false,
+      "rating": 0,
+      "active_projects_cnt": 0,
+      "good_teamlead": 0,
+      "status": "",
+      "vk": "",
+      "linked_in": "",
+      "telegram": "",
+      "bio": "",
+      "location": "",
+      "github_account": "",
+      "github_projects_cnt": 0,
+      "github": "",
+      "github_id": null,
+      "github_followers": 0,
+      "github_access_token": null,
+      "github_commits": 0,
+      "github_stars": 0
+    }
+  },
+  {
+    "model": "user.userprofile",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "first_name": "",
+      "last_name": "",
+      "avatar": "profile/photos/3.png",
+      "confirmed": false,
+      "rating": 0,
+      "active_projects_cnt": 0,
+      "good_teamlead": 0,
+      "status": "",
+      "vk": "",
+      "linked_in": "",
+      "telegram": "",
+      "bio": "",
+      "location": "",
+      "github_account": "",
+      "github_projects_cnt": 0,
+      "github": "",
+      "github_id": null,
+      "github_followers": 0,
+      "github_access_token": null,
+      "github_commits": 0,
+      "github_stars": 0
+    }
+  },
+  {
+    "model": "user.userprofile",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "first_name": "",
+      "last_name": "",
+      "avatar": "",
+      "confirmed": false,
+      "rating": 0,
+      "active_projects_cnt": 0,
+      "good_teamlead": 0,
+      "status": "",
+      "vk": "",
+      "linked_in": "",
+      "telegram": "",
+      "bio": "",
+      "location": "",
+      "github_account": "",
+      "github_projects_cnt": 0,
+      "github": "",
+      "github_id": null,
+      "github_followers": 0,
+      "github_access_token": null,
+      "github_commits": 0,
+      "github_stars": 0
+    }
+  },
+  {
+    "model": "taggit.tag",
+    "pk": 1,
+    "fields": {
+      "name": "project",
+      "slug": "project"
+    }
+  },
+  {
+    "model": "taggit.tag",
+    "pk": 2,
+    "fields": {
+      "name": "test",
+      "slug": "test"
+    }
+  },
+  {
+    "model": "taggit.taggeditem",
+    "pk": 1,
+    "fields": {
+      "tag": 1,
+      "content_type": 8,
+      "object_id": 1
+    }
+  },
+  {
+    "model": "taggit.taggeditem",
+    "pk": 2,
+    "fields": {
+      "tag": 2,
+      "content_type": 8,
+      "object_id": 1
+    }
+  },
+  {
+    "model": "sites.site",
+    "pk": 1,
+    "fields": {
+      "domain": "example.com",
+      "name": "example.com"
+    }
+  },
+  {
+    "model": "sites.site",
+    "pk": 2,
+    "fields": {
+      "domain": "127.0.0.1",
+      "name": "localhost"
+    }
+  },
+  {
+    "model": "sites.site",
+    "pk": 3,
+    "fields": {
+      "domain": "alphabet-concat.herokuapp.com",
+      "name": "heorku"
+    }
+  }
+]
