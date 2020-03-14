@@ -21,6 +21,7 @@ urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + 
     path('account/login/', u.LoginFormView.as_view(), name="user_login"),
     path('account/logout/', u.LogoutView.as_view(), name="user_logout"),
     path('account/profile/', u.update_profile, name="user_profile"),
+    path('support/', u.support, name='user_support'),
     path('reset_password/<str:hash>/', u.reset_password_check_hash, name='reset_password'),
     path('u/<str:username>/', u.profile_resolver, name="user_get_profile"),
     path('account/update_avatar/', u.update_profile_avatar, name="user_update_avatar"),

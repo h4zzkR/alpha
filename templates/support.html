@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ pagename }}
+{% endblock %}
+
+{% block extra_links %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
+    <link rel="script" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js">
+    <link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/typeagead-styles.css">
+{% endblock %}
+
+{% block styles %}
+    .CodeMirror, .CodeMirror-scroll {
+    min-height: 575px;
+    }
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block main_content_class %}
+    <div class="main-content" style="padding-bottom: 60px;">
+{% endblock %}
+
+{% block content %}
+
+
+    <!--  ВСПЛЫВАЮЩЕЕ МЕНЮ ИЗМЕНЕНИЯ АВАТАРА  -->
+
+
+    <div class="col-xl-8 order-xl-1 mt-9 scrolling">
+        <form role="form" method="POST" id="profile-form" action="{% url 'user_support' %}">
+            {% csrf_token %}
+            <div class="card bg-secondary shadow ml-4">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Поддержка</h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">Отправить</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h6 class="heading-small text-muted mb-4">Информация</h6>
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-email">Почта</label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-first-name">Имя</label>
+                                    {{ form.name }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4"/>
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label">Вопрос</label>
+                                    {{ form.question }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'blocks/footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ STATIC_URL }}js/gen_avatar.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/blockies.js"></script>
+    <script src="{{ STATIC_URL }}js/plugins/ehtereum_identicon/hqx.js"></script>
+
+    <script src="{{ STATIC_URL }}js/bootstrap-tagsinput.js"></script>
+    <script src="{{ STATIC_URL }}js/typeahead.js"></script>
+
+{% endblock %}

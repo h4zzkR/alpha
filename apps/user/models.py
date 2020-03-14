@@ -103,8 +103,6 @@ class UserProfile(models.Model):
             html_content = f.read()
             for var in arguments.keys():
                 html_content = html_content.replace('{{ ' + var + ' }}', arguments[var])
-
-
             msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [self.user.email])
             msg.attach_alternative(html_content, "text/html")
             msg.send()

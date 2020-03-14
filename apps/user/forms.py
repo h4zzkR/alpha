@@ -105,7 +105,7 @@ class UserEditForm(forms.ModelForm):
     email = forms.CharField(max_length=User._meta.get_field('email').max_length, required=True,
                             widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Новая почта',
                                                      'label': 'email', 'name': 'email', 'id': 'email',
-                                                     'readonly' : True,}))
+                                                     'readonly': True,}))
 
     first_name = forms.CharField(max_length=UserProfile._meta.get_field('first_name').max_length, required=False,
                                  widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя',
@@ -118,6 +118,24 @@ class UserEditForm(forms.ModelForm):
 
     # def clean(self):
     #     super(UserEditForm, self).clean()
+
+
+class SupportForm(forms.Form):
+    question = forms.CharField(required=False, max_length=2000,
+                          widget=forms.Textarea(
+                              attrs={'placeholder': "Ваш Вопрос",
+                                     "rows": "4",
+                                     'id': 'bio',
+                                     'name': 'question',
+                                     'class': 'form-control form-control-alternative'}))
+    email = forms.CharField(max_length=User._meta.get_field('email').max_length, required=True,
+                            widget=EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ваша почта',
+                                                     'label': 'email', 'name': 'email', 'id': 'email',
+                                                     }))
+    name = forms.CharField(max_length=UserProfile._meta.get_field('first_name').max_length + UserProfile._meta.get_field('last_name').max_length + 3, required=False,
+                                 widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'Ваше Имя',
+                                                         'label': 'first_name', 'name': 'first_name',
+                                                         'id': 'first_name'}))
 
 
 class ProfileEditForm(forms.ModelForm):

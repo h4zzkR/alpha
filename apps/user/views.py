@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotFound
@@ -9,10 +11,12 @@ from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.views.generic.base import View
-from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm
+from .forms import AuthForm, RegisterForm, ProfileEditForm, UserEditForm, SupportForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-import json, pytz
+import json
+import pytz
+import os
 
 import requests
 
@@ -37,6 +41,7 @@ class RegisterFormView(FormView):
     success_url = '/account/login/'
     template_name = "register.html"
     extra_context = {'pagename': 'Регистрация'}
+
     def form_valid(self, form):
         form.save()
         return super(RegisterFormView, self).form_valid(form)
@@ -59,6 +64,7 @@ class LoginFormView(FormView):
     template_name = "login.html"
     success_url = "/account/profile/"
     extra_context = {'pagename': 'Вход'}
+
     def form_valid(self, form):
         self.user = form.get_user()
         login(self.request, self.user)
@@ -79,6 +85,37 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return HttpResponseRedirect("/")
+
+
+def support(request):
+    m = Messages()
+    u = request.user
+    if request.method == 'POST':
+        support_form = SupportForm(request.POST)
+        if support_form.is_valid():
+            arguments = {"domain": settings.HOST}
+            template_name = os.path.join(settings.BASE_DIR, 'templates/mail/concat_support.html')
+            with open(template_name, "r", encoding='utf-8') as f:
+                html_content = f.read()
+                for var in arguments.keys():
+                    html_content = html_content.replace('{{ ' + var + ' }}', arguments[var])
+                msg = EmailMultiAlternatives("Обращение в Тех.Поддержку", "", settings.EMAIL_HOST_USER, [support_form.data['email']])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            msg = EmailMultiAlternatives(f"Обращение от пользователя {request.user.username}.", f'Текст Обращения: {support_form.data["question"]}\n Email: {support_form.data["email"]}\n Имя: {support_form.data["name"]}', settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
+            msg.send()
+            m.add(request, 'success', 'Обращение было успешно отправлено.')
+        else:
+            m.add(request, 'error', 'Что-то пошло не так...')
+        return redirect('/')
+    else:
+        support_form = SupportForm()
+        if request.user.is_authenticated:
+            support_form.email = request.user.email
+
+    context = get_context(request, 'Поддержка')
+    context.update({'form': support_form})
+    return render(request, 'support.html', context)
 
 
 def profile_resolver(request, username):
@@ -144,8 +181,6 @@ def update_profile(request):
     context.update({'form2': profile_form})
     context.update({'user': u})
     context.update({'skills': json_skills()})
-
-
     return render(request, 'profile_.html', context)
 
 
