@@ -125,6 +125,37 @@ def project_view(request, id):
         project = Project.objects.get(id=id)
     except Project.DoesNotExist:
         return handler404(request)
+    try:
+        project_invite = ProjectInvite.objects.get(user=request.user, project=project)
+        if project_invite.status == 1:
+            context = get_context(request, f'Проект | {project.name}')
+            context.update({'project': project})
+            context.update({"user": request.user})
+            context.update({'is_in': False})
+            if request.user.is_authenticated is True:
+                for i in project.collaborators.all():
+                    if request.user == i.member:
+                        context.update({'is_in': True})
+                        break
+            else:
+                context.update({'is_in': True})  # do not touch, it is hack for non display on unloginned
+            return render(request, 'project_view.html', context)
+    except ProjectInvite.DoesNotExist:
+        pass
+    print(project.collaborators.all())
+    if len(project.collaborators.filter(member=request.user)) != 0:
+        context = get_context(request, f'Проект | {project.name}')
+        context.update({'project': project})
+        context.update({"user": request.user})
+        context.update({'is_in': False})
+        if request.user.is_authenticated is True:
+            for i in project.collaborators.all():
+                if request.user == i.member:
+                    context.update({'is_in': True})
+                    break
+        else:
+            context.update({'is_in': True})  # do not touch, it is hack for non display on unloginned
+        return render(request, 'project_view.html', context)
     if project.is_public:
         context = get_context(request, f'Проект | {project.name}')
         context.update({'project': project})
@@ -202,6 +233,20 @@ def project_team_view(request, id):
         project = Project.objects.get(id=id)
     except Project.DoesNotExist:
         return handler404(request)
+    try:
+        project_invite = ProjectInvite.objects.get(user=request.user, project=project)
+        if project_invite.status == 1:
+            context = get_context(request, f'Команда | {project.name}')
+            context.update({'project': project})
+            context.update({"user": request.user})
+            return render(request, 'project_team_view.html', context)
+    except ProjectInvite.DoesNotExist:
+        pass
+    if len(project.collaborators.filter(member=request.user)) != 0:
+        context = get_context(request, f'Команда | {project.name}')
+        context.update({'project': project})
+        context.update({"user": request.user})
+        return render(request, 'project_team_view.html', context)
     if project.is_public:
         context = get_context(request, f'Команда | {project.name}')
         context.update({'project': project})
@@ -248,6 +293,14 @@ def project_team_edit(request, id):
                 except ProjectInvite.DoesNotExist:
                     req = ProjectInvite(user=u, project=project)
                     req.save()
+                    args = {'template_name': 'concat_invite_project.html',
+                            'project': project.name,
+                            'username': u.username,
+                            'unsub': os.path.join(settings.HOST, 'unsub_email'),
+                            'domain': settings.DOMAIN,
+                            'link': settings.HOST + '/project/v/' + str(id),
+                            }
+                    u.profile.email_user('Вас пригласили в проект', args)
                     m.add(request, 'success', 'Пользователю было отправлено приглашение в команду проекта')
                 return redirect(f'/project/e/{id}/team/', request)
                 # response_data.update(project_form.cleaned_data)
@@ -308,7 +361,7 @@ def project_request(request, id):
         args = {'template_name': 'concat_request_project.html',
                 'username': request.user.username,
                 'user': request.user.username,
-                'link': settings.HOST + 'projects/',
+                'link': settings.HOST + '/projects/',
                 'unsub': os.path.join(settings.HOST, 'unsub_email'),
                 'domain': settings.DOMAIN
                 }
@@ -343,7 +396,7 @@ def projects_accept_request(request):
                 'username': username,
                 'unsub': os.path.join(settings.HOST, 'unsub_email'),
                 'domain': settings.DOMAIN,
-                'link': settings.HOST + 'project/v/' + pr_id,
+                'link': settings.HOST + '/project/v/' + pr_id,
                 }
         user.profile.email_user('Вы были добавлены в команду.', args)
         proj_request.delete()
@@ -366,7 +419,7 @@ def projects_decline_request(request):
                 'username': username,
                 'unsub': os.path.join(settings.HOST, 'unsub_email'),
                 'domain': settings.DOMAIN,
-                'link': settings.HOST + 'project/v/' + pr_id,
+                'link': settings.HOST + '/project/v/' + pr_id,
                 }
         user.profile.email_user('Запрос на вступление в команду отклонен.', args)
         proj_request.delete()

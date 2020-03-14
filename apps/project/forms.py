@@ -28,9 +28,9 @@ class ProjectForm(forms.ModelForm):
                           widget=forms.Textarea(
                               attrs={'placeholder': "Подробно опишите идею Вашего проекта",
                                      "rows": "4",
-                                     'id': 'description',
+                                     'id': 'input-description',
                                      "maxlength": Project._meta.get_field('description').max_length,
-                                     'name': 'description',
+                                     'name': 'input-description',
                                      'class': 'form-control form-control-alternative'}))
 
     max_people = forms.IntegerField(required=False, max_value=10,
@@ -82,7 +82,7 @@ class ProjectForm(forms.ModelForm):
                'name' : 'tags',
                'id' : 'tags-input'},
 
-    ))
+    ), required=False)
 
     class Meta:
         model = Project
