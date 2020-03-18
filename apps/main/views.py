@@ -98,7 +98,7 @@ def search_engine(request):
                 (Q(name__icontains=i) | Q(collaborators__member__username__contains=i)) & Q(
                     is_public=True))
             object_list |= s
-            object_list = object_list.union(Project.objects.filter(tags__name__icontains=i).distinct())
+            object_list = object_list.union(Project.objects.filter(tags__name__icontains=i, is_public=True).distinct())
     elif type == 'users':
         object_list = UserProfile.objects.none()
         if len(data) == 1 and data[0] == '':
@@ -109,7 +109,7 @@ def search_engine(request):
                 object_list |= s
                 object_list = object_list.union(UserProfile.objects.filter(skills__name__icontains=i).distinct())
     page = request.GET.get('page', 1)
-    context = get_context(request, f'Поиск | {data}')
+    context = get_context(request, f'Поиск | "{" ".join(data)}"')
     if type == 'projects':
         context.update({'object_list': object_list.order_by(sort)})
     else:

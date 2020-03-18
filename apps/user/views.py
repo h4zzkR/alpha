@@ -283,7 +283,7 @@ def save_profile(backend, user, response, *args, **kwargs):
         if user.email == "":
             user.email = "wrongemail"
         if response['bio'] is None:
-            user.profile.bio = "Нет биографии"
+                user.profile.bio = "Нет биографии"
         else:
             user.profile.bio = response['bio']
         img = Image.open(BytesIO(requests.get(response.get('avatar_url')).content))
@@ -304,7 +304,7 @@ def save_profile(backend, user, response, *args, **kwargs):
             else:
                 user.profile.first_name = name.split()[0]
         else:
-            name = "Anonymous User"
+            name = "AnonymousUser"
         user.profile.github_access_token = response.get('access_token')
         user.profile.github_followers = response.get('followers')
         location = response.get('location')

@@ -35,8 +35,6 @@
             <!-- Brand -->
             <a class="h2 mb-0 text-blue text-uppercase d-none d-lg-inline-block"> {{ pagename }} </a>
             <!-- Form -->
-            {% include "blocks/search.html" %}
-            <!-- User -->
             {% include "blocks/profile_menu.html" %}
         </div>
     </nav>
@@ -81,7 +79,7 @@
                 <a class="close" id="close-popup" href="#">&times;</a>
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
-                        <a href="#">
+                        <a href="">
                             <img src="{{ user.profile.avatar_url }}" id='card-avatar-0' class="rounded-circle">
                         </a>
                     </div>
@@ -132,7 +130,7 @@
                         <input type="submit" value="Загрузить" class="btn btn-outline-danger">
                     </form>
                     <hr class="my-4"/>
-                    <a href="#"></a>
+                    <a href=""></a>
                 </div>
             </div>
         </div>
