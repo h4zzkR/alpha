@@ -1,5 +1,4 @@
 import os
-import dj_database_url
 from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

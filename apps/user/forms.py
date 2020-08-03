@@ -129,7 +129,7 @@ class ProfileEditForm(forms.ModelForm):
 
 
     github = forms.URLField(required=False, max_length=UserProfile._meta.get_field('github').max_length,
-                            widget=URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                            widget=URLInput(attrs={'placeholder': "Ссылка на профиль",
                                                    'id': 'github',
                                                    'name': 'github',
                                                    'class': 'form-control form-control-alternative',
@@ -137,7 +137,7 @@ class ProfileEditForm(forms.ModelForm):
                                                    }))
 
     telegram = forms.URLField(required=False, max_length=UserProfile._meta.get_field('telegram').max_length,
-                              widget=URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                              widget=URLInput(attrs={'placeholder': "Ссылка на профиль",
                                                      'id': 'telegram',
                                                      'name': 'telegram',
                                                      'class': 'form-control form-control-alternative',
@@ -145,7 +145,7 @@ class ProfileEditForm(forms.ModelForm):
                                                      }))
 
     linked_in = forms.URLField(required=False, max_length=UserProfile._meta.get_field('linked_in').max_length,
-                               widget=URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                               widget=URLInput(attrs={'placeholder': "Ссылка на профиль",
                                                       'id': 'linked_in',
                                                       'name': 'linked_in',
                                                       'class': 'form-control form-control-alternative',
@@ -153,7 +153,7 @@ class ProfileEditForm(forms.ModelForm):
                                                       }))
 
     vk = forms.URLField(required=False, max_length=UserProfile._meta.get_field('vk').max_length,
-                        widget=URLInput(attrs={'placeholder': "Ссылка на ваш профиль",
+                        widget=URLInput(attrs={'placeholder': "Ссылка на профиль",
                                                'id': 'vk',
                                                'name': 'vk',
                                                'class': 'form-control form-control-alternative',
@@ -162,7 +162,7 @@ class ProfileEditForm(forms.ModelForm):
 
     bio = forms.CharField(required=False, max_length=UserProfile._meta.get_field('bio').max_length,
                           widget=forms.Textarea(
-                              attrs={'placeholder': "Любые детали такие как возраст, страна или город.",
+                              attrs={'placeholder': "Любые детали, такие как возраст, страна или город.",
                                      "rows": "4",
                                      'id': 'bio',
                                      "maxlength": UserProfile._meta.get_field('bio').max_length,
