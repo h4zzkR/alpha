@@ -2,8 +2,8 @@ import os
 from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOST = 'https://concat.cleverapps.io'
-DOMAIN = 'concat.cleverapps.io' #need for emailing templates
+HOST = 'http://217.182.75.251:8000'
+DOMAIN = '217.182.75.251:8000' #need for emailing templates
 AUTO_CONFIRM = True
 
 SITE_ID = 1
@@ -98,8 +98,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GITHUB_KEY = '9c3677f2a7a6b701b346'
-SOCIAL_AUTH_GITHUB_SECRET = 'c309904ac9f35de316c0a6fa12f1db8f6bcabe5d'
+SOCIAL_AUTH_GITHUB_KEY = 'e87f58fb9971ac0bd0ae'
+SOCIAL_AUTH_GITHUB_SECRET = 'a57439a004cf205d0f131102ddb7a636fdb0f7b7'
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
