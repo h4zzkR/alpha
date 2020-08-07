@@ -2,7 +2,7 @@ import os
 from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOST = 'http://217.182.75.251/'
+HOST = 'http://217.182.75.251:8000/'
 DOMAIN = 'concat.org' #need for emailing templates
 AUTO_CONFIRM = True
 
