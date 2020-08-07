@@ -127,19 +127,40 @@ CACHES = {
     }
 }
 
+# DATABASES = {
+
+#     'default': {
+
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+#         'NAME': 'bhq17eglljztxpcwh9k1',
+
+#         'USER': 'uen2a9h3qu5akdyavlua',
+
+#         'PASSWORD': 'z6e2Gc6z6c86vG9Dh6AD',
+
+#         'HOST': 'bhq17eglljztxpcwh9k1-postgresql.services.clever-cloud.com',
+
+#         'PORT': '5432',
+
+
+
+#     }
+
+# }
 DATABASES = {
 
     'default': {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'bhq17eglljztxpcwh9k1',
+        'NAME': 'concat',
 
-        'USER': 'uen2a9h3qu5akdyavlua',
+        'USER': 'concat',
 
-        'PASSWORD': 'z6e2Gc6z6c86vG9Dh6AD',
+        'PASSWORD': 's1XTPKlOjWo4',
 
-        'HOST': 'bhq17eglljztxpcwh9k1-postgresql.services.clever-cloud.com',
+        'HOST': 'localhost',
 
         'PORT': '5432',
 
